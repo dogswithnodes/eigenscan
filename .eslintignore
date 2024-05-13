@@ -1,0 +1,4 @@
+.next
+public
+next.config.mjs
+lint-staged.config.js
