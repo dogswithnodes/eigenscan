@@ -29,7 +29,7 @@ export const Stakers: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) => {
   } = useTable<StakersRow>({
     tableName: 'stakers',
     sortParams: {
-      orderBy: 'id',
+      orderBy: 'totalShares',
       orderDirection: 'desc',
     },
   });
@@ -102,7 +102,7 @@ export const Stakers: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) => {
       sortingOptions={{
         sortParams,
         setSortParams,
-        unsortableKeys: ['stakedEth', 'stakedEigen', 'lastDelegatedAt', 'lastUndelegatedAt'],
+        unsortableKeys: ['delegatedTo', 'lastDelegatedAt', 'lastUndelegatedAt', 'stakedEigen'],
       }}
     />
   );

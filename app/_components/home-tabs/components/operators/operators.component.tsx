@@ -29,7 +29,7 @@ export const Operators: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) => 
   } = useTable<OperatorsRow>({
     tableName: 'operators',
     sortParams: {
-      orderBy: 'id',
+      orderBy: 'delegatorsCount',
       orderDirection: 'desc',
     },
   });

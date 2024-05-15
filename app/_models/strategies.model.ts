@@ -1,4 +1,4 @@
-export type Strategy = {
+export type StrategyServer = {
   id: string;
   name: string;
   totalShares: string;
@@ -9,7 +9,8 @@ export type Strategy = {
   underlyingToken: string | null;
 };
 
-export type StrategyEnriched = Strategy & {
+export type Strategy = StrategyServer & {
   tvl: string;
+  balance: string;
   logo?: string | null;
 };

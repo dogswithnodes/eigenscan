@@ -3,16 +3,21 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { StyledHomeTabs, TabButtons } from './home-tabs.styled';
+import { StyledHomeTabs } from './home-tabs.styled';
 import { AVSs } from './components/avss/avss.component';
 import { Operators } from './components/operators/operators.component';
 import { Stakers } from './components/stakers/stakers.component';
 import { Strategies } from './components/strategies/strategies.component';
 import { SearchInput } from './components/search-input/search-input.component';
 
-import { TabButton, TabContent } from '../tabs/tabs.styled';
+import { TabButtons, TabButton, TabContent } from '../tabs/tabs.styled';
 
-import { HOME_TABS } from '@/app/_constants/home-tabs.constants';
+const HOME_TABS = {
+  avss: 'avss',
+  operators: 'operators',
+  stakers: 'stakers',
+  strategies: 'strategies',
+};
 
 const searchInputPlaceholders = {
   [HOME_TABS.avss]: 'Enter avs id or name',
@@ -29,7 +34,7 @@ export const HomeTabs: React.FC = () => {
   const { replace } = useRouter();
 
   useEffect(() => {
-    if (!tab) {
+    if (!tab || !Object.values(HOME_TABS).some((t) => t === tab.toLowerCase())) {
       replace(`${pathname}?tab=${HOME_TABS.avss}`);
     }
   }, [pathname, tab, replace]);

@@ -28,16 +28,3 @@ export const StyledHomeTabs = styled(Tabs)`
     }
   }
 `;
-
-export const TabButtons = styled.section`
-  display: flex;
-
-  a {
-    margin-left: 12px;
-    text-decoration: none;
-
-    &:first-of-type {
-      margin-left: 0;
-    }
-  }
-`;

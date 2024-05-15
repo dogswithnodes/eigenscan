@@ -11,6 +11,15 @@ export const Tabs = styled.section`
   background-color: #1c2839;
 `;
 
+export const TabButtons = styled.section`
+  display: flex;
+  gap: 12px;
+
+  a {
+    text-decoration: none;
+  }
+`;
+
 export const TabButton = styled.div<{ $active: boolean }>`
   padding: 7px 14px 8px;
   font-size: 20px;

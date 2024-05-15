@@ -1,27 +1,21 @@
-type EntityMetadata = {
-  name: string;
-  website: string;
-  description: string;
-  logo: string;
-  twitter: string;
-};
+import { ProtocolEntityMetadata } from '../_models/protocol-entity-metadata.model';
 
-type IdToEntityMetadataMap = Record<string, EntityMetadata>;
+type IdToMetadataMap = Record<string, ProtocolEntityMetadata>;
 
 export const fetchEntitiesMetadata = async (
   entities: Array<{
     id: string;
     metadataURI: string | null;
   }>,
-): Promise<IdToEntityMetadataMap> => {
-  const metadata: Array<EntityMetadata> = await Promise.all(
-    entities.map(async ({ id, metadataURI }) => {
+): Promise<IdToMetadataMap> => {
+  const metadata: Array<ProtocolEntityMetadata> = await Promise.all(
+    entities.map(async ({ metadataURI }) => {
       const defaultMetadata = {
-        name: id,
+        name: '',
         logo: '',
-        website: 'no data',
-        description: 'no data',
-        twitter: 'no data',
+        website: '',
+        description: '',
+        twitter: '',
       };
 
       if (metadataURI) {
@@ -37,7 +31,7 @@ export const fetchEntitiesMetadata = async (
     }),
   );
 
-  return entities.reduce<IdToEntityMetadataMap>((map, { id }, i) => {
+  return entities.reduce<IdToMetadataMap>((map, { id }, i) => {
     map[id] = metadata[i];
 
     return map;

@@ -1,7 +1,7 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
 
-import { StrategyEnriched } from '@/app/_models/strategies.model';
+import { Strategy } from '@/app/_models/strategies.model';
 import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
 
 export type StrategiesRow = {
@@ -94,7 +94,7 @@ export const transformToRow = ({
   stakesCount,
   delegationsCount,
   logo,
-}: StrategyEnriched): StrategiesRow => {
+}: Strategy): StrategiesRow => {
   return {
     key: id,
     id,

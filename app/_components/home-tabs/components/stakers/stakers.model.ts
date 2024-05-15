@@ -7,7 +7,7 @@ import { renderAddressLink, renderBigNumber, renderDate } from '@/app/_utils/ren
 export type StakersRow = {
   key: string;
   id: string;
-  stakedEth: number;
+  totalShares: number;
   stakedEigen: number;
   delegatedTo: string | null;
   lastDelegatedAt: string | null;
@@ -16,7 +16,7 @@ export type StakersRow = {
 
 const titles: Record<Exclude<keyof StakersRow, 'key'>, string> = {
   id: 'Staker',
-  stakedEth: 'Staked ETH',
+  totalShares: 'Staked ETH',
   stakedEigen: 'Staked Eigen',
   delegatedTo: 'Delegated to',
   lastDelegatedAt: 'Last delegation',
@@ -36,12 +36,12 @@ export const columns: Array<ColumnType<StakersRow>> = [
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    render: renderAddressLink('profile'),
+    render: renderAddressLink('profile', 'staker-details'),
   },
   {
-    title: titles.stakedEth,
-    dataIndex: 'stakedEth',
-    key: 'stakedEth',
+    title: titles.totalShares,
+    dataIndex: 'totalShares',
+    key: 'totalShares',
     render: renderBigNumber,
   },
   {
@@ -75,13 +75,15 @@ export const columns: Array<ColumnType<StakersRow>> = [
 
 export const transformToCsvRow = ({
   id,
-  stakedEth,
+  totalShares,
+  stakedEigen,
   delegatedTo,
   lastDelegatedAt,
   lastUndelegatedAt,
 }: StakersRow) => ({
   [titles.id]: id,
-  [titles.stakedEth]: stakedEth,
+  [titles.totalShares]: totalShares,
+  [titles.stakedEigen]: stakedEigen,
   [titles.delegatedTo]: delegatedTo,
   [titles.lastDelegatedAt]: lastDelegatedAt ? formatTableDate(lastDelegatedAt) : null,
   [titles.lastUndelegatedAt]: lastUndelegatedAt ? formatTableDate(lastUndelegatedAt) : null,

@@ -1,8 +1,8 @@
-import { StrategyEnriched } from '@/app/_models/strategies.model';
+import { Strategy } from '@/app/_models/strategies.model';
 import { fetchStrategiesWithTvl } from '@/app/_services/strategies.service';
 
 export async function GET() {
-  const strategies: Array<StrategyEnriched> = await fetchStrategiesWithTvl();
+  const strategies: Array<Strategy> = await fetchStrategiesWithTvl();
 
   try {
     const COIN_MARKET_CAP_API_KEY = process.env.COIN_MARKET_CAP_API_KEY;

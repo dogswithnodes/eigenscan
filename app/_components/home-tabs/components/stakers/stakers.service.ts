@@ -23,7 +23,6 @@ type FetchStakersParams = {
   idFilters: Array<string> | null;
 };
 
-// TODO generic
 export const useStakers = ({ currentPage, perPage, sortParams, idFilters }: FetchStakersParams) =>
   useQuery({
     queryKey: ['stakers', currentPage, perPage, sortParams, idFilters],
@@ -81,7 +80,11 @@ export const useStakersSearch = (searchTerm: string) => {
 
 type StakerServer = {
   id: string;
-  delegatedTo: string | null;
+  delegator: {
+    operator: {
+      id: string;
+    } | null;
+  } | null;
   stakes: Array<{
     id: string;
     lastUpdatedTimestamp: string;
@@ -106,7 +109,11 @@ type StakersResponse = {
 const stakerFragment = gql`
   fragment StakerFragment on Staker {
     id
-    delegatedTo
+    delegator {
+      operator {
+        id
+      }
+    }
     stakes (
       first: ${REQUEST_LIMIT},
       orderBy: lastUpdatedTimestamp,
@@ -149,7 +156,7 @@ const _fetchStakers = async (requestOptions: string) => {
 };
 
 const createStakersRow = (
-  { id, delegatedTo, stakes, withdrawals }: StakerServer,
+  { id, delegator, stakes, withdrawals }: StakerServer,
   strategyToTvl: StrategyToTvlMap,
 ): StakersRow => {
   const { stakedEth, stakedEigen } = stakes.reduce(
@@ -174,8 +181,8 @@ const createStakersRow = (
   return {
     key: id,
     id,
-    delegatedTo,
-    stakedEth: Number(stakedEth) / 1e18,
+    delegatedTo: delegator?.operator?.id || null,
+    totalShares: Number(stakedEth) / 1e18,
     stakedEigen: Number(stakedEigen) / 1e18,
     lastDelegatedAt: stakes.at(0)?.lastUpdatedTimestamp || null,
     lastUndelegatedAt: withdrawals.at(0)?.queuedBlockTimestamp || null,
@@ -207,7 +214,7 @@ export const useStakersCsv = (sortParams: SortParams<StakersRow>) => {
   const { data: protocolData } = useProtocolData();
 
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ['stakers-csv'],
+    queryKey: ['stakers-csv', sortParams],
     queryFn: async () => {
       if (!protocolData) {
         return Promise.reject(new Error('Stakers csv request cannot be sent without stakers count.'));

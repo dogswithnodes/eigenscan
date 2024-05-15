@@ -45,8 +45,9 @@ export const Strategies: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) =>
         tap(compose(setTotal, prop('length'))),
         (strategies: Array<StrategiesRow>) => {
           const currentLength = strategies.length;
-          const filtered = strategies.filter((strategy) =>
-            /* strategy.id.match(RegExp(searchTerm, 'i')) || */ strategy.name.match(RegExp(searchTerm, 'i')),
+          const filtered = strategies.filter(
+            (strategy) =>
+              strategy.id.match(RegExp(searchTerm, 'i')) || strategy.name.match(RegExp(searchTerm, 'i')),
           );
 
           if (currentPage !== 1 && currentLength !== filtered.length) {

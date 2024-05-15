@@ -6,15 +6,15 @@ import { request, REQUEST_LIMIT } from './graphql.service';
 
 import erc20Abi from '../_models/erc20.model.json';
 import offchainOracleAbi from '../_models/offchain-oracle.model.json';
-import { Strategy, StrategyEnriched } from '../_models/strategies.model';
+import { StrategyServer, Strategy } from '../_models/strategies.model';
 
 type StrategiesResponse = {
-  strategies: Array<Strategy>;
+  strategies: Array<StrategyServer>;
 };
 
 const OFFCHAIN_ORACLE = '0x0AdDd25a91563696D8567Df78D5A01C9a991F9B8';
 
-export const fetchStrategiesWithTvl = async (): Promise<Array<StrategyEnriched>> => {
+export const fetchStrategiesWithTvl = async (): Promise<Array<Strategy>> => {
   const { strategies } = await request<StrategiesResponse>(gql`
     query {
       strategies(
@@ -62,7 +62,6 @@ export const fetchStrategiesWithTvl = async (): Promise<Array<StrategyEnriched>>
                 convert: 'ETH',
                 symbol: tokenSymbol,
                 CMC_PRO_API_KEY: COIN_MARKET_CAP_API_KEY,
-                skip_invalid: 'true',
               })}`,
             );
 
@@ -91,16 +90,16 @@ export const fetchStrategiesWithTvl = async (): Promise<Array<StrategyEnriched>>
   ]);
 
   return strategies.map((strategy, i) => {
+    const balance = balances[i];
     return {
       ...strategy,
-      tvl: String((BigInt(balances[i]) * BigInt(prices[i])) / BigInt(1e18)),
+      balance,
+      tvl: String((BigInt(balance) * BigInt(prices[i])) / BigInt(1e18)),
     };
   });
 };
 
-export const useStrategies = (
-  options?: Omit<UseQueryOptions<Array<StrategyEnriched>>, 'queryKey' | 'queryFn'>,
-) => {
+export const useStrategies = (options?: Omit<UseQueryOptions<Array<Strategy>>, 'queryKey' | 'queryFn'>) => {
   return useQuery({
     queryKey: ['strategies'],
     queryFn: async () => {

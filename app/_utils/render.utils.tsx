@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { styled } from 'styled-components';
 
 import { formatTableNumber, formatTooltipNumber } from './number.utils';
+import { preventDefault } from './events.utils';
 import { formatTableDate } from './table.utils';
 import { clampMiddle } from './text.utils';
 
@@ -38,11 +39,11 @@ export const renderImageGroup = (srcs: Array<string>) => {
   );
 };
 
-export const renderAddressLink = (type: 'avs' | 'profile' | 'strategy') =>
+export const renderAddressLink = (type: 'avs' | 'profile' | 'strategy', tab?: string) =>
   function AddressLink(address: string | null) {
     return address ? (
       <Link
-        href={`/${type}?id=${address}`}
+        href={`/${type}?id=${address}${tab ? `&tab=${tab}` : ''}`}
         className="ant-table-cell-monospaced-value"
         data-tooltip-id={GLOBAL_TOOLTIP_ID}
         data-tooltip-content={address}
@@ -52,11 +53,24 @@ export const renderAddressLink = (type: 'avs' | 'profile' | 'strategy') =>
     ) : null;
   };
 
-export const renderDate = (date: number | null) =>
+export const renderDate = (date: string | null) =>
   date ? <span className="ant-table-cell-monospaced-value">{formatTableDate(date)}</span> : null;
 
 export const renderBigNumber = (number: number) => (
   <span data-tooltip-id={GLOBAL_TOOLTIP_ID} data-tooltip-content={formatTooltipNumber(number)}>
     {formatTableNumber(number)}
   </span>
+);
+
+export const renderTransactionHash = (value: string) => (
+  <a
+    onMouseDown={preventDefault}
+    href={`https://etherscan.io/tx/${value}`}
+    target="_blank"
+    rel="noreferrer"
+    data-tooltip-id={GLOBAL_TOOLTIP_ID}
+    data-tooltip-content={value}
+  >
+    {value}
+  </a>
 );

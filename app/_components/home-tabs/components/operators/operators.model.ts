@@ -4,16 +4,6 @@ import { ColumnType } from 'antd/es/table';
 import { formatTableDate } from '@/app/_utils/table.utils';
 import { renderAddressLink, renderDate, renderImage, renderImageGroup } from '@/app/_utils/render.utils';
 
-export type Operator = {
-  id: string;
-  logo: string;
-  name: string;
-  created: string;
-  stakersCount: number;
-  tvl: bigint;
-  avsLogos: Array<string>;
-};
-
 export type OperatorsRow = {
   key: string;
   id: string;
@@ -21,7 +11,7 @@ export type OperatorsRow = {
   name: string;
   created: string;
   tvl: number;
-  stakersCount: number;
+  delegatorsCount: number;
   avsLogos: Array<string>;
 };
 
@@ -31,7 +21,7 @@ const titles: Record<Exclude<keyof OperatorsRow, 'key'>, string> = {
   logo: 'Img',
   created: 'Created',
   tvl: 'TVL',
-  stakersCount: 'Total stakers',
+  delegatorsCount: 'Delegators count',
   avsLogos: 'AVSs',
 };
 
@@ -53,14 +43,14 @@ export const columns: Array<ColumnType<OperatorsRow>> = [
     title: titles.name,
     dataIndex: 'name',
     key: 'name',
-    align: 'left',
+    onCell: () => ({ className: 'ant-table-cell_left-aligned' }),
   },
   {
     title: titles.id,
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    render: renderAddressLink('profile'),
+    render: renderAddressLink('profile', 'operator-details' /** TODO const */),
   },
   {
     title: titles.created,
@@ -75,9 +65,9 @@ export const columns: Array<ColumnType<OperatorsRow>> = [
     key: 'tvl',
   },
   {
-    title: titles.stakersCount,
-    dataIndex: 'stakersCount',
-    key: 'stakersCount',
+    title: titles.delegatorsCount,
+    dataIndex: 'delegatorsCount',
+    key: 'delegatorsCount',
   },
   {
     title: titles.avsLogos,
@@ -92,7 +82,7 @@ export const transformToCsvRow = ({
   logo,
   name,
   created,
-  stakersCount,
+  delegatorsCount,
   tvl,
   avsLogos,
 }: OperatorsRow) => ({
@@ -100,7 +90,7 @@ export const transformToCsvRow = ({
   [titles.logo]: logo,
   [titles.name]: name,
   [titles.created]: formatTableDate(created),
-  [titles.stakersCount]: stakersCount,
+  [titles.delegatorsCount]: delegatorsCount,
   [titles.tvl]: tvl.toString(),
   [titles.avsLogos]: avsLogos.join(', '),
 });

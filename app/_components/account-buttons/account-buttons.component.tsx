@@ -24,7 +24,13 @@ export const AccountButtons: React.FC<Props> = ({ id }) => {
           <Copy />
         </AccountButton>
       </CopyToClipboard>
-      <a href={`TODO`} target="_blank" rel="noreferrer" style={{ outline: 'none' }} tabIndex={-1}>
+      <a
+        href={`https://etherscan.io/address/${id}`}
+        target="_blank"
+        rel="noreferrer"
+        style={{ outline: 'none' }}
+        tabIndex={-1}
+      >
         <AccountButton onMouseDown={preventDefault}>
           <ExternalLink />
         </AccountButton>

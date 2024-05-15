@@ -25,8 +25,8 @@ export const useAVSs = () => {
 
 type AVSOperator = {
   operator: {
-    delegations: Array<{
-      shares: string;
+    strategies: Array<{
+      totalShares: string;
       strategy: {
         id: string;
         totalShares: string;
@@ -48,6 +48,7 @@ type AVSsResponse = {
         };
       }>;
       operators: Array<AVSOperator>;
+      operatorsCount: number;
     }>;
     registrations: Array<AVSOperator>;
   }>;
@@ -81,10 +82,11 @@ const createAVSsFetcher = () => async (skip: number) => {
               first: ${REQUEST_LIMIT}
             ) {
               operator {
-                delegations(
-                  first: ${REQUEST_LIMIT},
+                strategies(
+                  first: ${REQUEST_LIMIT}
+                  where: {strategy_not: null, totalShares_gt: "0"}
                 ) {
-                  shares
+                  totalShares
                   strategy {
                     id
                     totalShares
@@ -92,22 +94,23 @@ const createAVSsFetcher = () => async (skip: number) => {
                 }
               }
             }
+            operatorsCount
           }
           registrations(
             first: ${REQUEST_LIMIT},
             where: {status: 1}
           ) {
             operator {
-              delegations(
-                first: ${REQUEST_LIMIT},
-                where: {shares_gt: "0"}
-              ) {
-                shares
-                strategy {
-                  id
-                  totalShares
-                }
+              strategies(
+              first: ${REQUEST_LIMIT}
+              where: {strategy_not: null, totalShares_gt: "0"}
+            ) {
+              totalShares
+              strategy {
+                id
+                totalShares
               }
+            }
             }
           }
         }
@@ -154,7 +157,7 @@ export const fetchAvss = async (): Promise<Array<AVS>> => {
       eigenTvl: BigInt(0),
     };
 
-    if (quorums.length > 0) {
+    if (quorums.length > 0 && quorums.some(({ operatorsCount }) => operatorsCount > 0)) {
       quorums.forEach(({ multipliers, operators }) => {
         const ethStrategies = multipliers.flatMap(({ strategy }) =>
           strategy.id !== EIGEN_STRATEGY ? strategy.id : [],
@@ -164,21 +167,22 @@ export const fetchAvss = async (): Promise<Array<AVS>> => {
         );
 
         operators.forEach((operator) => {
-          operator.operator.delegations.forEach(({ shares, strategy }) => {
+          operator.operator.strategies.forEach(({ totalShares, strategy }) => {
             if (ethStrategies.some((id) => id === strategy.id)) {
               tvls.ethTvl +=
-                (BigInt(shares) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
+                (BigInt(totalShares) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
             } else if (eigenStrategies.some((id) => id === strategy.id)) {
               tvls.eigenTvl +=
-                (BigInt(shares) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
+                (BigInt(totalShares) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
             }
           });
         });
       });
     } else {
       tvls.ethTvl = registrations.reduce((tvl, { operator }) => {
-        tvl += operator.delegations.reduce((operatorTvl, { shares, strategy }) => {
-          operatorTvl += (BigInt(shares) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
+        tvl += operator.strategies.reduce((operatorTvl, { totalShares, strategy }) => {
+          operatorTvl +=
+            (BigInt(totalShares) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
 
           return operatorTvl;
         }, BigInt(0));

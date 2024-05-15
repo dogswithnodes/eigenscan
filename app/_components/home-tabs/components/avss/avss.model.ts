@@ -52,7 +52,7 @@ export const columns: Array<ColumnType<AVSsRow>> = [
     title: titles.name,
     dataIndex: 'name',
     key: 'name',
-    align: 'left',
+    onCell: () => ({ className: 'ant-table-cell_left-aligned' }),
   },
 
   {
