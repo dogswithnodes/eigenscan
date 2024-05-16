@@ -10,18 +10,13 @@ export const Wrapper = styled.div`
     min-width: 53px;
     text-align: center;
     font-size: 18px !important;
-    color: #fff;
+    color: #000;
     letter-spacing: 0.2em;
-    background-color: #243855;
-    border: none;
+    background-color: #fff;
+    border: 1px solid #ececec;
     border-radius: 4px;
     outline: none;
     transition: 0.2s;
-
-    &:hover,
-    &:focus {
-      background-color: #203451;
-    }
 
     @media ${mq[1920]} {
       padding: 1px 8px;

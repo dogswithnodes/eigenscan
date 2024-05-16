@@ -12,8 +12,13 @@ export const Background = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color: #1a2637;
+  background-color: #fff;
+  border: 2px solid #ececec;
   border-radius: 6px;
+
+  @media ${mq[1280]} {
+    border-width: 1px;
+  }
 `;
 
 export const PreloaderBackground = styled(Background)`

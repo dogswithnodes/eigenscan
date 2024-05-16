@@ -10,11 +10,11 @@ import { StyledTable, LoadScreen } from './table.styled';
 import { HeaderCell } from './components/header-cell/header-cell.component';
 import { NoData } from './components/no-data/no-data.component';
 import { TableFooter } from './components/table-footer/table-footer.component';
+import sort from './images/sort.svg';
 
 import { Spinner } from '../spinner/spinner.component';
 
 import { SortParams } from '@/app/_models/sort.model';
-import sort from '@/app/_assets/images/sort.svg';
 
 type Resolution = '2560' | '1920' | '1440' | '1280';
 

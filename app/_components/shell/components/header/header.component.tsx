@@ -19,7 +19,8 @@ export const Header: React.FC = () => {
           aria-disabled={pathname === titleHref}
           onMouseDown={preventDefault}
         >
-          eigenscan
+          dogswithnodes
+          <span className="header-title-scan"> scan</span>
         </Link>
       </HeaderContent>
     </StyledHeader>

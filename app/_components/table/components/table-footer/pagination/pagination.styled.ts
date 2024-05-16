@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import { styled } from 'styled-components';
 
 export const Wrapper = styled.div`
   width: 100%;
@@ -15,9 +15,9 @@ export const NavContainer = styled.section`
   align-items: center;
 `;
 
-export const Span = styled.span`
+export const Count = styled.span`
   margin-right: 18px;
   letter-spacing: 0.2em;
-  color: #859ec3;
+  color: #525252;
   white-space: nowrap;
 `;

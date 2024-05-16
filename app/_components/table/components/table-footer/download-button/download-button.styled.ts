@@ -13,16 +13,12 @@ export const StyledDownloadButton = styled.button<{ $isLoading: boolean }>`
   &:hover,
   &:focus {
     path {
-      fill: ${({ $isLoading }) => ($isLoading ? '' : '#3673ea')};
+      fill: ${({ $isLoading }) => ($isLoading ? '' : '#525252')};
     }
   }
 
   &:active {
     margin-top: -2px;
-
-    path {
-      fill: ${({ $isLoading }) => ($isLoading ? '' : '#3269d3')};
-    }
   }
 
   svg {

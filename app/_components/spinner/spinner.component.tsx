@@ -4,9 +4,9 @@ export const StyledSpinner = styled.div`
   flex-shrink: 0;
   width: 40px;
   height: 40px;
-  border: 4px solid #384d6b;
-  border-right-color: #23344f;
-  border-top-color: #23344f;
+  border: 4px solid #b3b3b3;
+  border-right-color: #000;
+  border-top-color: #000;
   border-radius: 50%;
 
   animation: spin 1s linear infinite;

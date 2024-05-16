@@ -50,7 +50,6 @@ export const StyledTable = styled.section`
 
   .ant-table {
     font-size: 18px;
-    line-height: 1.05;
     box-sizing: border-box;
     position: relative;
 
@@ -73,13 +72,27 @@ export const StyledTable = styled.section`
   }
 
   .ant-table-thead {
-    color: #859ec3;
+    color: #525252;
+  }
+
+  .ant-table-header {
+    border-right: 2px solid #ececec;
+    border-left: 2px solid #ececec;
+
+    @media ${mq[1280]} {
+      border-width: 1px;
+    }
   }
 
   .ant-table-body {
     overflow-x: auto;
+    border: 2px solid #ececec;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
+
+    @media ${mq[1280]} {
+      border-width: 1px;
+    }
 
     ::-webkit-scrollbar {
       height: 20px;
@@ -94,28 +107,28 @@ export const StyledTable = styled.section`
     }
 
     ::-webkit-scrollbar-track {
-      background: #192434;
+      background: #fff;
       border-bottom-left-radius: 6px;
       border-bottom-right-radius: 6px;
     }
 
     ::-webkit-scrollbar-thumb {
-      background: #243855;
-      border: 6px solid #192434;
+      background: #ededed;
+      border: 6px solid #fff;
       border-radius: 10px;
 
       @media ${mq[1280]} {
-        border: 5px solid #192434;
+        border: 5px solid #fff;
       }
     }
 
-    scrollbar-color: #243855 #192434;
+    scrollbar-color: #ededed #fff;
   }
 
   .ant-table .ant-table-cell {
     vertical-align: middle;
-    background-color: #192434;
-    border-right: 2px solid #24354e;
+    background-color: #fff;
+    border-right: 2px solid #ececec;
 
     @media ${mq[1280]} {
       border-width: 1px;
@@ -126,8 +139,6 @@ export const StyledTable = styled.section`
     }
 
     &_sorted {
-      color: #fff;
-
       .ant-table-sort-icon {
         display: block;
       }
@@ -151,8 +162,7 @@ export const StyledTable = styled.section`
     position: sticky;
     padding: 28px 10px;
     text-align: center;
-    border-top: 2px solid #24354e;
-    border-bottom: 2px solid #24354e;
+    border-top: 2px solid #ececec;
     text-overflow: ellipsis;
     cursor: pointer;
 
@@ -175,7 +185,7 @@ export const StyledTable = styled.section`
     padding: 14px 10px;
     text-align: right;
     font-weight: 500;
-    color: #758aa9;
+    color: #525252;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -199,19 +209,19 @@ export const StyledTable = styled.section`
 
     &.ant-table-cell {
       &_with-link {
-        color: #3e7cf4;
+        color: #6830ff;
 
         &:hover {
-          color: #3b73df;
+          color: #4313c3;
         }
 
         &:active {
-          color: #3269d2;
+          color: #6830ff;
         }
       }
 
       &_row-hovered {
-        background-color: #243855;
+        background-color: #f6f6f6;
       }
 
       &_left-aligned {
@@ -248,7 +258,7 @@ export const StyledTable = styled.section`
     font-family: 'Roboto Mono', 'Courier New', monospace;
     font-weight: 500;
     font-size: 18px;
-    color: #3e7cf4;
+    color: #6830ff;
     text-decoration: none;
     outline: none;
     transition: color 0.2s;
@@ -267,11 +277,11 @@ export const StyledTable = styled.section`
 
     &:hover,
     &:focus {
-      color: #3b73df;
+      color: #4313c3;
     }
 
     &:active {
-      color: #3269d2;
+      color: #6830ff;
     }
   }
 
@@ -328,15 +338,15 @@ export const StyledTable = styled.section`
 
   .ant-table .ant-table-column {
     &_sorted {
-      color: #fff;
-      background-color: #1b283b;
+      color: #000;
+      background-color: #fcfcfc;
     }
   }
 
   .ant-table-row {
     &:last-of-type {
       td {
-        border-bottom: 2px solid #24354e;
+        border-bottom: 2px solid #ececec;
 
         @media ${mq[1280]} {
           border-bottom-width: 1px;
@@ -357,8 +367,8 @@ export const StyledTable = styled.section`
     display: -webkit-box;
     display: flex;
     align-items: center;
-    background: #192434;
-    border-top: 1px solid #192434;
+    background: #fff;
+    border-top: 1px solid #fff;
 
     @media ${mq[1440]} {
       height: 18px !important;
@@ -379,7 +389,7 @@ export const StyledTable = styled.section`
       left: 0;
       right: 0;
       height: 2px;
-      background-color: #24354e;
+      background-color: #ededed;
       transform: translateY(-100%);
 
       @media ${mq[1280]} {
@@ -390,12 +400,12 @@ export const StyledTable = styled.section`
 
   .ant-table-sticky-scroll-bar {
     height: 100%;
-    background-color: #243855;
-    border: 6px solid #192434;
+    background-color: #ededed;
+    border: 6px solid #fff;
     border-radius: 10px;
 
     @media ${mq[1280]} {
-      border: 5px solid #192434;
+      border: 5px solid #fff;
     }
   }
 `;

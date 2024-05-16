@@ -10,7 +10,7 @@ const StyledDocsLinks = styled.section`
     font-weight: 600;
     font-size: 16px;
     text-decoration-line: none;
-    color: #4d9fff;
+    color: #a8a8a8;
     transition: color 0.2s;
 
     @media (max-width: 1920px) {
@@ -27,7 +27,7 @@ const StyledDocsLinks = styled.section`
 
     &:hover,
     &:focus {
-      color: #3b73df;
+      color: #525252;
     }
 
     &:first-of-type {

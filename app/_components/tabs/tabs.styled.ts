@@ -6,9 +6,15 @@ export const Tabs = styled.section`
   position: relative;
   padding: 18px 16px 18px 28px;
   display: flex;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-  background-color: #1c2839;
+  border: 2px solid #ececec;
+  border-bottom: none;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: #fff;
+
+  @media ${mq[1280]} {
+    border-width: 1px;
+  }
 `;
 
 export const TabButtons = styled.section`
@@ -21,34 +27,32 @@ export const TabButtons = styled.section`
 `;
 
 export const TabButton = styled.div<{ $active: boolean }>`
-  padding: 7px 14px 8px;
+  padding: 7px 14px;
   font-size: 20px;
-  line-height: 1.14;
-  border-radius: 5px;
+  font-weight: 500;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 6px;
   transition: 0.2s;
 
   ${(p) =>
     p.$active
       ? css`
-          font-weight: bold;
-          color: #fff;
-          background-color: #f86342;
-          box-shadow: 0px 3px 16px rgba(248, 99, 66, 0.3);
+          background-color: #fce202;
+          box-shadow: 2px 3px 0px rgba(0, 0, 0, 1);
           pointer-events: none;
         `
       : css`
-          font-weight: 500;
-          color: #859ec3;
-          background-color: #243855;
+          background-color: #fff;
           cursor: pointer;
 
           &:hover,
           &:focus {
-            background-color: #203451;
+            box-shadow: 1px 2px 0px rgba(0, 0, 0, 1);
           }
 
           &:active {
-            background-color: #1a2f4d;
+            box-shadow: 0px 1px 0px rgba(0, 0, 0, 1);
           }
         `}
 

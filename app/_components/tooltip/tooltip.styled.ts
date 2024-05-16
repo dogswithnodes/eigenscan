@@ -6,16 +6,19 @@ import { mq } from '@/app/_utils/media-query.utils';
 export const StyledReactTooltip = styled(ReactTooltip)`
   max-width: 50vw;
 
+  .react-tooltip-arrow {
+    border-bottom: 1px solid #ececec;
+    border-right: 1px solid #ececec;
+  }
+
   &.tooltip {
     padding: 10px;
     font-weight: 500;
     font-size: 18px;
     line-height: 1.3;
-    color: #d9e4f4;
-    background-color: #273c5e;
-    box-shadow:
-      0px 2px 4px rgba(0, 0, 0, 0.05),
-      0px 1px 40px rgba(0, 0, 0, 0.1);
+    color: #000;
+    background-color: #fff;
+    border: 1px solid #ececec;
     border-radius: 6px;
     pointer-events: auto;
     z-index: 110;
@@ -40,7 +43,7 @@ export const StyledReactTooltip = styled(ReactTooltip)`
       &:before {
         width: 11px;
         height: 11px;
-        background-color: #273c5e;
+        background-color: #fff;
         border-top: none;
         border-left: none;
         border-right: none;

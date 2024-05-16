@@ -7,7 +7,6 @@ export const Wrapper = styled.footer`
   font-weight: 500;
   font-size: 18px;
   line-height: 1.33;
-  color: #fff;
 
   @media (max-width: 1920px) {
     font-size: 16px;
@@ -34,7 +33,7 @@ export const LeftSide = styled.div`
 `;
 
 export const Result = styled.span`
-  color: #859ec3;
+  color: #525252;
 `;
 
 export const DownloadButtonContainer = styled.div`

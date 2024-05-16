@@ -39,13 +39,13 @@ export const NavButton: React.FC<Props> = ({
     >
       {navigatePerPage ? (
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="0.5" y="0.500012" width="19" height="19" rx="9.5" stroke="#3B5170" />
+          <rect x="0.5" y="0.500012" width="19" height="19" rx="9.5" stroke="#000" />
           <line
             x1="8.06063"
             y1="10"
             x2="11"
             y2="12.9394"
-            stroke="#3B5170"
+            stroke="#000"
             strokeWidth="1.5"
             strokeLinecap="round"
           />
@@ -54,20 +54,20 @@ export const NavButton: React.FC<Props> = ({
             y1="7.06068"
             x2="8.06063"
             y2="10"
-            stroke="#3B5170"
+            stroke="#000"
             strokeWidth="1.5"
             strokeLinecap="round"
           />
         </svg>
       ) : (
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="0.5" y="0.5" width="17" height="17" rx="8.5" stroke="#3B5170" />
+          <rect x="0.5" y="0.5" width="17" height="17" rx="8.5" stroke="#000" />
           <line
             x1="9.06066"
             y1="9"
             x2="12"
             y2="11.9393"
-            stroke="#3B5170"
+            stroke="#000"
             strokeWidth="1.5"
             strokeLinecap="round"
           />
@@ -76,7 +76,7 @@ export const NavButton: React.FC<Props> = ({
             y1="6.06066"
             x2="9.06066"
             y2="9"
-            stroke="#3B5170"
+            stroke="#000"
             strokeWidth="1.5"
             strokeLinecap="round"
           />
@@ -85,7 +85,7 @@ export const NavButton: React.FC<Props> = ({
             y1="9"
             x2="8"
             y2="11.9393"
-            stroke="#3B5170"
+            stroke="#000"
             strokeWidth="1.5"
             strokeLinecap="round"
           />
@@ -94,7 +94,7 @@ export const NavButton: React.FC<Props> = ({
             y1="6.06066"
             x2="5.06066"
             y2="9"
-            stroke="#3B5170"
+            stroke="#000"
             strokeWidth="1.5"
             strokeLinecap="round"
           />

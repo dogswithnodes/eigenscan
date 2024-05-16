@@ -7,8 +7,7 @@ export const Container = styled(DetailsContainer)`
 `;
 
 export const ChartContainer = styled.section`
-  border: 2px solid #243855;
-  border-top: none;
+  border-left: 2px solid #ececec;
 
   @media (max-width: 1280px) {
     border-width: 1px;

@@ -8,6 +8,6 @@ export const Container = styled.div`
 
 export const Description = styled.span`
   line-height: 1.33;
-  color: #3b5170;
+  color: #525252;
   white-space: nowrap;
 `;

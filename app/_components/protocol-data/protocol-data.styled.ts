@@ -7,11 +7,13 @@ import { mq } from '@/app/_utils/media-query.utils';
 
 export const StyledProtocolData = styled.article`
   margin: 16px 0 21px;
-  background-color: #1c2839;
-  box-shadow:
-    0px 6px 6px rgba(0, 0, 0, 0.07),
-    0px 2px 2px rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
+  background-color: #fff;
+  border: 2px solid #ececec;
+  border-radius: 8px;
+
+  @media ${mq[1280]} {
+    border-width: 1px;
+  }
 
   .protocol-data-row {
     display: flex;
@@ -47,7 +49,7 @@ export const StyledProtocolData = styled.article`
     flex-grow: 1;
     font-size: 22px;
     font-weight: bold;
-    color: #d9e4f4;
+    color: #000000;
     cursor: default;
 
     @media ${mq[1920]} {
@@ -69,7 +71,7 @@ export const StyledProtocolData = styled.article`
       height: 20px;
       top: 50%;
       right: 0;
-      background-color: #243855;
+      background-color: #cccccc;
       transform: translateY(-50%);
       transition: background-color 0.5s;
 
@@ -96,7 +98,6 @@ export const StyledProtocolData = styled.article`
     margin-right: 14px;
     font-size: 18px;
     font-weight: 500;
-    color: #859ec3;
 
     @media ${mq[1920]} {
       margin-right: 12px;
@@ -115,6 +116,8 @@ export const StyledProtocolData = styled.article`
 
   .protocol-data-units {
     font-size: 16px;
+    font-weight: 500;
+    color: #525252;
 
     @media ${mq[1920]} {
       font-size: 14px;
@@ -132,8 +135,7 @@ export const StyledProtocolData = styled.article`
 
 export const Contracts = styled(Link)`
   font-size: 18px;
-  font-weight: 600;
-  color: #528eff;
+  font-weight: 500;
 
   @media ${mq[1920]} {
     font-size: 16px;

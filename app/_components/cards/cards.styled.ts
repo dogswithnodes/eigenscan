@@ -19,8 +19,13 @@ const cardsMinHeight = css`
 `;
 
 export const Card = styled.section`
-  background-color: #1a2637;
+  background-color: #fff;
+  border: 2px solid #ececec;
   border-radius: 6px;
+
+  @media (max-width: 1280px) {
+    border-width: 1px;
+  }
 `;
 
 export const Cards = styled.section`

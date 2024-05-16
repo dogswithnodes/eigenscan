@@ -2,6 +2,8 @@ import { useRef, ChangeEvent, KeyboardEvent } from 'react';
 
 import { Label, Input, Span } from './radio.styled';
 
+import { preventDefault } from '@/app/_utils/events.utils';
+
 type Props = {
   value: number;
   checked: boolean;
@@ -26,6 +28,7 @@ export const Radio: React.FC<Props> = ({ value, checked, onPerPageChange }) => {
         name="perpage"
         value={value}
         checked={checked}
+        onMouseDown={preventDefault}
       />
       <Span onKeyDown={handleKeyDown} tabIndex={0} $checked={checked}>
         {value}

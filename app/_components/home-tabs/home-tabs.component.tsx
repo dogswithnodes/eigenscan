@@ -39,7 +39,7 @@ export const HomeTabs: React.FC = () => {
     }
   }, [pathname, tab, replace]);
 
-  const isAVSs = tab === HOME_TABS.avss;
+  const isAVSs = !tab || tab === HOME_TABS.avss;
   const isOperators = tab === HOME_TABS.operators;
   const isStakers = tab === HOME_TABS.stakers;
   const isStrategies = tab === HOME_TABS.strategies;

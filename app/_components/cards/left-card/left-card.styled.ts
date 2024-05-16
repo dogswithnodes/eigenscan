@@ -60,10 +60,10 @@ export const ImageBox = styled.div`
 export const Name = styled.p`
   margin-top: 8px;
   width: 140px;
-  font-weight: 700;
+  font-weight: 500;
   font-size: 20px;
   line-height: 1.14;
-  color: #dae3ef;
+  color: #000;
   text-align: center;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -104,12 +104,11 @@ export const Title = styled.header`
 `;
 
 export const Heading = styled.h2<{ warning?: boolean }>`
-  margin-right: ${({ warning }) => (warning ? '0' : '12px')};
+  margin-right: 16px;
   max-width: 650px;
   font-weight: bold;
   font-size: 26px;
-  line-height: 1.15;
-  color: #dae3ef;
+  color: #000;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -137,7 +136,7 @@ export const Created = styled.p`
   font-weight: 500;
   font-size: 18px;
   line-height: 1;
-  color: #859ec3;
+  color: #525252;
 
   @media (max-width: 1920px) {
     font-size: 16px;

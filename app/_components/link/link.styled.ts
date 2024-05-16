@@ -1,7 +1,8 @@
 import { styled } from 'styled-components';
 
 export const Link = styled.a`
-  color: #3e7cf4;
+  color: #6830ff;
+  font-weight: 400;
   text-decoration: none;
   outline: none;
   cursor: pointer;
@@ -9,10 +10,10 @@ export const Link = styled.a`
 
   &:hover,
   &:focus {
-    color: #3b73df;
+    color: #4313c3;
   }
 
   &:active {
-    color: #3269d2;
+    color: #6830ff;
   }
 `;

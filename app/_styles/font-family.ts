@@ -7,4 +7,7 @@ export const fontFamily = {
   robotoMono: css`
     font-family: 'Roboto Mono', 'Courier New', monospace;
   `,
+  thunder: css`
+    font-family: 'Thunder', 'Arial', 'sans-serif';
+  `,
 };

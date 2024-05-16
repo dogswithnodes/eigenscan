@@ -1,4 +1,4 @@
-import { Wrapper, NavContainer, Span } from './pagination.styled';
+import { Wrapper, NavContainer, Count } from './pagination.styled';
 import { NavButton } from './nav-button/nav-button.component';
 import { Input } from './input/input.component';
 import { RadioGroup } from './radio-group/radio-group.component';
@@ -27,7 +27,7 @@ export const Pagination: React.FC = () => {
         {renderNavButton('previous', false)}
         {renderNavButton('previous', true)}
         <Input pagesCount={pagesCount} />
-        <Span>of {pagesCount}</Span>
+        <Count>of {pagesCount}</Count>
         {renderNavButton('next', true)}
         {renderNavButton('next', false)}
       </NavContainer>

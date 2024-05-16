@@ -1,10 +1,9 @@
-import styled from 'styled-components';
+import { css, styled } from 'styled-components';
 
 export const DetailsContainer = styled.article`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background-color: #192434;
-  border-top: 2px solid #243855;
+  border: 2px solid #ececec;
   overflow: hidden;
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
@@ -24,13 +23,13 @@ export const DetailsContainerWithPad = styled(DetailsContainer)`
 `;
 
 export const ContainerPad = styled.div`
-  background-color: #243855;
+  background-color: #ececec;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
 `;
 
 export const TablePad = styled.div`
-  background-color: #192434;
+  background-color: #fcfcfc;
 `;
 
 export const Table = styled.table`
@@ -39,7 +38,7 @@ export const Table = styled.table`
   border-collapse: collapse;
 `;
 
-const cellStyles = `
+const cellStyles = css`
   padding: 6px 28px;
   white-space: nowrap;
   cursor: default;
@@ -47,7 +46,7 @@ const cellStyles = `
 
 export const Tr = styled.tr`
   &:hover {
-    background-color: #243855;
+    background-color: #f6f6f6;
   }
 `;
 
@@ -57,7 +56,7 @@ export const Th = styled.th`
   font-size: 20px;
   display: flex;
   text-align: left;
-  color: #859ec3;
+  color: #525252;
 
   @media (max-width: 1920px) {
     font-size: 18px;
@@ -74,10 +73,10 @@ export const Th = styled.th`
 
 export const Td = styled.td`
   ${cellStyles}
-  font-weight: 600;
+  font-weight: bold;
   font-size: 20px;
   text-align: right;
-  color: #fff;
+  color: #000;
 
   @media (max-width: 1920px) {
     font-size: 18px;
@@ -92,24 +91,25 @@ export const Td = styled.td`
   }
 
   a {
-    color: #3e7cf4;
+    color: #6830ff;
     outline: none;
     transition: color 0.2s;
 
     &:hover,
     &:focus {
-      color: #3b73df;
+      color: #4313c3;
     }
 
     &:active {
-      color: #3269d2;
+      color: #6830ff;
     }
   }
 `;
 
 export const Postfix = styled.span`
   font-size: 18px;
-  color: #859ec3;
+  color: #000;
+  font-weight: 400;
 
   @media (max-width: 1920px) {
     font-size: 16px;
@@ -122,9 +122,4 @@ export const Postfix = styled.span`
   @media (max-width: 1280px) {
     font-size: 12px;
   }
-`;
-
-export const DetailsPreloader = styled.div`
-  background-color: #192434;
-  border-radius: 6px;
 `;

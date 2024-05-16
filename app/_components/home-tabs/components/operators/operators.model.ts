@@ -2,7 +2,13 @@
 import { ColumnType } from 'antd/es/table';
 
 import { formatTableDate } from '@/app/_utils/table.utils';
-import { renderAddressLink, renderDate, renderImage, renderImageGroup } from '@/app/_utils/render.utils';
+import {
+  renderAddressLink,
+  renderBigNumber,
+  renderDate,
+  renderImage,
+  renderImageGroup,
+} from '@/app/_utils/render.utils';
 
 export type OperatorsRow = {
   key: string;
@@ -26,10 +32,10 @@ const titles: Record<Exclude<keyof OperatorsRow, 'key'>, string> = {
 };
 
 export const columnsWidth = {
-  '2560': [62, 470, 219, 371, 371, 371, 201],
-  '1920': [56, 421, 192, 230, 170, 170, 201],
-  '1440': [52, 370, 168, 180, 165, 165, 180],
-  '1280': [48, 311, 150, 154, 175, 175, 171],
+  '2560': [62, 468, 219, 371, 371, 371, 201],
+  '1920': [56, 417, 192, 230, 170, 170, 201],
+  '1440': [52, 366, 168, 180, 165, 165, 180],
+  '1280': [48, 309, 150, 154, 175, 175, 171],
 };
 
 export const columns: Array<ColumnType<OperatorsRow>> = [
@@ -63,6 +69,7 @@ export const columns: Array<ColumnType<OperatorsRow>> = [
     title: titles.tvl,
     dataIndex: 'tvl',
     key: 'tvl',
+    render: renderBigNumber,
   },
   {
     title: titles.delegatorsCount,

@@ -11,6 +11,9 @@ export const Span = styled.span<{ $checked: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: 500;
+  color: #000;
+  border: 1px solid #000;
   border-radius: 4px;
   outline: none;
   transition: 0.2s;
@@ -19,24 +22,20 @@ export const Span = styled.span<{ $checked: boolean }>`
   ${(p) =>
     p.$checked
       ? css`
-          font-weight: 600;
-          color: #fff;
-          background-color: #3e7cf4;
-          box-shadow: 0px 2px 8px rgba(62, 124, 244, 0.3);
+          background-color: #fce202;
+          box-shadow: 0px 3px 0px rgba(0, 0, 0, 1);
           pointer-events: none;
         `
       : css`
-          font-weight: 500;
-          color: #859ec3;
-          background-color: #243855;
+          background-color: #fff;
 
           &:hover,
           &:focus {
-            background-color: #203451;
+            box-shadow: 0px 2px 0px rgba(0, 0, 0, 1);
           }
 
           &:active {
-            background-color: #1a2f4d;
+            box-shadow: 0px 1px 0px rgba(0, 0, 0, 1);
           }
         `}
 `;

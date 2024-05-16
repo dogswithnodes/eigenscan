@@ -7,20 +7,21 @@ export const StyledSearchInput = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color: #243855;
-  border-radius: 4px;
-  height: 34px;
+  background-color: #fcfcfc;
+  border: 1px solid #e1e1e1;
+  border-radius: 6px;
+  height: 38px;
 
   @media ${mq[1920]} {
-    height: 32px;
+    height: 36px;
   }
 
   @media ${mq[1440]} {
-    height: 30px;
+    height: 34px;
   }
 
   @media ${mq[1280]} {
-    height: 28px;
+    height: 32px;
   }
 
   .search-input-field {
@@ -30,14 +31,14 @@ export const StyledSearchInput = styled.div`
     height: 100%;
     font-weight: 600;
     line-height: 1;
-    color: #fff;
+    color: #525252;
     border: none;
     outline: none;
     background-color: transparent;
 
     &::placeholder {
       font-weight: 500;
-      color: #6a82a6;
+      color: #a0a0a0;
     }
   }
 

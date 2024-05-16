@@ -46,8 +46,8 @@ export const GlobalStyles = createGlobalStyle`
     ${fontFamily.montserrat}
     font-weight: normal;
     line-height: 1.2;
-    color: #fff;
-    background-color: #141d2b;
+    color: ##525252;
+    background-color: #fff;
 
     @media (min-width: 960px) {
       margin-right: calc(100% - 100vw);
@@ -79,12 +79,12 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   ::-webkit-scrollbar-track {
-    background: #192434;
+    background: #fff;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #243855;
-    border: 4px solid #192434;
+    background: #ededed;
+    border: 4px solid #fff;
     border-radius: 10px;
   }
 `;

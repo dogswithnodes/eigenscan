@@ -1,9 +1,8 @@
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-import { Copy, ExternalLink } from './account-buttons.icons';
-import { StyledAccountButtons } from './account-buttons.styled';
-
-import { AccountButton } from '../account-button/account-button.styled';
+import { StyledAccountButtons, AccountButton } from './account-buttons.styled';
+import copy from './images/copy.svg';
+import external from './images/external.svg';
 
 import { preventDefault } from '@/app/_utils/events.utils';
 import { GLOBAL_TOOLTIP_ID } from '@/app/_constants/tooltip.constants';
@@ -21,7 +20,7 @@ export const AccountButtons: React.FC<Props> = ({ id }) => {
           data-tooltip-content="Copy to clipboard"
           onMouseDown={preventDefault}
         >
-          <Copy />
+          <img src={copy.src} alt="" width={12} height={13} />
         </AccountButton>
       </CopyToClipboard>
       <a
@@ -32,7 +31,7 @@ export const AccountButtons: React.FC<Props> = ({ id }) => {
         tabIndex={-1}
       >
         <AccountButton onMouseDown={preventDefault}>
-          <ExternalLink />
+          <img src={external.src} alt="" width={9} height={10} />
         </AccountButton>
       </a>
     </StyledAccountButtons>

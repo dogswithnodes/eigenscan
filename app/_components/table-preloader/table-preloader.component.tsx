@@ -6,7 +6,6 @@ import { Footer } from '../footer/footer.component';
 import { Spinner } from '../spinner/spinner.component';
 
 const Preloader = styled(PreloaderBackground)`
-  background-color: #192434;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 `;

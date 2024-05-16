@@ -7,12 +7,16 @@ export const StyledSelect = styled(Select)`
       min-width: 175px;
       height: 40px;
       min-height: 34px;
-      background-color: #243855;
-      border: none;
+      background-color: #fce202;
+      border: 2px solid #000;
       border-radius: 4px;
       box-shadow: none;
       cursor: pointer;
       transition: none;
+
+      &:hover {
+        border: 2px solid #000;
+      }
 
       @media (max-width: 1920px) {
         min-width: 160px;
@@ -27,6 +31,7 @@ export const StyledSelect = styled(Select)`
       @media (max-width: 1280px) {
         min-width: 130px;
         height: 34px;
+        border-width: 1px;
       }
 
       &--menu-is-open {
@@ -49,7 +54,7 @@ export const StyledSelect = styled(Select)`
       font-weight: 500;
       font-size: 20px;
       line-height: 1;
-      color: #859ec3;
+      color: #000;
 
       @media (max-width: 1920px) {
         font-size: 18px;
@@ -68,7 +73,7 @@ export const StyledSelect = styled(Select)`
       font-weight: 600;
       font-size: 20px;
       line-height: 1.2;
-      color: #b7c8e2;
+      color: #000;
 
       @media (max-width: 1920px) {
         font-size: 18px;
@@ -88,18 +93,19 @@ export const StyledSelect = styled(Select)`
     }
 
     &__indicator {
-      color: #fff;
+      color: #000;
       transition: 0.2s;
 
       &:hover {
-        color: #fff;
+        color: #000;
       }
     }
 
     &__menu {
       margin: 0;
-      background-color: #243855;
-      border-top: 2px solid #3b5170;
+      background-color: #fff;
+      border: 2px solid #000;
+      border-top: none;
       border-radius: 4px;
       border-top-right-radius: 0;
       border-top-left-radius: 0;
@@ -119,12 +125,12 @@ export const StyledSelect = styled(Select)`
       }
 
       ::-webkit-scrollbar-track {
-        background: #1a2637;
+        background: #fff;
       }
 
       ::-webkit-scrollbar-thumb {
-        background: #243855;
-        border: 5px solid #1a2637;
+        background: #fff;
+        border: 5px solid #ededed;
         border-radius: 14px;
       }
     }
@@ -132,9 +138,10 @@ export const StyledSelect = styled(Select)`
     &__option {
       font-weight: 500;
       font-size: 20px;
-      line-height: 1;
-      color: #859ec3;
+      color: #525252;
+      font-weight: 400;
       background-color: transparent;
+      transition: 0.2s;
 
       cursor: pointer;
       white-space: nowrap;
@@ -152,8 +159,8 @@ export const StyledSelect = styled(Select)`
       }
 
       &:hover {
-        color: #b7c8e2;
-        background-color: #3b5170;
+        color: #000;
+        background-color: #f6f6f6;
       }
 
       &:last-of-type:hover {
@@ -162,7 +169,8 @@ export const StyledSelect = styled(Select)`
       }
 
       &--is-selected {
-        color: #b7c8e2;
+        color: #000;
+        font-weight: 500;
       }
     }
   }
