@@ -60,7 +60,7 @@ export const StrategyTabs: React.FC<Props> = ({
     <>
       <Tabs>
         <Fieldset role="presentation">
-          <Legend>AVS:</Legend>
+          <Legend>Strategy:</Legend>
           <TabButtons>
             <Link href={{ query: { id, tab: STRATEGY_TABS.details } }}>
               <TabButton $active={isDetails}>Details</TabButton>
