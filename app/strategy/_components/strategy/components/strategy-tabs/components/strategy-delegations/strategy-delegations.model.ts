@@ -1,10 +1,16 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
 
-import { renderAddressLink, renderDate, renderTransactionHash } from '@/app/_utils/render.utils';
+import {
+  renderAddressLink,
+  renderBigNumber,
+  renderDate,
+  renderTransactionHash,
+} from '@/app/_utils/render.utils';
 
 export type StrategyDelegation = {
   id: string;
+  shares: string;
   createdTimestamp: string;
   lastUpdatedTimestamp: string;
   lastUpdatedTransactionHash: string;
@@ -19,6 +25,7 @@ export type StrategyDelegation = {
 export type StrategyDelegationsRow = {
   key: string;
   operator: string;
+  shares: number;
   createdTimestamp: string;
   createdTransactionHash: string;
   lastUpdatedTimestamp: string;
@@ -27,6 +34,7 @@ export type StrategyDelegationsRow = {
 
 const titles: Record<Exclude<keyof StrategyDelegationsRow, 'key'>, string> = {
   operator: 'Operator',
+  shares: 'Shares',
   createdTimestamp: 'Created',
   createdTransactionHash: 'Create TX',
   lastUpdatedTimestamp: 'Updated',
@@ -34,10 +42,10 @@ const titles: Record<Exclude<keyof StrategyDelegationsRow, 'key'>, string> = {
 };
 
 export const columnsWidth = {
-  '2560': [344, 344, 344, 344, 344],
-  '1920': [240, 240, 240, 240, 240],
-  '1440': [213, 213, 213, 213, 213],
-  '1280': [197, 197, 197, 197, 197],
+  '2560': [344, 344, 344, 344, 344, 344],
+  '1920': [240, 240, 240, 240, 240, 240],
+  '1440': [213, 213, 213, 213, 213, 213],
+  '1280': [197, 197, 197, 197, 197, 197],
 };
 
 export const columns: Array<ColumnType<StrategyDelegationsRow>> = [
@@ -47,6 +55,12 @@ export const columns: Array<ColumnType<StrategyDelegationsRow>> = [
     key: 'operator',
     align: 'center',
     render: renderAddressLink('profile', 'operator-details'),
+  },
+  {
+    title: titles.shares,
+    dataIndex: 'shares',
+    key: 'shares',
+    render: renderBigNumber,
   },
   {
     title: titles.createdTimestamp,
@@ -79,15 +93,22 @@ export const columns: Array<ColumnType<StrategyDelegationsRow>> = [
 
 export const transformToRow = ({
   id,
+  shares,
   createdTimestamp,
   createdTransactionHash,
   lastUpdatedTimestamp,
   lastUpdatedTransactionHash,
   operatorStrategy: { operator },
-}: StrategyDelegation): StrategyDelegationsRow => {
+  balance,
+  strategyTotalShares,
+}: StrategyDelegation & {
+  balance: string;
+  strategyTotalShares: string;
+}): StrategyDelegationsRow => {
   return {
     key: id,
     operator: operator.id,
+    shares: (Number(shares) * Number(balance)) / (Number(strategyTotalShares) * 1e18),
     createdTimestamp,
     createdTransactionHash,
     lastUpdatedTimestamp,
@@ -97,12 +118,14 @@ export const transformToRow = ({
 
 export const transformToCsvRow = ({
   operator,
+  shares,
   createdTimestamp,
   createdTransactionHash,
   lastUpdatedTimestamp,
   lastUpdatedTransactionHash,
 }: StrategyDelegationsRow) => ({
   [titles.operator]: operator,
+  [titles.shares]: shares,
   [titles.createdTimestamp]: renderDate(createdTimestamp),
   [titles.createdTransactionHash]: createdTransactionHash,
   [titles.lastUpdatedTimestamp]: renderDate(lastUpdatedTimestamp),

@@ -27,6 +27,7 @@ const fetchStrategyDelegations = async (requestOptions: string) => {
           ${requestOptions}
         ) {
           id
+          shares
           createdTimestamp
           lastUpdatedTimestamp
           lastUpdatedTransactionHash
@@ -52,12 +53,11 @@ type FetchStrategyDelegationsParams = {
   sortParams: SortParams<StrategyDelegationsRow>;
 };
 
-export const useStrategyDelegations = ({
-  id,
-  currentPage,
-  perPage,
-  sortParams,
-}: FetchStrategyDelegationsParams) =>
+export const useStrategyDelegations = (
+  { id, currentPage, perPage, sortParams }: FetchStrategyDelegationsParams,
+  balance: string,
+  strategyTotalShares: string,
+) =>
   useQuery({
     queryKey: ['strategy-delegations', currentPage, perPage, sortParams],
     queryFn: async () => {
@@ -69,7 +69,7 @@ export const useStrategyDelegations = ({
         where: { strategy: ${JSON.stringify(id)} }
       `);
 
-      return delegations.map(transformToRow);
+      return delegations.map((stake) => transformToRow({ ...stake, balance, strategyTotalShares }));
     },
     placeholderData: (prev) => prev,
   });
@@ -77,6 +77,8 @@ export const useStrategyDelegations = ({
 const fetchAllStrategyDelegationsParallel = async (
   id: string,
   delegationsCount: number,
+  balance: string,
+  strategyTotalShares: string,
 ): Promise<Array<StrategyDelegationsRow>> => {
   const delegations = await fetchAllParallel(delegationsCount, async (skip: number) =>
     fetchStrategyDelegations(`
@@ -86,7 +88,7 @@ const fetchAllStrategyDelegationsParallel = async (
     `),
   );
 
-  return delegations.map(transformToRow);
+  return delegations.map((stake) => transformToRow({ ...stake, balance, strategyTotalShares }));
 };
 // TODO generic name
 const downloadStrategyDelegationsCsv = (
@@ -98,11 +100,13 @@ export const useStrategyDelegationsCsv = (
   id: string,
   delegationsCount: number,
   sortParams: SortParams<StrategyDelegationsRow>,
+  balance: string,
+  strategyTotalShares: string,
 ) => {
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['strategy-delegations-csv', id, sortParams],
     queryFn: async () => {
-      return fetchAllStrategyDelegationsParallel(id, delegationsCount);
+      return fetchAllStrategyDelegationsParallel(id, delegationsCount, balance, strategyTotalShares);
     },
     enabled: false,
   });

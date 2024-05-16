@@ -94,12 +94,17 @@ type StakerServer = {
       totalShares: string;
     };
   }>;
-  withdrawals: [
-    {
-      id: string;
-      queuedBlockTimestamp: string | null;
-    }?,
-  ];
+  withdrawals: Array<{
+    id: string;
+    queuedBlockTimestamp: string | null;
+    strategies: Array<{
+      share: string;
+      strategy: {
+        id: string;
+        totalShares: string;
+      };
+    }>;
+  }>;
 };
 
 type StakersResponse = {
@@ -128,12 +133,22 @@ const stakerFragment = gql`
       }
     }
     withdrawals(
-      first: 1, 
+      first: ${REQUEST_LIMIT},
       orderBy: queuedBlockTimestamp, 
       orderDirection: desc
     ) {
       id
       queuedBlockTimestamp
+      strategies(
+        first:${REQUEST_LIMIT}
+        where: {strategy_not: null, share_not: null}
+      ) {
+        share
+        strategy {
+          id
+          totalShares
+        }
+      }
     }
   }
 `;
@@ -178,12 +193,21 @@ const createStakersRow = (
     },
   );
 
+  const totalWithdrawalsEth = withdrawals.reduce((total, { strategies }) => {
+    strategies.forEach(({ share, strategy }) => {
+      total += (BigInt(share) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
+    });
+
+    return total;
+  }, BigInt(0));
+
   return {
     key: id,
     id,
     delegatedTo: delegator?.operator?.id || null,
     totalShares: Number(stakedEth) / 1e18,
     stakedEigen: Number(stakedEigen) / 1e18,
+    totalWithdrawalsShares: Number(totalWithdrawalsEth) / 1e18,
     lastDelegatedAt: stakes.at(0)?.lastUpdatedTimestamp || null,
     lastUndelegatedAt: withdrawals.at(0)?.queuedBlockTimestamp || null,
   };

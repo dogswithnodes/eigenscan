@@ -12,9 +12,16 @@ import { useTable } from '@/app/_utils/table.utils';
 type Props = {
   id: string;
   delegationsCount: number;
+  balance: string;
+  strategyTotalShares: string;
 };
 
-export const StrategyDelegations: React.FC<Props> = ({ id, delegationsCount }) => {
+export const StrategyDelegations: React.FC<Props> = ({
+  id,
+  delegationsCount,
+  balance,
+  strategyTotalShares,
+}) => {
   const {
     currentPage,
     perPage,
@@ -29,7 +36,7 @@ export const StrategyDelegations: React.FC<Props> = ({ id, delegationsCount }) =
   } = useTable<StrategyDelegationsRow>({
     tableName: 'strategy-stakes',
     sortParams: {
-      orderBy: 'lastUpdatedTimestamp',
+      orderBy: 'shares',
       orderDirection: 'desc',
     },
   });
@@ -43,14 +50,24 @@ export const StrategyDelegations: React.FC<Props> = ({ id, delegationsCount }) =
     error,
     isFetching,
     isPending,
-  } = useStrategyDelegations({
-    id,
-    currentPage,
-    perPage,
-    sortParams,
-  });
+  } = useStrategyDelegations(
+    {
+      id,
+      currentPage,
+      perPage,
+      sortParams,
+    },
+    balance,
+    strategyTotalShares,
+  );
 
-  const { isCsvLoading, handleCsvDownload } = useStrategyDelegationsCsv(id, delegationsCount, sortParams);
+  const { isCsvLoading, handleCsvDownload } = useStrategyDelegationsCsv(
+    id,
+    delegationsCount,
+    sortParams,
+    balance,
+    strategyTotalShares,
+  );
 
   const rows = useMemo(() => stakers ?? [], [stakers]);
 

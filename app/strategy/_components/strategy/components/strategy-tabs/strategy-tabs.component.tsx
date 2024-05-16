@@ -95,7 +95,14 @@ export const StrategyTabs: React.FC<Props> = ({
             strategyTotalShares={totalShares}
           />
         )}
-        {isDelegations && <StrategyDelegations id={id} delegationsCount={delegationsCount} />}
+        {isDelegations && (
+          <StrategyDelegations
+            id={id}
+            delegationsCount={delegationsCount}
+            balance={balance}
+            strategyTotalShares={totalShares}
+          />
+        )}
       </TabContent>
     </>
   );
