@@ -1,3 +1,7 @@
+import { useMemo } from 'react';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import ColorHash from 'color-hash';
+
 import { Container, ChartContainer } from './avs-details.styled';
 
 import { OperatorsQuorumWeights } from '../../avs-tabs.model';
@@ -30,7 +34,21 @@ export const AVSDetails: React.FC<Props> = ({
   minimalStake,
   blsApkRegistry,
   stakeRegistry,
+  weights,
 }) => {
+  const colorHash = new ColorHash();
+  const data = useMemo(
+    () =>
+      weights
+        ? Object.entries(weights)
+            .flatMap(([id, weight]) =>
+              id === 'totalWeight' ? [] : { name: id, value: Number((weight / 1e18).toFixed(1)) },
+            )
+            .sort((a, b) => b.value - a.value)
+        : null,
+    [weights],
+  );
+
   return (
     <>
       <Container>
@@ -140,7 +158,36 @@ export const AVSDetails: React.FC<Props> = ({
             </Tr>
           </tbody>
         </Table>
-        <ChartContainer></ChartContainer>
+        <ChartContainer>
+          {data && (
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart width={600} height={600}>
+                <Pie
+                  data={[
+                    ...data.slice(0, 10),
+                    data.slice(10).reduce<{ name: string; value: number }>(
+                      (others, { value }) => {
+                        others.value += value;
+                        return others;
+                      },
+                      { name: 'others', value: 0 },
+                    ),
+                  ]}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {data.map(({ name }, index) => {
+                    return <Cell key={`cell-${index}`} fill={colorHash.hex(name).toUpperCase()} />;
+                  })}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          )}
+        </ChartContainer>
       </Container>
       <Footer />
     </>

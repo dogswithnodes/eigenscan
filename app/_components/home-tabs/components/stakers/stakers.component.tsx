@@ -102,7 +102,7 @@ export const Stakers: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) => {
       sortingOptions={{
         sortParams,
         setSortParams,
-        unsortableKeys: ['delegatedTo', 'lastDelegatedAt', 'lastUndelegatedAt', 'stakedEigen'],
+        unsortableKeys: ['delegatedTo', 'lastDelegatedAt', 'lastUndelegatedAt'],
       }}
     />
   );

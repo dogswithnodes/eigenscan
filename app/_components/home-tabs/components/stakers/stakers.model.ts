@@ -8,7 +8,7 @@ export type StakersRow = {
   key: string;
   id: string;
   totalShares: number;
-  stakedEigen: number;
+  totalEigenShares: number;
   totalWithdrawalsShares: number;
   delegatedTo: string | null;
   lastDelegatedAt: string | null;
@@ -18,7 +18,7 @@ export type StakersRow = {
 const titles: Record<Exclude<keyof StakersRow, 'key'>, string> = {
   id: 'Staker',
   totalShares: 'Staked ETH',
-  stakedEigen: 'Staked Eigen',
+  totalEigenShares: 'Staked Eigen',
   totalWithdrawalsShares: 'Withdrawn ETH',
   delegatedTo: 'Delegated to',
   lastDelegatedAt: 'Last delegation',
@@ -47,9 +47,9 @@ export const columns: Array<ColumnType<StakersRow>> = [
     render: renderBigNumber,
   },
   {
-    title: titles.stakedEigen,
-    dataIndex: 'stakedEigen',
-    key: 'stakedEigen',
+    title: titles.totalEigenShares,
+    dataIndex: 'totalEigenShares',
+    key: 'totalEigenShares',
     render: renderBigNumber,
   },
   {
@@ -84,7 +84,7 @@ export const columns: Array<ColumnType<StakersRow>> = [
 export const transformToCsvRow = ({
   id,
   totalShares,
-  stakedEigen,
+  totalEigenShares,
   totalWithdrawalsShares,
   delegatedTo,
   lastDelegatedAt,
@@ -92,7 +92,7 @@ export const transformToCsvRow = ({
 }: StakersRow) => ({
   [titles.id]: id,
   [titles.totalShares]: totalShares,
-  [titles.stakedEigen]: stakedEigen,
+  [titles.totalEigenShares]: totalEigenShares,
   [titles.totalWithdrawalsShares]: totalWithdrawalsShares,
   [titles.delegatedTo]: delegatedTo,
   [titles.lastDelegatedAt]: lastDelegatedAt ? formatTableDate(lastDelegatedAt) : null,

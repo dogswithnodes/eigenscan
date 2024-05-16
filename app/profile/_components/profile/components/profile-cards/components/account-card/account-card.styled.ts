@@ -3,9 +3,9 @@ import { styled } from 'styled-components';
 export const HashImageContainer = styled.div<{ size: number }>`
   width: ${({ size }) => `${size + 10}px`};
   height: ${({ size }) => `${size + 10}px`};
-  background-color: #2b3e58;
+  background-color: rgba(lightgray, 0.5);
   border-radius: 50%;
-  border: 2px solid #3b5170;
+  border: 2px solid #ececec;
   overflow: hidden;
 
   @media (max-width: 1920px) {

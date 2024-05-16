@@ -206,7 +206,7 @@ const createStakersRow = (
     id,
     delegatedTo: delegator?.operator?.id || null,
     totalShares: Number(stakedEth) / 1e18,
-    stakedEigen: Number(stakedEigen) / 1e18,
+    totalEigenShares: Number(stakedEigen) / 1e18,
     totalWithdrawalsShares: Number(totalWithdrawalsEth) / 1e18,
     lastDelegatedAt: stakes.at(0)?.lastUpdatedTimestamp || null,
     lastUndelegatedAt: withdrawals.at(0)?.queuedBlockTimestamp || null,
