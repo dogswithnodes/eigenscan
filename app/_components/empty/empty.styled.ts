@@ -33,8 +33,7 @@ export const StyledEmpty = styled(Background)`
   .empty-description {
     font-weight: 500;
     font-size: 20px;
-    line-height: 1;
-    color: #859ec3;
+    color: #525252;
 
     @media ${mq[1920]} {
       font-size: 18px;

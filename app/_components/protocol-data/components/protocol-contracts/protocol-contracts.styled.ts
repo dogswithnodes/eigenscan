@@ -6,7 +6,7 @@ import { mq } from '@/app/_utils/media-query.utils';
 export const Table = styled.table`
   width: 100%;
   font-size: 20px;
-  color: #859ec3;
+  color: #525252;
   text-align: left;
   border-collapse: collapse;
 
@@ -24,7 +24,12 @@ export const Table = styled.table`
 `;
 
 export const Thead = styled.thead`
-  background-color: #1f2d40;
+  background-color: #fcfcfc;
+  border-bottom: 2px solid #ececec;
+
+  @media ${mq[1280]} {
+    border-width: 1px;
+  }
 `;
 
 export const Th = styled.th`
@@ -34,7 +39,7 @@ export const Th = styled.th`
 
 export const BodyRow = styled.tr`
   &:hover {
-    background-color: #1e314b;
+    background-color: #f6f6f6;
   }
 `;
 
@@ -52,6 +57,5 @@ export const Anchor = styled(Link)`
   margin-right: 16px;
   font-family: 'Roboto Mono', 'Courier New', monospace;
   font-weight: 500;
-  color: #387bca;
   text-decoration: none;
 `;

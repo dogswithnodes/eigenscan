@@ -1,5 +1,7 @@
 import { css, styled } from 'styled-components';
 
+import { fontFamily } from '@/app/_styles/font-family';
+
 export const DetailsContainer = styled.article`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -92,6 +94,7 @@ export const Td = styled.td`
 
   a {
     color: #6830ff;
+    font-weight: 500;
     outline: none;
     transition: color 0.2s;
 
@@ -103,6 +106,10 @@ export const Td = styled.td`
     &:active {
       color: #6830ff;
     }
+  }
+
+  a.monospaced {
+    ${fontFamily.robotoMono}
   }
 `;
 

@@ -71,6 +71,6 @@ export const renderTransactionHash = (value: string) => (
     data-tooltip-id={GLOBAL_TOOLTIP_ID}
     data-tooltip-content={value}
   >
-    {value}
+    {clampMiddle(value)}
   </a>
 );

@@ -3,10 +3,17 @@ export type StrategyServer = {
   name: string;
   totalShares: string;
   totalDelegated: string;
+  totalWithdrawing: string;
   tokenSymbol: string;
+  tokenDecimals: number;
+  underlyingToken: string | null;
   stakesCount: number;
   delegationsCount: number;
-  underlyingToken: string | null;
+  operatorsCount: number;
+  whitelisted: boolean;
+  withdrawals: Array<{
+    share: string;
+  }>;
 };
 
 export type Strategy = StrategyServer & {

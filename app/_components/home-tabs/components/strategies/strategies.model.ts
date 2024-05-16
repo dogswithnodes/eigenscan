@@ -10,7 +10,8 @@ export type StrategiesRow = {
   name: string;
   logo: string | null;
   tokenSymbol: string;
-  totalShares: number;
+  tvlEth: number;
+  balance: number;
   totalDelegated: number;
   stakesCount: number;
   delegationsCount: number;
@@ -21,20 +22,27 @@ const titles: Record<Exclude<keyof StrategiesRow, 'key'>, string> = {
   name: 'Name',
   logo: '',
   tokenSymbol: 'Symbol',
-  totalShares: 'Total Shares',
+  tvlEth: 'TVL ETH',
+  balance: 'Total staked',
   totalDelegated: 'Total Delegated',
   stakesCount: 'Total stakes',
   delegationsCount: 'Total delegations',
 };
 
 export const columnsWidth = {
-  '2560': [196, 347, 62, 292, 292, 292, 292, 292],
-  '1920': [172, 272, 56, 188, 188, 188, 188, 188],
-  '1440': [155, 253, 52, 164, 164, 164, 164, 164],
-  '1280': [136, 215, 48, 157, 157, 157, 157, 157],
+  '2560': [62, 196, 347, 292, 292, 292, 292, 292, 292],
+  '1920': [56, 172, 272, 188, 188, 188, 188, 188, 188],
+  '1440': [52, 155, 253, 164, 164, 164, 164, 164, 164],
+  '1280': [48, 136, 215, 157, 157, 157, 157, 157, 157],
 };
 
 export const columns: Array<ColumnType<StrategiesRow>> = [
+  {
+    title: titles.logo,
+    dataIndex: 'logo',
+    key: 'logo',
+    render: renderImage,
+  },
   {
     title: titles.id,
     dataIndex: 'id',
@@ -49,21 +57,21 @@ export const columns: Array<ColumnType<StrategiesRow>> = [
     onCell: () => ({ className: 'ant-table-cell_left-aligned' }),
   },
   {
-    title: titles.logo,
-    dataIndex: 'logo',
-    key: 'logo',
-    render: renderImage,
-  },
-  {
     title: titles.tokenSymbol,
     dataIndex: 'tokenSymbol',
     key: 'tokenSymbol',
     align: 'center',
   },
   {
-    title: titles.totalShares,
-    dataIndex: 'totalShares',
-    key: 'totalShares',
+    title: titles.balance,
+    dataIndex: 'balance',
+    key: 'balance',
+    render: renderBigNumber,
+  },
+  {
+    title: titles.tvlEth,
+    dataIndex: 'tvlEth',
+    key: 'tvlEth',
     render: renderBigNumber,
   },
 
@@ -93,6 +101,7 @@ export const transformToRow = ({
   totalDelegated,
   stakesCount,
   delegationsCount,
+  balance,
   logo,
 }: Strategy): StrategiesRow => {
   return {
@@ -101,7 +110,8 @@ export const transformToRow = ({
     name,
     logo: logo || null,
     tokenSymbol,
-    totalShares: Number(BigInt(tvl) / BigInt(1e18)),
+    balance: Number(BigInt(balance) / BigInt(1e18)),
+    tvlEth: Number(BigInt(tvl) / BigInt(1e18)),
     totalDelegated: Number(BigInt(totalDelegated) / BigInt(1e18)),
     stakesCount,
     delegationsCount,
@@ -112,7 +122,7 @@ export const transformToCsvRow = ({
   id,
   name,
   tokenSymbol,
-  totalShares,
+  tvlEth,
   totalDelegated,
   stakesCount,
   delegationsCount,
@@ -120,7 +130,7 @@ export const transformToCsvRow = ({
   [titles.id]: id,
   [titles.name]: name,
   [titles.tokenSymbol]: tokenSymbol,
-  [titles.totalShares]: totalShares,
+  [titles.tvlEth]: tvlEth,
   [titles.totalDelegated]: totalDelegated,
   [titles.stakesCount]: stakesCount,
   [titles.delegationsCount]: delegationsCount,

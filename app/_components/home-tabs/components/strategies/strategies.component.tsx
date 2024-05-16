@@ -29,7 +29,7 @@ export const Strategies: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) =>
   } = useTable<StrategiesRow>({
     tableName: 'strategies',
     sortParams: {
-      orderBy: 'totalShares',
+      orderBy: 'tvlEth',
       orderDirection: 'desc',
     },
   });

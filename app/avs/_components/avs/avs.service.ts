@@ -15,6 +15,8 @@ type AVSResponse = {
     actions: Array<AVSAction>;
     quorums: Array<Quorum>;
     registrations: Array<AVSOperator>;
+    stakeRegistry: { id: string } | null;
+    blsApkRegistry: { id: string } | null;
   };
 };
 
@@ -42,6 +44,7 @@ export const useAVS = (id: string) => {
               first: ${REQUEST_LIMIT}
               where: {multipliersCount_gt: 0}
             ) {
+              minimalStake
               multipliers(
                 first: ${REQUEST_LIMIT},
               ) {
@@ -53,6 +56,7 @@ export const useAVS = (id: string) => {
               operators(
                 first: ${REQUEST_LIMIT}
               ) {
+                totalWeight
                 operator {
                   id
                   metadataURI
@@ -89,6 +93,12 @@ export const useAVS = (id: string) => {
                 }
               }
               }
+            }
+            blsApkRegistry {
+              id
+            }
+            stakeRegistry {
+              id
             }
           }
         }

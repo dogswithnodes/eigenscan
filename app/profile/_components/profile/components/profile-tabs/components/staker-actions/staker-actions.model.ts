@@ -10,7 +10,7 @@ export type StakerActionsRow = BaseActionsRow;
 
 const titles: Record<Exclude<keyof BaseActionsRow, 'key'>, string> = {
   blockNumber: 'Block Number',
-  blockTimestamp: 'Block timestamp',
+  blockTimestamp: 'Date time',
   type: 'Type',
   transactionHash: 'Transaction hash',
 };
@@ -24,17 +24,17 @@ export const columnsWidth = {
 
 export const columns: Array<ColumnType<BaseActionsRow>> = [
   {
-    title: titles.blockNumber,
-    dataIndex: 'blockNumber',
-    key: 'blockNumber',
-    align: 'center',
-  },
-  {
     title: titles.blockTimestamp,
     dataIndex: 'blockTimestamp',
     key: 'blockTimestamp',
     align: 'center',
     render: renderDate,
+  },
+  {
+    title: titles.blockNumber,
+    dataIndex: 'blockNumber',
+    key: 'blockNumber',
+    align: 'center',
   },
   {
     title: titles.type,
@@ -46,6 +46,7 @@ export const columns: Array<ColumnType<BaseActionsRow>> = [
     title: titles.transactionHash,
     dataIndex: 'transactionHash',
     key: 'transactionHash',
+    align: 'center',
     onCell: () => ({ className: 'ant-table-cell_with-link' }),
     render: renderTransactionHash,
   },

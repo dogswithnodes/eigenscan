@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-import { Fieldset, Legend, TabsHeaderContent } from './avs-tabs.styled';
+import { TabsHeaderContent } from './avs-tabs.styled';
 import { OperatorsQuorumWeights } from './avs-tabs.model';
 import { Select } from './components/select/select.component';
 import { AVSDetails, Props as AVSDetailsProps } from './components/avs-details/avs-details.component';
@@ -12,7 +12,14 @@ import { AVSActions } from './components/avs-actions/avs-actions.component';
 import { AVSAction, AVSOperator, Quorum } from '../../avs.model';
 import { calculateAVSTVLS } from '../../avs.utils';
 
-import { Tabs, TabButton, TabContent, TabButtons } from '@/app/_components/tabs/tabs.styled';
+import {
+  Tabs,
+  TabButton,
+  TabContent,
+  TabButtons,
+  Fieldset,
+  Legend,
+} from '@/app/_components/tabs/tabs.styled';
 import { Strategy } from '@/app/_models/strategies.model';
 import { createStrategyToTvlMap } from '@/app/_utils/strategies.utils';
 
@@ -25,7 +32,7 @@ const AVS_TABS = {
 type Props = {
   id: string;
   tab: string | undefined;
-  avsDetails: Omit<AVSDetailsProps, 'ethTvl' | 'eigenTvl' | 'weights'>;
+  avsDetails: Omit<AVSDetailsProps, 'ethTvl' | 'eigenTvl' | 'weights' | 'minimalStake'>;
   quorums: Array<Quorum>;
   strategies: Array<Strategy>;
   registrations: Array<AVSOperator>;
@@ -64,46 +71,25 @@ export const AVSTabs: React.FC<Props> = ({
 
   const selectedQuorums = useMemo(() => quorums.filter((q) => q.quorum === quorum), [quorum, quorums]);
 
-  const selectedActions = useMemo(
-    () => actions.filter(({ quorumNumber }) => quorumNumber === quorum),
-    [actions, quorum],
-  );
-
   const { ethTvl, eigenTvl } = useMemo(
     () => calculateAVSTVLS(selectedQuorums, registrations, strategyToTvl),
     [registrations, selectedQuorums, strategyToTvl],
   );
 
-  const strategyToMultiply = useMemo(
-    () =>
-      selectedQuorums.at(0)?.multipliers.reduce<Record<string, string>>((map, { multiply, strategy }) => {
-        map[strategy.id] = multiply;
-        return map;
-      }, {}),
-    [selectedQuorums],
-  );
-
   const operatorsQuorumWeights = useMemo(
     () =>
-      strategyToMultiply
-        ? selectedQuorums.at(0)?.operators.reduce<OperatorsQuorumWeights>(
-            (weights, { operator }) => {
-              operator.strategies.forEach(({ totalShares, strategy }) => {
-                if (strategy.id in strategyToMultiply) {
-                  const weight = Number(totalShares) * Number(strategyToMultiply[strategy.id]);
-                  weights[operator.id] ??= 0;
-                  weights[operator.id] += weight;
-                  weights.totalWeight += weight;
-                }
-              });
-              return weights;
-            },
-            {
-              totalWeight: 0,
-            },
-          ) ?? null
-        : null,
-    [selectedQuorums, strategyToMultiply],
+      selectedQuorums.at(0)?.operators.reduce<OperatorsQuorumWeights>(
+        (weights, { operator, totalWeight }) => {
+          const weight = Number(totalWeight);
+          weights[operator.id] ??= 0;
+          weights[operator.id] += weight;
+          weights.totalWeight += weight;
+
+          return weights;
+        },
+        { totalWeight: 0 },
+      ) ?? null,
+    [selectedQuorums],
   );
 
   return (
@@ -141,7 +127,13 @@ export const AVSTabs: React.FC<Props> = ({
       </Tabs>
       <TabContent $footerPressedToBottom={isDetails}>
         {isDetails && (
-          <AVSDetails {...avsDetails} eigenTvl={eigenTvl} ethTvl={ethTvl} weights={operatorsQuorumWeights} />
+          <AVSDetails
+            {...avsDetails}
+            minimalStake={selectedQuorums.length > 0 ? Number(selectedQuorums[0].minimalStake) / 1e18 : null}
+            eigenTvl={eigenTvl}
+            ethTvl={ethTvl}
+            weights={operatorsQuorumWeights}
+          />
         )}
         {isOperators && (
           <AVSOperators
@@ -154,7 +146,7 @@ export const AVSTabs: React.FC<Props> = ({
             strategyToTvl={strategyToTvl}
           />
         )}
-        {isActions && <AVSActions actions={selectedActions} />}
+        {isActions && <AVSActions actions={actions} />}
       </TabContent>
     </>
   );

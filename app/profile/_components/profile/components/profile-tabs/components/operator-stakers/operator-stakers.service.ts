@@ -19,7 +19,7 @@ import { StrategyToTvlMap } from '@/app/_utils/strategies.utils';
 type StakersResponse = {
   delegators: Array<OperatorStakerServer>;
 };
-
+// TODO remove fragments
 const operatorStakerFragment = gql`
   fragment OperatorStakerFragment on Delegator {
     id

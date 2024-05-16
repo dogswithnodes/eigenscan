@@ -11,6 +11,7 @@ import {
 import { Footer } from '@/app/_components/footer/footer.component';
 import { GLOBAL_TOOLTIP_ID } from '@/app/_constants/tooltip.constants';
 import { formatNumber, formatOptionalTooltipNumber } from '@/app/_utils/number.utils';
+import { renderAddressLink } from '@/app/_utils/render.utils';
 
 export type Props = {
   operator: string | undefined;
@@ -80,7 +81,7 @@ export const StakerDetails: React.FC<Props> = ({
               <tbody>
                 <Tr>
                   <Th>Operator</Th>
-                  <Td>{operator}</Td>
+                  <Td>{renderAddressLink('profile', 'operator-details')(operator ?? null)}</Td>
                 </Tr>
                 <Tr>
                   <Th>Stakes count</Th>

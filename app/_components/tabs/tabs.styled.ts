@@ -77,3 +77,45 @@ export const TabContent = styled.article<{ $footerPressedToBottom?: boolean }>`
   width: 100%;
   height: 100%;
 `;
+
+export const Fieldset = styled.fieldset`
+  margin: 0 0 0 52px;
+  padding: 25px 0 5px;
+  width: 100%;
+  border: none;
+
+  @media (max-width: 1920px) {
+    padding: 20px 0 5px;
+  }
+
+  @media (max-width: 1440px) {
+    padding: 15px 0 5px;
+  }
+
+  @media (max-width: 1280px) {
+    padding: 10px 0 5px;
+  }
+
+  &:first-of-type {
+    margin-left: 0;
+  }
+`;
+
+export const Legend = styled.legend`
+  font-weight: 600;
+  font-size: 20px;
+  color: #525252;
+  white-space: nowrap;
+
+  @media (max-width: 1920px) {
+    font-size: 18px;
+  }
+
+  @media (max-width: 1440px) {
+    font-size: 16px;
+  }
+
+  @media (max-width: 1280px) {
+    font-size: 14px;
+  }
+`;

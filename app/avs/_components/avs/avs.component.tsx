@@ -44,6 +44,8 @@ export const AVS: React.FC<Props> = ({ id, tab }) => {
     registrations,
     quorums,
     actions,
+    blsApkRegistry,
+    stakeRegistry,
   } = avs.data;
 
   return (
@@ -56,6 +58,8 @@ export const AVS: React.FC<Props> = ({ id, tab }) => {
           registrationsCount,
           website,
           twitter,
+          blsApkRegistry: blsApkRegistry?.id,
+          stakeRegistry: stakeRegistry?.id,
         }}
         quorums={quorums}
         strategies={strategies.data}

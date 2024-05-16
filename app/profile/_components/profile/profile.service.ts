@@ -112,7 +112,7 @@ export const useAccount = (id: string) => {
               ) {
                 strategies(
                   first:${REQUEST_LIMIT}
-                  where: {strategy_not: null}
+                  where: {strategy_not: null, share_not: null}
                 ) {
                   share
                   strategy {

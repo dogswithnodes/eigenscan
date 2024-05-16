@@ -13,6 +13,7 @@ export const useAVSOperators = (
   return useQuery({
     queryKey: ['avs-operators', JSON.stringify(operators)],
     queryFn: async () => {
+      // TODO generic batch
       const metadata = await Promise.all(
         operators.map(({ operator: { metadataURI } }) =>
           metadataURI

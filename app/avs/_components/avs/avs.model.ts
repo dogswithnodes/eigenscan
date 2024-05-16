@@ -15,6 +15,7 @@ export type AVSOperator = {
 };
 
 export type Quorum = {
+  minimalStake: string;
   quorum: number;
   multipliers: Array<{
     multiply: string;
@@ -22,7 +23,11 @@ export type Quorum = {
       id: string;
     };
   }>;
-  operators: Array<AVSOperator>;
+  operators: Array<
+    AVSOperator & {
+      totalWeight: string;
+    }
+  >;
   operatorsCount: number;
 };
 

@@ -25,10 +25,20 @@ export const fetchStrategiesWithTvl = async (): Promise<Array<Strategy>> => {
         name
         totalShares
         totalDelegated
+        totalWithdrawing
         tokenSymbol
         stakesCount
         delegationsCount
         underlyingToken
+        whitelisted
+        tokenDecimals
+        operatorsCount
+        withdrawals(
+          first: ${REQUEST_LIMIT}
+          where: {share_not: null, strategy_not: null}
+        ) {
+          share
+        }
       }
     }
   `);

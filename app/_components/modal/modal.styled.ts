@@ -43,12 +43,8 @@ export const StyledModal = styled.div<{ $animationDuration: number }>`
     display: flex;
     flex-direction: column;
     max-height: calc(100vh - 40px);
-    background-color: #1a2637;
-    box-shadow:
-      0px 6px 6px rgba(0, 0, 0, 0.05),
-      0px 2px 2px rgba(0, 0, 0, 0.08),
-      inset 0px 1px 1px #253450;
-    border-radius: 6px;
+    background-color: #fff;
+    border-radius: 8px;
     overflow: hidden;
   }
 
@@ -69,8 +65,7 @@ export const StyledModal = styled.div<{ $animationDuration: number }>`
     text-align: center;
     font-weight: 600;
     font-size: 24px;
-    line-height: 1;
-    color: #95b0d9;
+    color: #000;
 
     @media ${mq[1920]} {
       font-size: 22px;
@@ -87,11 +82,12 @@ export const StyledModal = styled.div<{ $animationDuration: number }>`
 
   hr.modal-line {
     margin: 0;
-    border-color: transparent;
-    border-top: 2px solid #304462;
+    border: none;
+    height: 2px;
+    background: #ececec;
 
     @media ${mq[1280]} {
-      border-width: 1px;
+      height: 1px;
     }
   }
 
@@ -107,13 +103,24 @@ export const StyledModal = styled.div<{ $animationDuration: number }>`
     }
 
     ::-webkit-scrollbar-track {
-      background: #1a2637;
+      background: #fff;
     }
 
     ::-webkit-scrollbar-thumb {
-      background: #243855;
-      border: 5px solid #1a2637;
+      background: #ededed;
+      border: 5px solid #fff;
       border-radius: 14px;
     }
   }
+`;
+
+export const CloseButton = styled.button`
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
 `;

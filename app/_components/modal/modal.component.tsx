@@ -1,12 +1,11 @@
 import { useEffect, useState, MouseEvent, ReactNode } from 'react';
 
-import { StyledModal } from './modal.styled';
+import { StyledModal, CloseButton } from './modal.styled';
 import { Portal } from './components/portal/portal.component';
-
-import { CloseButton } from '../close-button/close-button.styled';
 
 import { useBodyScrollLock } from '@/app/_utils/body-scroll-lock.utils';
 import { ChildrenProp } from '@/app/_models/children-prop.model';
+import close from '@/app/_assets/images/close.svg';
 
 const ANIMATION_DURATION = 250;
 
@@ -74,33 +73,7 @@ export const Modal: React.FC<Props> = ({ isVisible, title, onCancel, children, .
           <article className="modal-window">
             <div className="modal-close-button-box">
               <CloseButton onClick={onCancel}>
-                <svg
-                  width="14"
-                  height="13"
-                  viewBox="0 0 14 13"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line
-                    x1="12"
-                    y1="1.41421"
-                    x2="2.41421"
-                    y2="11"
-                    stroke="#95B0D9"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                  <line
-                    x1="1"
-                    y1="-1"
-                    x2="14.5563"
-                    y2="-1"
-                    transform="matrix(0.707107 0.707107 0.707107 -0.707107 2.27725 0)"
-                    stroke="#95B0D9"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <img src={close.src} alt="close" width={14} height={13} />
               </CloseButton>
             </div>
             <header className="modal-header">

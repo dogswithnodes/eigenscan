@@ -2,7 +2,6 @@ import { useEffect, useMemo } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-import { Fieldset, Legend } from './profile-tabs.styled';
 import {
   OperatorDetails,
   Props as OperatorDetailsProps,
@@ -18,7 +17,14 @@ import { StakerActions } from './components/staker-actions/staker-actions.compon
 
 import { OperatorAction, StakerStaker, StakerAction } from '../../profile.model';
 
-import { Tabs, TabButton, TabContent, TabButtons } from '@/app/_components/tabs/tabs.styled';
+import {
+  Tabs,
+  TabButton,
+  TabContent,
+  TabButtons,
+  Fieldset,
+  Legend,
+} from '@/app/_components/tabs/tabs.styled';
 import { Footer } from '@/app/_components/footer/footer.component';
 import { Strategy } from '@/app/_models/strategies.model';
 import { createStrategyToTvlMap } from '@/app/_utils/strategies.utils';
