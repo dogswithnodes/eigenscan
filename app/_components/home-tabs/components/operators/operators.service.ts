@@ -102,43 +102,36 @@ type OperatorsResponse = {
   operators: Array<OperatorServer>;
 };
 
-const operatorFragment = gql`
-  fragment OperatorFragment on Operator {
-    id
-    delegatorsCount
-    registered
-    metadataURI
-    strategies(
-      first: ${REQUEST_LIMIT}
-      where: {strategy_not: null, totalShares_gt: "0"}
-    ) {
-      totalShares
-      strategy {
-        id
-        totalShares
-      }
-    }
-    avsStatuses(
-      first: ${REQUEST_LIMIT}
-      where: {status: 1}
-    ) {
-      avs {
-        id
-        metadataURI
-      }
-    }
-  }
-`;
-
 const _fetchOperators = async (requestOptions: string) => {
   const { operators } = await request<OperatorsResponse>(
     gql`
-      ${operatorFragment}
       query {
         operators(
           ${requestOptions}
         ) {
-          ...OperatorFragment
+          id
+          delegatorsCount
+          registered
+          metadataURI
+          strategies(
+            first: ${REQUEST_LIMIT}
+            where: {strategy_not: null, totalShares_gt: "0"}
+          ) {
+            totalShares
+            strategy {
+              id
+              totalShares
+            }
+          }
+          avsStatuses(
+            first: ${REQUEST_LIMIT}
+            where: {status: 1}
+          ) {
+            avs {
+              id
+              metadataURI
+            }
+          }
         }
       }
     `,

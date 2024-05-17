@@ -19,33 +19,26 @@ import { StrategyToTvlMap } from '@/app/_utils/strategies.utils';
 type StakersResponse = {
   delegators: Array<OperatorStakerServer>;
 };
-// TODO remove fragments
-const operatorStakerFragment = gql`
-  fragment OperatorStakerFragment on Delegator {
-    id
-    delegations(
-      first: ${REQUEST_LIMIT},
-    ) {
-      shares
-      strategy {
-        id
-        totalShares
-      }
-    }
-    delegatedAt
-    undelegatedAt
-  }
-`;
 
 const fetchOperatorStakers = async (requestOptions: string) => {
   const { delegators } = await request<StakersResponse>(
     gql`
-      ${operatorStakerFragment}
       query {
         delegators(
           ${requestOptions}
         ) {
-          ...OperatorStakerFragment
+          id
+          delegations(
+            first: ${REQUEST_LIMIT},
+          ) {
+            shares
+            strategy {
+              id
+              totalShares
+            }
+          }
+          delegatedAt
+          undelegatedAt
         }
       }
     `,

@@ -24,10 +24,10 @@ const titles: Record<Exclude<keyof AvsOperatorsRow, 'key' | 'quorumTotalShares'>
 };
 
 export const columnsWidth = {
-  '2560': [62, 292, 292, 292, 292],
-  '1920': [56, 188, 188, 188, 188],
-  '1440': [52, 164, 164, 164, 164],
-  '1280': [48, 157, 157, 157, 157],
+  '2560': [65, 499, 499, 499, 499],
+  '1920': [56, 345, 345, 345, 345],
+  '1440': [52, 306, 306, 306, 306],
+  '1280': [50, 283, 283, 283, 283],
 };
 
 export const columns: Array<ColumnType<AvsOperatorsRow>> = [

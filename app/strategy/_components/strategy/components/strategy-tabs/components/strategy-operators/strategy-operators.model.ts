@@ -30,10 +30,10 @@ const titles: Record<Exclude<keyof StrategyOperatorsRow, 'key'>, string> = {
 };
 
 export const columnsWidth = {
-  '2560': [62, 344, 344, 344, 344, 344],
-  '1920': [56, 240, 240, 240, 240, 240],
-  '1440': [52, 213, 213, 213, 213, 213],
-  '1280': [48, 197, 197, 197, 197, 197],
+  '2560': [65, 499, 499, 499, 499, 499],
+  '1920': [56, 345, 345, 345, 345, 345],
+  '1440': [52, 306, 306, 306, 306, 306],
+  '1280': [48, 283, 283, 283, 283, 283],
 };
 
 export const columns: Array<ColumnType<StrategyOperatorsRow>> = [

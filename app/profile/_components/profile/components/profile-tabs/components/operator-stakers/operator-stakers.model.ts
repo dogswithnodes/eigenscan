@@ -37,10 +37,10 @@ const titles: Record<Exclude<keyof OperatorStakersRow, 'key'>, string> = {
 };
 
 export const columnsWidth = {
-  '2560': [344, 344, 344, 344, 344],
-  '1920': [240, 240, 240, 240, 240],
-  '1440': [213, 213, 213, 213, 213],
-  '1280': [197, 197, 197, 197, 197],
+  '2560': [413, 412, 412, 412, 412],
+  '1920': [288, 287, 287, 287, 287],
+  '1440': [256, 255, 255, 255, 255],
+  '1280': [237, 237, 236, 236, 236],
 };
 
 export const columns: Array<ColumnType<OperatorStakersRow>> = [

@@ -48,7 +48,7 @@ export const TabButton = styled.div<{ $active: boolean }>`
 
           &:hover,
           &:focus {
-            box-shadow: 1px 2px 0px rgba(0, 0, 0, 1);
+            box-shadow: 2px 3px 0px rgba(0, 0, 0, 1);
           }
 
           &:active {
