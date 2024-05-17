@@ -16,10 +16,10 @@ const titles: Record<Exclude<keyof BaseActionsRow, 'key'>, string> = {
 };
 
 export const columnsWidth = {
-  '2560': [292, 292, 292, 292],
-  '1920': [188, 188, 188, 188],
-  '1440': [164, 164, 164, 164],
-  '1280': [157, 157, 157, 157],
+  '2560': [516, 515, 515, 515],
+  '1920': [359, 359, 359, 359],
+  '1440': [319, 319, 319, 319],
+  '1280': [296, 296, 295, 295],
 };
 
 export const columns: Array<ColumnType<BaseActionsRow>> = [

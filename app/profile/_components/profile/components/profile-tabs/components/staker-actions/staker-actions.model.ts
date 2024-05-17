@@ -16,10 +16,10 @@ const titles: Record<Exclude<keyof BaseActionsRow, 'key'>, string> = {
 };
 
 export const columnsWidth = {
-  '2560': [292, 292, 292, 292],
-  '1920': [188, 188, 188, 188],
-  '1440': [164, 164, 164, 164],
-  '1280': [157, 157, 157, 157],
+  '2560': [516, 515, 515, 515],
+  '1920': [359, 359, 359, 359],
+  '1440': [319, 319, 319, 319],
+  '1280': [296, 296, 295, 295],
 };
 
 export const columns: Array<ColumnType<BaseActionsRow>> = [
@@ -29,18 +29,21 @@ export const columns: Array<ColumnType<BaseActionsRow>> = [
     key: 'blockTimestamp',
     align: 'center',
     render: renderDate,
+    width: '25%',
   },
   {
     title: titles.blockNumber,
     dataIndex: 'blockNumber',
     key: 'blockNumber',
     align: 'center',
+    width: '25%',
   },
   {
     title: titles.type,
     dataIndex: 'type',
     key: 'type',
     align: 'center',
+    width: '25%',
   },
   {
     title: titles.transactionHash,
@@ -49,6 +52,7 @@ export const columns: Array<ColumnType<BaseActionsRow>> = [
     align: 'center',
     onCell: () => ({ className: 'ant-table-cell_with-link' }),
     render: renderTransactionHash,
+    width: '25%',
   },
 ];
 

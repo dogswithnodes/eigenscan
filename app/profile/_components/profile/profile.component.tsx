@@ -40,23 +40,15 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
     if (account.data?.staker && strategyToTvl) {
       const { staker } = account.data;
 
-      const { stakedEth, stakedEigen } = staker.stakes.reduce(
-        (totals, { shares, strategy }) => {
-          const strategyTvl =
-            (BigInt(shares) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
-          if (strategy.id !== EIGEN_STRATEGY) {
-            totals.stakedEth += strategyTvl;
-          } else {
-            totals.stakedEigen += strategyTvl;
-          }
+      const stakedEth = staker.stakes.reduce((acc, { shares, strategy }) => {
+        const strategyTvl =
+          (BigInt(shares) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
+        if (strategy.id !== EIGEN_STRATEGY) {
+          acc += strategyTvl;
+        }
 
-          return totals;
-        },
-        {
-          stakedEth: BigInt(0),
-          stakedEigen: BigInt(0),
-        },
-      );
+        return acc;
+      }, BigInt(0));
 
       const totalWithdrawalsEth = staker.withdrawals.reduce((total, { strategies }) => {
         strategies.forEach(({ share, strategy }) => {
@@ -68,7 +60,6 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
 
       return {
         stakedEth: Number(stakedEth) / 1e18,
-        stakedEigen: Number(stakedEigen) / 1e18,
         totalWithdrawalsEth: Number(totalWithdrawalsEth) / 1e18,
       };
     }
@@ -117,6 +108,10 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
           operator: staker?.delegator?.operator?.id,
           stakesCount: staker?.stakesCount,
           withdrawalsCount: staker?.withdrawalsCount,
+          stakedEigen: staker?.totalEigenShares ? Number(staker.totalEigenShares) / 1e18 : undefined,
+          withdrawnEigen: staker?.totalEigenWithdrawalsShares
+            ? Number(staker.totalEigenWithdrawalsShares) / 1e18
+            : undefined,
         }}
         stakerStakes={staker?.stakes}
         strategies={strategies.data}

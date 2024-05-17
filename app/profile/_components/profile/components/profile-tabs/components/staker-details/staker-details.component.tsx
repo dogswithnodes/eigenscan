@@ -17,6 +17,7 @@ export type Props = {
   operator: string | undefined;
   stakedEth?: number;
   stakedEigen?: number;
+  withdrawnEigen: number | undefined;
   totalWithdrawalsEth?: number;
   withdrawalsCount: number | undefined;
   stakesCount: number | undefined;
@@ -29,6 +30,7 @@ export const StakerDetails: React.FC<Props> = ({
   totalWithdrawalsEth = 0,
   withdrawalsCount = 0,
   stakesCount = 0,
+  withdrawnEigen = 0,
 }) => {
   return (
     <>
@@ -50,6 +52,18 @@ export const StakerDetails: React.FC<Props> = ({
                   </Td>
                 </Tr>
                 <Tr>
+                  <Th>Withdrawn ETH</Th>
+                  <Td>
+                    <span
+                      data-tooltip-id={GLOBAL_TOOLTIP_ID}
+                      data-tooltip-content={formatOptionalTooltipNumber(totalWithdrawalsEth)}
+                    >
+                      {formatNumber(totalWithdrawalsEth)}
+                    </span>
+                    <Postfix> ETH</Postfix>
+                  </Td>
+                </Tr>
+                <Tr>
                   <Th>Staked Eigen</Th>
                   <Td>
                     <span
@@ -62,15 +76,15 @@ export const StakerDetails: React.FC<Props> = ({
                   </Td>
                 </Tr>
                 <Tr>
-                  <Th>Total withdrawals ETH</Th>
+                  <Th>Withdrawn Eigen</Th>
                   <Td>
                     <span
                       data-tooltip-id={GLOBAL_TOOLTIP_ID}
-                      data-tooltip-content={formatOptionalTooltipNumber(totalWithdrawalsEth)}
+                      data-tooltip-content={formatOptionalTooltipNumber(withdrawnEigen)}
                     >
-                      {formatNumber(totalWithdrawalsEth)}
+                      {formatNumber(withdrawnEigen)}
                     </span>
-                    <Postfix> ETH</Postfix>
+                    <Postfix> EIGEN</Postfix>
                   </Td>
                 </Tr>
               </tbody>

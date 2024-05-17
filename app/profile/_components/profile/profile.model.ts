@@ -1,6 +1,6 @@
 import { BaseAction } from '@/app/_models/actions.model';
 
-export type StakerStaker = {
+export type StakerStake = {
   id: string;
   shares: string;
   createdTimestamp: string;

@@ -10,7 +10,7 @@ import {
   transformToRow,
 } from './staker-stakes.model';
 
-import { StakerStaker } from '../../../../profile.model';
+import { StakerStake } from '../../../../profile.model';
 
 import { Table } from '@/app/_components/table/table.component';
 import { downloadCsv } from '@/app/_utils/csv.utils';
@@ -20,7 +20,7 @@ import { Strategy } from '@/app/_models/strategies.model';
 import { StrategyToTvlMap } from '@/app/_utils/strategies.utils';
 
 type Props = {
-  stakes: Array<StakerStaker>;
+  stakes: Array<StakerStake>;
   strategies: Array<Strategy>;
   strategyToTvl: StrategyToTvlMap;
 };

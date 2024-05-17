@@ -1,7 +1,7 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
 
-import { StakerStaker } from '../../../../profile.model';
+import { StakerStake } from '../../../../profile.model';
 
 import { Strategy } from '@/app/_models/strategies.model';
 import { renderBigNumber, renderDate, renderImage } from '@/app/_utils/render.utils';
@@ -29,10 +29,10 @@ const titles: Record<Exclude<keyof StakerStakesRow, 'key'>, string> = {
 };
 
 export const columnsWidth = {
-  '2560': [62, 347, 292, 292, 292, 292, 292],
-  '1920': [56, 272, 188, 188, 188, 188, 188],
-  '1440': [52, 253, 164, 164, 164, 164, 164],
-  '1280': [48, 215, 157, 157, 157, 157, 157],
+  '2560': [62, 334, 333, 333, 333, 333, 333],
+  '1920': [56, 230, 230, 230, 230, 230, 230],
+  '1440': [52, 204, 204, 204, 204, 204, 204],
+  '1280': [48, 189, 189, 189, 189, 189, 189],
 };
 
 export const columns: Array<ColumnType<StakerStakesRow>> = [
@@ -70,12 +70,14 @@ export const columns: Array<ColumnType<StakerStakesRow>> = [
     title: titles.created,
     dataIndex: 'created',
     key: 'created',
+    align: 'center',
     render: renderDate,
   },
   {
     title: titles.updated,
     dataIndex: 'updated',
     key: 'updated',
+    align: 'center',
     render: renderDate,
   },
 ];
@@ -89,7 +91,7 @@ export const transformToRow =
     lastUpdatedTimestamp,
     strategy: stakeStrategy,
     withdrawal,
-  }: StakerStaker): StakerStakesRow => {
+  }: StakerStake): StakerStakesRow => {
     const strategy = strategies.find(({ id }) => id === stakeStrategy.id);
     if (!strategy) throw `Invalid stake strategy id: ${stakeStrategy.id}`;
 

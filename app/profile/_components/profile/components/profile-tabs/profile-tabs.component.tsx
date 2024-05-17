@@ -15,7 +15,7 @@ import { StakerStakes } from './components/staker-stakes/staker-stakes.component
 import { OperatorActions } from './components/operator-actions/operator-actions.component';
 import { StakerActions } from './components/staker-actions/staker-actions.component';
 
-import { OperatorAction, StakerStaker, StakerAction } from '../../profile.model';
+import { OperatorAction, StakerStake, StakerAction } from '../../profile.model';
 
 import {
   Tabs,
@@ -46,7 +46,7 @@ type Props = {
   operatorDetails: OperatorDetailsProps;
   operatorActions: Array<OperatorAction> | undefined;
   stakerDetails: StakerDetailsProps;
-  stakerStakes: Array<StakerStaker> | undefined;
+  stakerStakes: Array<StakerStake> | undefined;
   stakerActions: Array<StakerAction> | undefined;
   strategies: Array<Strategy>;
 };

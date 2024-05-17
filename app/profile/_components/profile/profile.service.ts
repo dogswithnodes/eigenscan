@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 
-import { OperatorAction, StakerStaker, StakerAction } from './profile.model';
+import { OperatorAction, StakerStake, StakerAction } from './profile.model';
 
 import { REQUEST_LIMIT, request } from '@/app/_services/graphql.service';
 import { ProtocolEntityMetadata } from '@/app/_models/protocol-entity-metadata.model';
@@ -27,8 +27,10 @@ type AccountResponse = {
       id: string;
       stakesCount: number;
       withdrawalsCount: number;
+      totalEigenShares: string;
+      totalEigenWithdrawalsShares: string;
       actions: Array<StakerAction>;
-      stakes: Array<StakerStaker>;
+      stakes: Array<StakerStake>;
       withdrawals: Array<{
         strategies: Array<{
           share: string;
@@ -80,6 +82,8 @@ export const useAccount = (id: string) => {
             }
             staker {
               id
+              totalEigenWithdrawalsShares
+              totalEigenShares
               actions {
                 id
                 type
@@ -98,6 +102,7 @@ export const useAccount = (id: string) => {
                 id
                 createdTimestamp
                 lastUpdatedTimestamp
+                
                 shares
                 strategy {
                   id
