@@ -1,6 +1,6 @@
 import { Wrapper, NavContainer, Count } from './pagination.styled';
 import { NavButton } from './nav-button/nav-button.component';
-import { Input } from './input/input.component';
+import { AutosizeInput } from './autosize-input/autosize-input.component';
 import { RadioGroup } from './radio-group/radio-group.component';
 
 import { usePaginationContext } from '../table-footer.component';
@@ -26,7 +26,7 @@ export const Pagination: React.FC = () => {
       <NavContainer>
         {renderNavButton('previous', false)}
         {renderNavButton('previous', true)}
-        <Input pagesCount={pagesCount} />
+        <AutosizeInput pagesCount={pagesCount} />
         <Count>of {pagesCount}</Count>
         {renderNavButton('next', true)}
         {renderNavButton('next', false)}

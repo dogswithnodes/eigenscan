@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, ChangeEvent, KeyboardEvent } from 'react';
-import AutosizeInput from 'react-input-autosize';
 
-import { Wrapper } from './input.styled';
+import { StyledAutosizeInput } from './autosize-input.styled';
 
 import { usePaginationContext } from '../../table-footer.component';
 
@@ -9,7 +8,7 @@ type Props = {
   pagesCount: number;
 };
 
-export const Input: React.FC<Props> = ({ pagesCount }) => {
+export const AutosizeInput: React.FC<Props> = ({ pagesCount }) => {
   const { currentPage, setCurrentPage } = usePaginationContext();
   const [val, setVal] = useState<number | ''>(currentPage);
 
@@ -44,7 +43,7 @@ export const Input: React.FC<Props> = ({ pagesCount }) => {
     setCurrentPage(!val ? 1 : val);
   }, [val, setCurrentPage]);
 
-  const onKeyPress = useCallback(
+  const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Enter') {
         submit();
@@ -54,17 +53,15 @@ export const Input: React.FC<Props> = ({ pagesCount }) => {
   );
 
   return (
-    <Wrapper>
-      <AutosizeInput
-        autoComplete="off"
+    <StyledAutosizeInput>
+      <input
         value={val}
         onChange={onChange}
-        onKeyPress={onKeyPress}
+        onKeyDown={onKeyDown}
         onBlur={submit}
-        inputStyle={{
-          fontSize: 12,
-        }}
+        className="autosize-input-field"
       />
-    </Wrapper>
+      <span className="autosize-input-filler">{val}</span>
+    </StyledAutosizeInput>
   );
 };
