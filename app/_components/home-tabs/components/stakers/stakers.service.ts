@@ -80,6 +80,8 @@ export const useStakersSearch = (searchTerm: string) => {
 
 type StakerServer = {
   id: string;
+  totalEigenWithdrawalsShares: string;
+  totalEigenShares: string;
   delegator: {
     operator: {
       id: string;
@@ -111,57 +113,52 @@ type StakersResponse = {
   stakers: Array<StakerServer>;
 };
 
-const stakerFragment = gql`
-  fragment StakerFragment on Staker {
-    id
-    delegator {
-      operator {
-        id
-      }
-    }
-    stakes (
-      first: ${REQUEST_LIMIT},
-      orderBy: lastUpdatedTimestamp,
-      orderDirection: desc
-    ) {
-      id
-      lastUpdatedTimestamp
-      shares
-      strategy {
-        id
-        totalShares
-      }
-    }
-    withdrawals(
-      first: ${REQUEST_LIMIT},
-      orderBy: queuedBlockTimestamp, 
-      orderDirection: desc
-    ) {
-      id
-      queuedBlockTimestamp
-      strategies(
-        first:${REQUEST_LIMIT}
-        where: {strategy_not: null, share_not: null}
-      ) {
-        share
-        strategy {
-          id
-          totalShares
-        }
-      }
-    }
-  }
-`;
-
 const _fetchStakers = async (requestOptions: string) => {
   const { stakers } = await request<StakersResponse>(
     gql`
-      ${stakerFragment}
       query {
         stakers(
           ${requestOptions}
         ) {
-          ...StakerFragment
+          id
+          totalEigenWithdrawalsShares
+          totalEigenShares
+          delegator {
+            operator {
+              id
+            }
+          }
+          stakes (
+            first: ${REQUEST_LIMIT},
+            orderBy: lastUpdatedTimestamp,
+            orderDirection: desc
+          ) {
+            id
+            lastUpdatedTimestamp
+            shares
+            strategy {
+              id
+              totalShares
+            }
+          }
+          withdrawals(
+            first: ${REQUEST_LIMIT},
+            orderBy: queuedBlockTimestamp, 
+            orderDirection: desc
+          ) {
+            id
+            queuedBlockTimestamp
+            strategies(
+              first:${REQUEST_LIMIT}
+              where: {strategy_not: null, share_not: null}
+            ) {
+              share
+              strategy {
+                id
+                totalShares
+              }
+            }
+          }
         }
       }
     `,
@@ -171,27 +168,16 @@ const _fetchStakers = async (requestOptions: string) => {
 };
 
 const createStakersRow = (
-  { id, delegator, stakes, withdrawals }: StakerServer,
+  { id, delegator, stakes, withdrawals, totalEigenShares, totalEigenWithdrawalsShares }: StakerServer,
   strategyToTvl: StrategyToTvlMap,
 ): StakersRow => {
-  const { stakedEth, stakedEigen } = stakes.reduce(
-    (tvls, { shares, strategy }) => {
-      // TODO generic
-      const strategyTvl =
-        (BigInt(shares) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
-      if (strategy.id !== EIGEN_STRATEGY) {
-        tvls.stakedEth += strategyTvl;
-      } else {
-        tvls.stakedEigen += strategyTvl;
-      }
+  const stakedEth = stakes.reduce((acc, { shares, strategy }) => {
+    if (strategy.id !== EIGEN_STRATEGY) {
+      acc += (BigInt(shares) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
+    }
 
-      return tvls;
-    },
-    {
-      stakedEth: BigInt(0),
-      stakedEigen: BigInt(0),
-    },
-  );
+    return acc;
+  }, BigInt(0));
 
   const totalWithdrawalsEth = withdrawals.reduce((total, { strategies }) => {
     strategies.forEach(({ share, strategy }) => {
@@ -206,8 +192,9 @@ const createStakersRow = (
     id,
     delegatedTo: delegator?.operator?.id || null,
     totalShares: Number(stakedEth) / 1e18,
-    totalEigenShares: Number(stakedEigen) / 1e18,
     totalWithdrawalsShares: Number(totalWithdrawalsEth) / 1e18,
+    totalEigenShares: Number(totalEigenShares) / 1e18,
+    totalEigenWithdrawalsShares: Number(totalEigenWithdrawalsShares) / 1e18,
     lastDelegatedAt: stakes.at(0)?.lastUpdatedTimestamp || null,
     lastUndelegatedAt: withdrawals.at(0)?.queuedBlockTimestamp || null,
   };
