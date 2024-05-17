@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: 'Eigen Layer Explorer',
   description: 'Explorer for EigenLayer',
 };
-
+export const runtime = 'edge';
 export default function RootLayout({
   children,
 }: Readonly<{
