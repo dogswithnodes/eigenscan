@@ -109,7 +109,7 @@ export const useAVS = (id: string) => {
       const metadataRes =
         avs && avs.metadataURI
           ? await fetch(
-              `${process.env.NEXT_PUBLIC_URL}/api/metadata?${new URLSearchParams({
+              `/api/metadata?${new URLSearchParams({
                 uri: avs.metadataURI,
               })}`,
             )

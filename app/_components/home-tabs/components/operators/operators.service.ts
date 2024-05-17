@@ -47,7 +47,7 @@ export const useOperators = ({ currentPage, perPage, sortParams, idFilters }: Fe
   useQuery({
     queryKey: ['operators', currentPage, perPage, sortParams, idFilters],
     queryFn: async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/operators`, {
+      const res = await fetch(`/api/operators`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -27,7 +27,7 @@ export const useStakers = ({ currentPage, perPage, sortParams, idFilters }: Fetc
   useQuery({
     queryKey: ['stakers', currentPage, perPage, sortParams, idFilters],
     queryFn: async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/stakers`, {
+      const res = await fetch(`/api/stakers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

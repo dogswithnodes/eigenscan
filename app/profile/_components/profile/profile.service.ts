@@ -142,7 +142,7 @@ export const useAccount = (id: string) => {
       const metadataRes =
         operator && operator.metadataURI
           ? await fetch(
-              `${process.env.NEXT_PUBLIC_URL}/api/metadata?${new URLSearchParams({
+              `/api/metadata?${new URLSearchParams({
                 uri: operator.metadataURI,
               })}`,
             )

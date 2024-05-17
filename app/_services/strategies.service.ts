@@ -113,7 +113,7 @@ export const useStrategies = (options?: Omit<UseQueryOptions<Array<Strategy>>, '
   return useQuery({
     queryKey: ['strategies'],
     queryFn: async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/strategies`, {
+      const res = await fetch(`/api/strategies`, {
         headers: {
           'Content-Type': 'application/json',
         },

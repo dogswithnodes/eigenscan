@@ -40,7 +40,7 @@ const fetchStrategyOperators = async (requestOptions: string) => {
     operatorStrategies.map(({ operator: { metadataURI } }) =>
       metadataURI
         ? fetch(
-            `${process.env.NEXT_PUBLIC_URL}/api/metadata?${new URLSearchParams({
+            `/api/metadata?${new URLSearchParams({
               uri: metadataURI,
             })}`,
           ).then((res) => res.json())

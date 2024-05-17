@@ -12,7 +12,7 @@ export const useAVSs = () => {
   return useQuery({
     queryKey: ['avss'],
     queryFn: async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/avss`, {
+      const res = await fetch(`/api/avss`, {
         headers: {
           'Content-Type': 'application/json',
         },
