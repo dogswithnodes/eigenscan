@@ -6,19 +6,11 @@ import { mq } from '@/app/_utils/media-query.utils';
 import { fontFamily } from '@/app/_styles/font-family';
 
 export const StyledHeader = styled.header`
-  padding: 24px 0;
+  padding: 26px 0;
   width: 100%;
 
-  @media ${mq[1920]} {
-    padding: 30px 0;
-  }
-
   @media ${mq[1440]} {
-    padding: 29px 0;
-  }
-
-  @media ${mq[1280]} {
-    padding: 28px 0;
+    padding: 24px 0;
   }
 
   .header-title {
