@@ -160,7 +160,7 @@ export const AVSDetails: React.FC<Props> = ({
         </Table>
         <ChartContainer>
           {data && (
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={400} minHeight={400}>
               <PieChart width={600} height={600}>
                 <Pie
                   data={[
@@ -176,14 +176,21 @@ export const AVSDetails: React.FC<Props> = ({
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  fill="#8884d8"
                   dataKey="value"
                 >
                   {data.map(({ name }, index) => {
                     return <Cell key={`cell-${index}`} fill={colorHash.hex(name).toUpperCase()} />;
                   })}
                 </Pie>
-                <Tooltip />
+                <Tooltip
+                  itemStyle={{
+                    fontSize: '12px',
+                    fontWeight: 500,
+                  }}
+                  contentStyle={{
+                    borderRadius: '6px',
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           )}

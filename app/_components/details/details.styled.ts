@@ -56,7 +56,6 @@ export const Th = styled.th`
   ${cellStyles}
   font-weight: 500;
   font-size: 20px;
-  display: flex;
   text-align: left;
   color: #525252;
 
