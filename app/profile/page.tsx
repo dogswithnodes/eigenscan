@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 
 import { Profile } from './_components/profile/profile.component';
 
+export const runtime = 'edge';
+
 export default function Page({
   searchParams,
 }: {
