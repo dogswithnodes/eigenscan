@@ -2,7 +2,7 @@ import {
   fetchOperators,
   fetchAllOperators,
 } from '@/app/_components/home-tabs/components/operators/operators.service';
-
+export const runtime = 'edge';
 export async function POST(request: Request) {
   const params = await request.json();
 

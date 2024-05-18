@@ -1,6 +1,6 @@
 import { Strategy } from '@/app/_models/strategies.model';
 import { fetchStrategiesWithTvl } from '@/app/_services/strategies.service';
-
+export const runtime = 'edge';
 export async function GET() {
   const strategies: Array<Strategy> = await fetchStrategiesWithTvl();
 
