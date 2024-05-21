@@ -4,7 +4,7 @@ import { gql } from 'graphql-request';
 import { OperatorAction, StakerStake, StakerAction } from './profile.model';
 
 import { REQUEST_LIMIT, request } from '@/app/_services/graphql.service';
-import { ProtocolEntityMetadata } from '@/app/_models/protocol-entity-metadata.model';
+import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 
 type AccountResponse = {
   eigenAccount: {
@@ -139,16 +139,7 @@ export const useAccount = (id: string) => {
 
       if (!operator && !staker) return null;
 
-      const metadataRes =
-        operator && operator.metadataURI
-          ? await fetch(
-              `${process.env.NEXT_PUBLIC_URL}/api/metadata?${new URLSearchParams({
-                uri: operator.metadataURI,
-              })}`,
-            )
-          : null;
-
-      const metadata: ProtocolEntityMetadata | null = metadataRes ? await metadataRes.json() : null;
+      const metadata = operator ? (await fetchProtocolEntitiesMetadata([operator.metadataURI])).at(0) : null;
 
       return {
         ...metadata,

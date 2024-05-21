@@ -8,21 +8,21 @@ import { useAVSOperators } from './avs-operators.service';
 import { OperatorsQuorumWeights } from '../../avs-tabs.model';
 import { AVSOperator } from '../../../../avs.model';
 
+import { Empty } from '@/app/_components/empty/empty.component';
 import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
 import { Table } from '@/app/_components/table/table.component';
+import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { downloadCsv } from '@/app/_utils/csv.utils';
 import { sortTableRows } from '@/app/_utils/sort.utils';
 import { useTable } from '@/app/_utils/table.utils';
-import { StrategyToTvlMap } from '@/app/_utils/strategies.utils';
-import { Empty } from '@/app/_components/empty/empty.component';
 
 type Props = {
   operators: Array<AVSOperator>;
   weights: OperatorsQuorumWeights | null;
-  strategyToTvl: StrategyToTvlMap;
+  strategyToEthBalance: StrategyToEthBalance;
 };
 
-export const AVSOperators: React.FC<Props> = ({ operators, weights, strategyToTvl }) => {
+export const AVSOperators: React.FC<Props> = ({ operators, weights, strategyToEthBalance }) => {
   const {
     currentPage,
     perPage,
@@ -42,7 +42,7 @@ export const AVSOperators: React.FC<Props> = ({ operators, weights, strategyToTv
     },
   });
 
-  const { data, isPending, error } = useAVSOperators(operators, weights, strategyToTvl);
+  const { data, isPending, error } = useAVSOperators(operators, weights, strategyToEthBalance);
 
   const rows = useMemo(
     () =>

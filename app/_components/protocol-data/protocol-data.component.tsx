@@ -1,20 +1,20 @@
 'use client';
 import { useCallback, useState } from 'react';
+import BigNumber from 'bignumber.js';
 
 import { StyledProtocolData, Contracts, ContractsModal } from './protocol-data.styled';
 import { ProtocolContracts } from './components/protocol-contracts/protocol-contracts.component';
 
 import { Spinner } from '../spinner/spinner.component';
 
+import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { GLOBAL_TOOLTIP_ID } from '@/app/_constants/tooltip.constants';
 import { useProtocolData } from '@/app/_services/protocol-data.service';
 import { useStrategies } from '@/app/_services/strategies.service';
 import { preventDefault } from '@/app/_utils/events.utils';
-import { formatNumber, formatOptionalTooltipNumber } from '@/app/_utils/number.utils';
+import { formatNumber } from '@/app/_utils/number.utils';
+import { toEth } from '@/app/_utils/big-number.utils';
 import noData from '@/app/_assets/images/no-data.svg';
-
-const bigIntZero = BigInt(0);
-const bigInt1e18 = BigInt(1e18);
 
 export const ProtocolData: React.FC = () => {
   const [showContracts, setShowContracts] = useState(false);
@@ -66,27 +66,31 @@ export const ProtocolData: React.FC = () => {
 
   const protocolContracts = { delegationManager, strategyManager, eigenPodManager, avsDirectory, slasher };
 
-  const { totalDeposit, totalDelegated } = strategies.data.reduce<{
-    totalDeposit: bigint;
-    totalDelegated: bigint;
+  const totals = strategies.data.strategies.reduce<{
+    totalDeposit: BigNumber;
+    totalDelegated: BigNumber;
   }>(
-    (acc, { totalDelegated, totalShares, tvl }) => {
-      const bigIntTotalShares = BigInt(totalShares);
-      const bigIntTvl = BigInt(tvl);
+    (acc, { totalDelegated, totalShares, ethBalance }) => {
+      const bnTotalShares = new BigNumber(totalShares);
+      const bnEthBalance = new BigNumber(ethBalance);
 
-      acc.totalDeposit += bigIntTvl;
+      acc.totalDeposit = acc.totalDeposit.plus(bnEthBalance);
 
-      if (bigIntTotalShares > bigIntZero) {
-        acc.totalDelegated += (BigInt(totalDelegated) * bigIntTvl) / bigIntTotalShares;
+      if (bnTotalShares.gt(0)) {
+        acc.totalDelegated = acc.totalDelegated.plus(
+          new BigNumber(totalDelegated).times(bnEthBalance).div(bnTotalShares),
+        );
       }
 
       return acc;
     },
     {
-      totalDeposit: bigIntZero,
-      totalDelegated: bigIntZero,
+      totalDeposit: BN_ZERO,
+      totalDelegated: BN_ZERO,
     },
   );
+  const totalDeposit = toEth(totals.totalDeposit);
+  const totalDelegated = toEth(totals.totalDelegated);
 
   return (
     <>
@@ -96,20 +100,17 @@ export const ProtocolData: React.FC = () => {
             <span className="protocol-data-cell-title">Total deposit</span>
             <span
               data-tooltip-id={GLOBAL_TOOLTIP_ID}
-              data-tooltip-content={formatOptionalTooltipNumber(Number(totalDeposit / bigInt1e18))}
+              data-tooltip-content={totalDeposit.decimalPlaces(0, 1).toFormat()}
             >
-              {formatNumber(String(totalDeposit / bigInt1e18))}
+              {formatNumber(totalDeposit.toFixed())}
             </span>
             &nbsp;
             <span className="protocol-data-units">ETH</span>
           </section>
           <section className="protocol-data-cell" role="cell">
             <span className="protocol-data-cell-title">Total delegated</span>
-            <span
-              data-tooltip-id={GLOBAL_TOOLTIP_ID}
-              data-tooltip-content={formatOptionalTooltipNumber(Number(totalDelegated / bigInt1e18))}
-            >
-              {formatNumber(String(totalDelegated / bigInt1e18))}
+            <span data-tooltip-id={GLOBAL_TOOLTIP_ID} data-tooltip-content={totalDelegated.toFormat()}>
+              {formatNumber(totalDelegated.toFixed())}
             </span>
             &nbsp;
             <span className="protocol-data-units">ETH</span>

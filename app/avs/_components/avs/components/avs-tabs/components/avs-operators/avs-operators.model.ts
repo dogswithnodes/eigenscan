@@ -8,7 +8,7 @@ import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/re
 export type AvsOperatorsRow = {
   id: string;
   key: string;
-  logo: string | null;
+  logo: string;
   name: string;
   tvl: number;
   quorumShares: number;

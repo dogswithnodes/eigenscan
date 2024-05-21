@@ -4,7 +4,8 @@ import { StrategyTabs } from './components/strategy-tabs/strategy-tabs.component
 
 import { AccountPreloader } from '@/app/_components/account-preloader/account-preloader.component';
 import { Empty } from '@/app/_components/empty/empty.component';
-import { useStrategies } from '@/app/_services/strategies.service';
+import { useEnrichedStrategies } from '@/app/_services/strategies.service';
+import { toEth } from '@/app/_utils/big-number.utils';
 
 type Props = {
   id: string;
@@ -12,7 +13,7 @@ type Props = {
 };
 
 export const Strategy: React.FC<Props> = ({ id, tab }) => {
-  const { data, isPending, error } = useStrategies();
+  const { data, isPending, error } = useEnrichedStrategies();
 
   if (isPending) {
     return <AccountPreloader />;
@@ -24,7 +25,7 @@ export const Strategy: React.FC<Props> = ({ id, tab }) => {
     return <Empty />;
   }
 
-  const strategy = data.find((s) => s.id === id);
+  const strategy = data.strategies.find((s) => s.id === id);
 
   if (!strategy) {
     return <Empty />;
@@ -44,7 +45,7 @@ export const Strategy: React.FC<Props> = ({ id, tab }) => {
     totalDelegated,
     totalWithdrawing,
     totalShares,
-    tvl,
+    ethBalance,
   } = strategy;
 
   return (
@@ -63,12 +64,13 @@ export const Strategy: React.FC<Props> = ({ id, tab }) => {
           underlyingToken,
           tokenSymbol,
           tokenDecimals,
-          balance: Number(balance) / 1e18,
+          balance: Number(toEth(balance)),
           totalDelegated:
             (Number(totalDelegated) * Number(balance)) /
             (1e18 * (Number(totalShares) + Number(totalWithdrawing))),
-          ethTvl: Number(tvl) / 1e18,
+          ethBalance: Number(toEth(ethBalance)),
           totalWithdrawals:
+            // TODO bn
             (Number(totalWithdrawing) * Number(balance)) /
             (1e18 * (Number(totalShares) + Number(totalWithdrawing))),
           totalDelegatedPercent:

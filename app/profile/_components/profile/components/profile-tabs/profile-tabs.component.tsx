@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -26,8 +26,7 @@ import {
   Legend,
 } from '@/app/_components/tabs/tabs.styled';
 import { Footer } from '@/app/_components/footer/footer.component';
-import { Strategy } from '@/app/_models/strategies.model';
-import { createStrategyToTvlMap } from '@/app/_utils/strategies.utils';
+import { StrategyEnriched, StrategyToEthBalance } from '@/app/_models/strategies.model';
 
 const PROFILE_TABS = {
   operatorDetails: 'operator-details',
@@ -48,7 +47,10 @@ type Props = {
   stakerDetails: StakerDetailsProps;
   stakerStakes: Array<StakerStake> | undefined;
   stakerActions: Array<StakerAction> | undefined;
-  strategies: Array<Strategy>;
+  strategiesData: {
+    strategies: Array<StrategyEnriched>;
+    strategyToEthBalance: StrategyToEthBalance;
+  };
 };
 
 export const ProfileTabs: React.FC<Props> = ({
@@ -56,7 +58,7 @@ export const ProfileTabs: React.FC<Props> = ({
   tab,
   isOperator,
   isStaker,
-  strategies,
+  strategiesData: { strategies, strategyToEthBalance },
   operatorDetails,
   operatorActions,
   stakerDetails,
@@ -80,8 +82,6 @@ export const ProfileTabs: React.FC<Props> = ({
   const isStakerDetails = tab === PROFILE_TABS.stakerDetails;
   const isStakerStakes = tab === PROFILE_TABS.stakerStakes;
   const isStakerActions = tab === PROFILE_TABS.stakerActions;
-
-  const strategyToTvl = useMemo(() => createStrategyToTvlMap(strategies), [strategies]);
 
   return isOperator || isStaker ? (
     <>
@@ -125,14 +125,18 @@ export const ProfileTabs: React.FC<Props> = ({
         {isOperatorStakers && (
           <OperatorStakers
             id={id}
-            strategyToTvl={strategyToTvl}
+            strategyToEthBalance={strategyToEthBalance}
             delegatorsCount={operatorDetails.delegatorsCount}
           />
         )}
         {isOperatorActions && operatorActions && <OperatorActions actions={operatorActions} />}
         {isStakerDetails && <StakerDetails {...stakerDetails} />}
         {isStakerStakes && stakerStakes && (
-          <StakerStakes stakes={stakerStakes} strategies={strategies} strategyToTvl={strategyToTvl} />
+          <StakerStakes
+            stakes={stakerStakes}
+            strategies={strategies}
+            strategyToEthBalance={strategyToEthBalance}
+          />
         )}
         {isStakerActions && stakerActions && <StakerActions actions={stakerActions} />}
       </TabContent>

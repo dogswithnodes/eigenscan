@@ -17,7 +17,12 @@ export type StrategyServer = {
 };
 
 export type Strategy = StrategyServer & {
-  tvl: string;
+  ethBalance: string;
   balance: string;
-  logo?: string | null;
 };
+
+export type StrategyEnriched = Strategy & {
+  logo: string | null;
+};
+
+export type StrategyToEthBalance = Record<string, string>;

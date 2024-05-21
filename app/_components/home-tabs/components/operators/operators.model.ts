@@ -1,6 +1,9 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
 
+import { BN_ZERO } from '@/app/_constants/big-number.constants';
+import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { calculateTotalAssets, toEth } from '@/app/_utils/big-number.utils';
 import { formatTableDate } from '@/app/_utils/table.utils';
 import {
   renderAddressLink,
@@ -9,6 +12,32 @@ import {
   renderImage,
   renderImageGroup,
 } from '@/app/_utils/render.utils';
+
+export type Operator = {
+  id: string;
+  delegatorsCount: number;
+  registered: string;
+  metadataURI: string | null;
+  strategies: Array<{
+    totalShares: string;
+    strategy: {
+      id: string;
+      totalShares: string;
+    };
+  }>;
+  avsStatuses: Array<{
+    avs: {
+      id: string;
+      metadataURI: string | null;
+    };
+  }>;
+};
+
+export type OperatorEnriched = Operator & {
+  avsLogos: Array<string>;
+  logo: string;
+  name: string;
+};
 
 export type OperatorsRow = {
   key: string;
@@ -84,6 +113,29 @@ export const columns: Array<ColumnType<OperatorsRow>> = [
   },
 ];
 
+export const transformToRow = (
+  { id, registered, delegatorsCount, strategies, logo, name, avsLogos }: OperatorEnriched,
+  strategyToEthBalance: StrategyToEthBalance,
+): OperatorsRow => {
+  const tvl = strategies.reduce((acc, { totalShares, strategy }) => {
+    return acc.plus(
+      calculateTotalAssets(totalShares, strategyToEthBalance[strategy.id], strategy.totalShares),
+    );
+  }, BN_ZERO);
+
+  return {
+    key: id,
+    id,
+    logo,
+    name,
+    // TODO bn
+    tvl: Number(toEth(tvl)),
+    created: registered,
+    delegatorsCount,
+    avsLogos,
+  };
+};
+
 export const transformToCsvRow = ({
   id,
   logo,
@@ -98,6 +150,6 @@ export const transformToCsvRow = ({
   [titles.name]: name,
   [titles.created]: formatTableDate(created),
   [titles.delegatorsCount]: delegatorsCount,
-  [titles.tvl]: tvl.toString(),
+  [titles.tvl]: tvl,
   [titles.avsLogos]: avsLogos.join(', '),
 });

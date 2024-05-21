@@ -4,20 +4,20 @@ import { useQuery } from '@tanstack/react-query';
 import { compose, map } from 'ramda';
 
 import {
-  OperatorStakerServer,
+  OperatorStaker,
   OperatorStakersRow,
   transformToCsvRow,
   transformToRow,
 } from './operator-stakers.model';
 
 import { SortParams } from '@/app/_models/sort.model';
+import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { downloadCsv } from '@/app/_utils/csv.utils';
 import { sortTableRows } from '@/app/_utils/sort.utils';
-import { StrategyToTvlMap } from '@/app/_utils/strategies.utils';
 
 type StakersResponse = {
-  delegators: Array<OperatorStakerServer>;
+  delegators: Array<OperatorStaker>;
 };
 
 const fetchOperatorStakers = async (requestOptions: string) => {
@@ -28,6 +28,9 @@ const fetchOperatorStakers = async (requestOptions: string) => {
           ${requestOptions}
         ) {
           id
+          staker {
+            totalEigenShares
+          }
           delegations(
             first: ${REQUEST_LIMIT},
           ) {
@@ -57,7 +60,7 @@ type FetchOperatorStakersParams = {
 
 export const useOperatorStakers = (
   { id, currentPage, perPage, sortParams }: FetchOperatorStakersParams,
-  strategyToTvl: StrategyToTvlMap,
+  strategyToEthBalance: StrategyToEthBalance,
 ) =>
   useQuery({
     // TODO const key
@@ -71,7 +74,7 @@ export const useOperatorStakers = (
         where: { operator: ${JSON.stringify(id)} }
       `);
 
-      return stakers.map((staker) => transformToRow(staker, strategyToTvl));
+      return stakers.map((staker) => transformToRow(staker, strategyToEthBalance));
     },
     placeholderData: (prev) => prev,
   });
@@ -79,7 +82,7 @@ export const useOperatorStakers = (
 const fetchAllStakersParallel = async (
   id: string,
   stakersCount: number,
-  strategyToTvl: StrategyToTvlMap,
+  strategyToEthBalance: StrategyToEthBalance,
 ): Promise<Array<OperatorStakersRow>> => {
   const stakers = await fetchAllParallel(stakersCount, async (skip: number) =>
     fetchOperatorStakers(`
@@ -89,7 +92,7 @@ const fetchAllStakersParallel = async (
     `),
   );
 
-  return stakers.map((staker) => transformToRow(staker, strategyToTvl));
+  return stakers.map((staker) => transformToRow(staker, strategyToEthBalance));
 };
 // TODO generic name
 const downloadOperatorStakersCsv = (
@@ -101,12 +104,12 @@ export const useOperatorStakersCsv = (
   id: string,
   stakersCount: number,
   sortParams: SortParams<OperatorStakersRow>,
-  strategyToTvl: StrategyToTvlMap,
+  strategyToEthBalance: StrategyToEthBalance,
 ) => {
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['operator-stakers-csv', id, sortParams],
     queryFn: async () => {
-      return fetchAllStakersParallel(id, stakersCount, strategyToTvl);
+      return fetchAllStakersParallel(id, stakersCount, strategyToEthBalance);
     },
     enabled: false,
   });

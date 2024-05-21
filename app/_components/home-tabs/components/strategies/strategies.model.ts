@@ -1,8 +1,9 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
 
-import { Strategy } from '@/app/_models/strategies.model';
+import { StrategyEnriched } from '@/app/_models/strategies.model';
 import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
+import { toEth } from '@/app/_utils/big-number.utils';
 
 export type StrategiesRow = {
   key: string;
@@ -10,7 +11,7 @@ export type StrategiesRow = {
   name: string;
   logo: string | null;
   tokenSymbol: string;
-  tvlEth: number;
+  ethBalance: number;
   balance: number;
   totalDelegated: number;
   stakesCount: number;
@@ -22,7 +23,7 @@ const titles: Record<Exclude<keyof StrategiesRow, 'key'>, string> = {
   name: 'Name',
   logo: '',
   tokenSymbol: 'Symbol',
-  tvlEth: 'TVL ETH',
+  ethBalance: 'TVL ETH',
   balance: 'Total staked',
   totalDelegated: 'Total Delegated',
   stakesCount: 'Total stakes',
@@ -69,9 +70,9 @@ export const columns: Array<ColumnType<StrategiesRow>> = [
     render: renderBigNumber,
   },
   {
-    title: titles.tvlEth,
-    dataIndex: 'tvlEth',
-    key: 'tvlEth',
+    title: titles.ethBalance,
+    dataIndex: 'ethBalance',
+    key: 'ethBalance',
     render: renderBigNumber,
   },
 
@@ -97,22 +98,23 @@ export const transformToRow = ({
   id,
   name,
   tokenSymbol,
-  tvl,
+  ethBalance,
   totalDelegated,
   stakesCount,
   delegationsCount,
   balance,
   logo,
-}: Strategy): StrategiesRow => {
+}: StrategyEnriched): StrategiesRow => {
   return {
     key: id,
     id,
     name,
     logo: logo || null,
     tokenSymbol,
-    balance: Number(BigInt(balance) / BigInt(1e18)),
-    tvlEth: Number(BigInt(tvl) / BigInt(1e18)),
-    totalDelegated: Number(BigInt(totalDelegated) / BigInt(1e18)),
+    balance: Number(toEth(balance)),
+    // TODO bignumber
+    ethBalance: Number(toEth(ethBalance)),
+    totalDelegated: Number(toEth(totalDelegated)),
     stakesCount,
     delegationsCount,
   };
@@ -122,7 +124,7 @@ export const transformToCsvRow = ({
   id,
   name,
   tokenSymbol,
-  tvlEth,
+  ethBalance,
   totalDelegated,
   stakesCount,
   delegationsCount,
@@ -130,7 +132,7 @@ export const transformToCsvRow = ({
   [titles.id]: id,
   [titles.name]: name,
   [titles.tokenSymbol]: tokenSymbol,
-  [titles.tvlEth]: tvlEth,
+  [titles.ethBalance]: ethBalance,
   [titles.totalDelegated]: totalDelegated,
   [titles.stakesCount]: stakesCount,
   [titles.delegationsCount]: delegationsCount,

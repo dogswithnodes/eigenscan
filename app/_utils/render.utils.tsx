@@ -55,7 +55,7 @@ export const renderAddressLink = (type: 'avs' | 'profile' | 'strategy', tab?: st
 
 export const renderDate = (date: string | null) =>
   date ? <span className="ant-table-cell-monospaced-value">{formatTableDate(date)}</span> : null;
-
+// TODO bignumber
 export const renderBigNumber = (number: number) => (
   <span data-tooltip-id={GLOBAL_TOOLTIP_ID} data-tooltip-content={formatTooltipNumber(number)}>
     {formatTableNumber(number)}
