@@ -3,106 +3,30 @@ import { gql } from 'graphql-request';
 import { useQuery } from '@tanstack/react-query';
 import { compose, map } from 'ramda';
 
-import { OperatorsRow, transformToCsvRow } from './operators.model';
+import {
+  Operator,
+  OperatorEnriched,
+  OperatorsRow,
+  transformToCsvRow,
+  transformToRow,
+} from './operators.model';
+
+import { HomeTabTableFetchParams } from '../../home-tabs.model';
 
 import { SortParams } from '@/app/_models/sort.model';
-import { ProtocolEntityMetadata } from '@/app/_models/protocol-entity-metadata.model';
-import { fetchStrategiesWithTvl } from '@/app/_services/strategies.service';
-import { fetchEntitiesMetadata } from '@/app/_services/entity-metadata.service';
+import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
+import { useStrategies } from '@/app/_services/strategies.service';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
-import { fetchProtocolData, useProtocolData } from '@/app/_services/protocol-data.service';
+import { useProtocolData } from '@/app/_services/protocol-data.service';
 import { isTermLongEnough } from '@/app/_utils/account-search.utils';
 import { downloadCsv } from '@/app/_utils/csv.utils';
 import { sortTableRows } from '@/app/_utils/sort.utils';
-import { createStrategyToTvlMap, StrategyToTvlMap } from '@/app/_utils/strategies.utils';
-
-type FetchOperatorsParams = {
-  currentPage: number;
-  perPage: number;
-  sortParams: SortParams<OperatorsRow>;
-  idFilters: Array<string> | null;
-};
-
-type OperatorServer = {
-  id: string;
-  delegatorsCount: number;
-  registered: string;
-  metadataURI: string | null;
-  strategies: Array<{
-    totalShares: string;
-    strategy: {
-      id: string;
-      totalShares: string;
-    };
-  }>;
-  avsStatuses: Array<{
-    avs: {
-      id: string;
-      metadataURI: string | null;
-    };
-  }>;
-};
-
-export const useOperators = ({ currentPage, perPage, sortParams, idFilters }: FetchOperatorsParams) =>
-  useQuery({
-    queryKey: ['operators', currentPage, perPage, sortParams, idFilters],
-    queryFn: async () => {
-      const res = await fetch(`/api/operators`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          perPage,
-          currentPage,
-          sortParams,
-          idFilters,
-        }),
-      });
-
-      return res.json();
-    },
-    placeholderData: (prev) => prev,
-  });
-
-type OperatorsSearchResponse = {
-  accountSearch: Array<{
-    operator: {
-      id: string;
-    } | null;
-  }>;
-};
-
-export const useOperatorsSearch = (searchTerm: string) => {
-  return useQuery({
-    queryKey: ['operators-search', searchTerm],
-    queryFn: async () => {
-      const { accountSearch } = await request<OperatorsSearchResponse>(
-        gql`
-        query {
-          accountSearch(
-            text: "${searchTerm}:* | 0x${searchTerm}:*",
-            first: ${REQUEST_LIMIT}
-          ) {
-            operator {
-              id
-            }
-          }
-        }
-      `,
-      );
-
-      return accountSearch.flatMap((operator) => operator.operator?.id || []);
-    },
-    enabled: isTermLongEnough(searchTerm),
-  });
-};
 
 type OperatorsResponse = {
-  operators: Array<OperatorServer>;
+  operators: Array<Operator>;
 };
 
-const _fetchOperators = async (requestOptions: string) => {
+const fetchOperators = async (requestOptions: string): Promise<Array<OperatorEnriched>> => {
   const { operators } = await request<OperatorsResponse>(
     gql`
       query {
@@ -137,81 +61,84 @@ const _fetchOperators = async (requestOptions: string) => {
     `,
   );
 
-  const [metadata, logos] = await Promise.all([
-    fetchEntitiesMetadata(operators),
+  const [operatorsMetadata, operatorsAvssMetadata] = await Promise.all([
+    fetchProtocolEntitiesMetadata(operators.map((operator) => operator.metadataURI)),
     Promise.all(
-      operators.flatMap((operator) => {
-        return Promise.all(
-          operator.avsStatuses.map(async ({ avs }) => {
-            if (avs.metadataURI) {
-              const res = await fetch(avs.metadataURI);
-
-              const { logo } = await res.json();
-
-              return logo;
-            }
-
-            return [];
-          }),
-        );
-      }),
+      operators.map((operator) =>
+        fetchProtocolEntitiesMetadata(operator.avsStatuses.flatMap(({ avs }) => avs.metadataURI ?? [])),
+      ),
     ),
   ]);
 
   return operators.map((operator, i) => {
+    const { logo, name } = operatorsMetadata[i];
+
     return {
       ...operator,
-      avsLogos: logos[i],
-      metadata: metadata[operator.id],
+      avsLogos: operatorsAvssMetadata[i].map(({ logo }) => logo),
+      logo,
+      name,
     };
   });
 };
 
-const createOperatorsRow = (
-  {
-    id,
-    registered,
-    delegatorsCount,
-    strategies,
-    metadata,
-    avsLogos,
-  }: OperatorServer & { metadata: ProtocolEntityMetadata; avsLogos: Array<string> },
-  strategyToTvl: StrategyToTvlMap,
-): OperatorsRow => {
-  const { logo, name } = metadata;
+type FetchOperatorsParams = HomeTabTableFetchParams<OperatorsRow>;
 
-  const tvl = strategies.reduce((tvl, { totalShares, strategy }) => {
-    tvl += (BigInt(totalShares) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
-    return tvl;
-  }, BigInt(0));
+export const useOperators = ({ currentPage, perPage, sortParams, idFilters }: FetchOperatorsParams) => {
+  const { data } = useStrategies();
 
-  return {
-    key: id,
-    id,
-    logo,
-    name,
-    tvl: Number(tvl) / 1e18,
-    created: registered,
-    delegatorsCount,
-    avsLogos,
-  };
+  return useQuery({
+    enabled: Boolean(data),
+    queryKey: ['operators', currentPage, perPage, sortParams, idFilters],
+    queryFn: async () => {
+      if (!data) {
+        return Promise.reject(new Error('Operators request cannot be sent without strategies data.'));
+      }
+
+      const operators = await fetchOperators(`
+        first: ${perPage}
+        skip: ${perPage * (currentPage - 1)}
+        orderBy: ${sortParams.orderBy}
+        orderDirection: ${sortParams.orderDirection}
+        where: ${idFilters ? `{ id_in: ${JSON.stringify(idFilters)} }` : null}
+      `);
+
+      return operators.map((operator) => transformToRow(operator, data.strategyToEthBalance));
+    },
+    placeholderData: (prev) => prev,
+  });
 };
 
-const fetchAllOperatorsParallel = async (operatorsCount: number) => {
-  const [stakers, strategies] = await Promise.all([
-    fetchAllParallel(operatorsCount, async (skip: number) =>
-      _fetchOperators(`
-        first: ${REQUEST_LIMIT}
-        skip: ${skip}
-      `),
-    ),
-    fetchStrategiesWithTvl(),
-  ]);
+type OperatorsSearchResponse = {
+  accountSearch: Array<{
+    operator: {
+      id: string;
+    } | null;
+  }>;
+};
 
-  const strategyToTvl = createStrategyToTvlMap(strategies);
+export const useOperatorsSearch = (searchTerm: string) => {
+  return useQuery({
+    queryKey: ['operators-search', searchTerm],
+    queryFn: async () => {
+      const { accountSearch } = await request<OperatorsSearchResponse>(
+        gql`
+        query {
+          accountSearch(
+            text: "${searchTerm}:* | 0x${searchTerm}:*",
+            first: ${REQUEST_LIMIT}
+          ) {
+            operator {
+              id
+            }
+          }
+        }
+      `,
+      );
 
-  return stakers.map((staker) => {
-    return createOperatorsRow(staker, strategyToTvl);
+      return accountSearch.flatMap((operator) => operator.operator?.id || []);
+    },
+    enabled: isTermLongEnough(searchTerm),
   });
 };
 
@@ -219,16 +146,26 @@ const downloadOperatorsCsv = (data: Array<OperatorsRow>, sortParams: SortParams<
   downloadCsv(compose(map(transformToCsvRow), sortTableRows(sortParams))(data), 'operators');
 
 export const useOperatorsCsv = (sortParams: SortParams<OperatorsRow>) => {
-  const { data: protocolData } = useProtocolData();
+  const strategies = useStrategies();
+  const protocolData = useProtocolData();
 
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['operators-csv', sortParams],
     queryFn: async () => {
-      if (!protocolData) {
-        return Promise.reject(new Error('Operators csv request cannot be sent without operators count.'));
+      if (!protocolData.data || !strategies.data) {
+        return Promise.reject(
+          new Error('Operators csv request cannot be sent without strategies data and operators count.'),
+        );
       }
 
-      return fetchAllOperatorsParallel(protocolData.operatorsCount);
+      const operators = await fetchAllParallel(protocolData.data.operatorsCount, (skip) =>
+        fetchOperators(`
+          first: ${REQUEST_LIMIT}
+          skip: ${skip}
+        `),
+      );
+
+      return operators.map((operator) => transformToRow(operator, strategies.data.strategyToEthBalance));
     },
     enabled: false,
   });
@@ -243,34 +180,4 @@ export const useOperatorsCsv = (sortParams: SortParams<OperatorsRow>) => {
     isCsvLoading: isFetching,
     handleCsvDownload,
   };
-};
-
-export const fetchOperators = async ({
-  currentPage,
-  perPage,
-  sortParams,
-  idFilters,
-}: FetchOperatorsParams) => {
-  const [operators, strategies] = await Promise.all([
-    _fetchOperators(`
-      first: ${perPage}
-      skip: ${perPage * (currentPage - 1)}
-      orderBy: ${sortParams.orderBy}
-      orderDirection: ${sortParams.orderDirection}
-      where: ${idFilters ? `{ id_in: ${JSON.stringify(idFilters)} }` : null}
-    `),
-    fetchStrategiesWithTvl(),
-  ]);
-
-  const strategyToTvl = createStrategyToTvlMap(strategies);
-
-  return operators.map((operator) => {
-    return createOperatorsRow(operator, strategyToTvl);
-  });
-};
-
-export const fetchAllOperators = async () => {
-  const { operatorsCount } = await fetchProtocolData();
-
-  return fetchAllOperatorsParallel(operatorsCount);
 };

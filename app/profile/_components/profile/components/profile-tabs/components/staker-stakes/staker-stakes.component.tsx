@@ -13,19 +13,18 @@ import {
 import { StakerStake } from '../../../../profile.model';
 
 import { Table } from '@/app/_components/table/table.component';
+import { StrategyEnriched, StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { downloadCsv } from '@/app/_utils/csv.utils';
 import { sortTableRows } from '@/app/_utils/sort.utils';
 import { useTable } from '@/app/_utils/table.utils';
-import { Strategy } from '@/app/_models/strategies.model';
-import { StrategyToTvlMap } from '@/app/_utils/strategies.utils';
 
 type Props = {
   stakes: Array<StakerStake>;
-  strategies: Array<Strategy>;
-  strategyToTvl: StrategyToTvlMap;
+  strategies: Array<StrategyEnriched>;
+  strategyToEthBalance: StrategyToEthBalance;
 };
 
-export const StakerStakes: React.FC<Props> = ({ stakes, strategies, strategyToTvl }) => {
+export const StakerStakes: React.FC<Props> = ({ stakes, strategies, strategyToEthBalance }) => {
   const {
     currentPage,
     perPage,
@@ -47,13 +46,13 @@ export const StakerStakes: React.FC<Props> = ({ stakes, strategies, strategyToTv
   const rows = useMemo(
     () =>
       compose(
-        (strategies: Array<StakerStakesRow>) =>
-          strategies.slice(perPage * (currentPage - 1), perPage * currentPage),
+        (stakerStakes: Array<StakerStakesRow>) =>
+          stakerStakes.slice(perPage * (currentPage - 1), perPage * currentPage),
         sortTableRows(sortParams),
         tap(compose(setTotal, prop('length'))),
-        map(transformToRow(strategies, strategyToTvl)),
+        map(transformToRow(strategies, strategyToEthBalance)),
       )(stakes),
-    [sortParams, setTotal, strategies, strategyToTvl, stakes, perPage, currentPage],
+    [sortParams, setTotal, strategies, strategyToEthBalance, stakes, perPage, currentPage],
   );
 
   const handleCsvDownload = useCallback(() => {
@@ -61,11 +60,11 @@ export const StakerStakes: React.FC<Props> = ({ stakes, strategies, strategyToTv
       compose(
         map(transformToCsvRow),
         sortTableRows(sortParams),
-        map(transformToRow(strategies, strategyToTvl)),
+        map(transformToRow(strategies, strategyToEthBalance)),
       )(stakes),
       'staker-stakes',
     );
-  }, [sortParams, strategies, strategyToTvl, stakes]);
+  }, [sortParams, strategies, strategyToEthBalance, stakes]);
 
   return (
     <Table<StakerStakesRow>

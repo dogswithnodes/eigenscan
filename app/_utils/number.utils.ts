@@ -9,16 +9,16 @@ export const formatNumber = (value: BigNumberish, mantissa = 1) =>
     })
     .toUpperCase();
 
-export const formatTableNumber = (value: number) =>
+export const formatTableNumber = (value: number | string) =>
   numbro(value)
     .format(
-      Math.abs(value) >= 1e6
+      Math.abs(Number(value)) >= 1e6
         ? {
             average: true,
             mantissa: 1,
             forceAverage: 'million',
           }
-        : Math.abs(value) >= 1e4
+        : Math.abs(Number(value)) >= 1e4
           ? {
               average: true,
               mantissa: 1,
@@ -42,5 +42,8 @@ const separateThousands = (value: number) => {
 
 export const formatTooltipNumber = (value: number) => separateThousands(value);
 
-export const formatOptionalTooltipNumber = (value: number) =>
-  shouldBeRounded(value) || (Math.abs(value) < 1 && Math.abs(value) > 0) ? separateThousands(value) : null;
+export const formatOptionalTooltipNumber = (value: number) => {
+  return shouldBeRounded(value) || (Math.abs(value) < 1 && Math.abs(value) > 0)
+    ? separateThousands(value)
+    : null;
+};

@@ -3,8 +3,8 @@ import { gql } from 'graphql-request';
 
 import { AVSAction, AVSOperator, Quorum } from './avs.model';
 
-import { ProtocolEntityMetadata } from '@/app/_models/protocol-entity-metadata.model';
 import { REQUEST_LIMIT, request } from '@/app/_services/graphql.service';
+import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 
 type AVSResponse = {
   avs: {
@@ -60,6 +60,7 @@ export const useAVS = (id: string) => {
                 operator {
                   id
                   metadataURI
+                  totalEigenShares
                   strategies(
                     first: ${REQUEST_LIMIT}
                     where: {strategy_not: null, totalShares_gt: "0"}
@@ -82,11 +83,13 @@ export const useAVS = (id: string) => {
               operator {
                 id
                 metadataURI
+                totalEigenShares
                 strategies(
-                first: ${REQUEST_LIMIT}
-                where: {strategy_not: null, totalShares_gt: "0"}
-              ) {
+                  first: ${REQUEST_LIMIT}
+                  where: {strategy_not: null, totalShares_gt: "0"}
+                ) {
                 totalShares
+                
                 strategy {
                   id
                   totalShares
@@ -106,20 +109,11 @@ export const useAVS = (id: string) => {
 
       if (!avs) return null;
 
-      const metadataRes =
-        avs && avs.metadataURI
-          ? await fetch(
-              `/api/metadata?${new URLSearchParams({
-                uri: avs.metadataURI,
-              })}`,
-            )
-          : null;
-
-      const metadata: ProtocolEntityMetadata | null = metadataRes ? await metadataRes.json() : null;
+      const metadata = await fetchProtocolEntitiesMetadata([avs.metadataURI]);
 
       return {
         ...avs,
-        ...metadata,
+        ...metadata[0],
       };
     },
   });

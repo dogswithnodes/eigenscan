@@ -1,4 +1,5 @@
 import { sort } from 'ramda';
+import BigNumber from 'bignumber.js';
 
 import { SortParams } from '../_models/sort.model';
 
@@ -20,6 +21,10 @@ export const rowsComparator =
 
     if (typeof x === 'number' && typeof y === 'number') {
       return isAscending ? x - y : y - x;
+    }
+
+    if (x instanceof BigNumber && y instanceof BigNumber) {
+      return isAscending ? Number(x) - Number(y) : Number(y) - Number(x);
     }
 
     return new Intl.Collator('en', { sensitivity: 'base', ignorePunctuation: true }).compare(

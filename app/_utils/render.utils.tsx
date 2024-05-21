@@ -1,6 +1,8 @@
 'use client';
 import Link from 'next/link';
 import { styled } from 'styled-components';
+import BigNumber from 'bignumber.js';
+import numbro from 'numbro';
 
 import { formatTableNumber, formatTooltipNumber } from './number.utils';
 import { preventDefault } from './events.utils';
@@ -55,12 +57,49 @@ export const renderAddressLink = (type: 'avs' | 'profile' | 'strategy', tab?: st
 
 export const renderDate = (date: string | null) =>
   date ? <span className="ant-table-cell-monospaced-value">{formatTableDate(date)}</span> : null;
-
+// TODO bignumber
 export const renderBigNumber = (number: number) => (
   <span data-tooltip-id={GLOBAL_TOOLTIP_ID} data-tooltip-content={formatTooltipNumber(number)}>
     {formatTableNumber(number)}
   </span>
 );
+
+const formatTooltipBnValue = (value: BigNumber) =>
+  value.absoluteValue().gte(1) ? value.toFormat(2) : value.toString();
+
+export const _renderBN = (optionalTooltip?: boolean) => {
+  return function RenderedBigNumber(bn: BigNumber | string) {
+    const value = new BigNumber(bn).div(1e18);
+    const absValue = value.absoluteValue();
+
+    const tooltipContent = !optionalTooltip
+      ? formatTooltipBnValue(value)
+      : value.gte(1000) || (absValue.lt(1) && absValue.gt(0))
+        ? formatTooltipBnValue(value)
+        : null;
+
+    const format: numbro.Format = {
+      average: true,
+      mantissa: 1,
+    };
+
+    if (value.gte(1e6)) {
+      format.forceAverage = 'million';
+    } else if (value.gte(1e4)) {
+      format.forceAverage = 'thousand';
+    }
+
+    return (
+      <span data-tooltip-id={GLOBAL_TOOLTIP_ID} data-tooltip-content={tooltipContent}>
+        {numbro(value.toFixed()).format(format).toUpperCase()}
+      </span>
+    );
+  };
+};
+
+export const renderBNWithOptionalTooltip = _renderBN(true);
+
+export const renderBN = _renderBN();
 
 export const renderTransactionHash = (value: string) => (
   <a

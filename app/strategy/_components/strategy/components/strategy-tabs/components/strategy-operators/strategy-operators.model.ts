@@ -15,7 +15,7 @@ export type StrategyOperator = {
 export type StrategyOperatorsRow = {
   key: string;
   id: string;
-  logo: string | null;
+  logo: string;
   name: string;
   totalShares: number;
   delegationsCount: number;
@@ -78,7 +78,7 @@ export const transformToRow = ({
   balance,
   strategyTotalShares,
 }: StrategyOperator & {
-  logo: string | null;
+  logo: string;
   name: string;
   balance: string;
   strategyTotalShares: string;

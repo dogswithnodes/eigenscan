@@ -62,9 +62,9 @@ export const AVS: React.FC<Props> = ({ id, tab }) => {
           stakeRegistry: stakeRegistry?.id,
         }}
         quorums={quorums}
-        strategies={strategies.data}
         registrations={registrations}
         actions={actions}
+        strategyToEthBalance={strategies.data.strategyToEthBalance}
       />
     </>
   );

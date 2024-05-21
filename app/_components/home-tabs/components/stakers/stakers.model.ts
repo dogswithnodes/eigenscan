@@ -1,8 +1,43 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
 
+import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
+import { BN_ZERO } from '@/app/_constants/big-number.constants';
+import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { formatTableDate } from '@/app/_utils/table.utils';
 import { renderAddressLink, renderBigNumber, renderDate } from '@/app/_utils/render.utils';
+import { calculateTotalAssets } from '@/app/_utils/big-number.utils';
+
+export type Staker = {
+  id: string;
+  totalEigenWithdrawalsShares: string;
+  totalEigenShares: string;
+  delegator: {
+    operator: {
+      id: string;
+    } | null;
+  } | null;
+  stakes: Array<{
+    id: string;
+    lastUpdatedTimestamp: string;
+    shares: string;
+    strategy: {
+      id: string;
+      totalShares: string;
+    };
+  }>;
+  withdrawals: Array<{
+    id: string;
+    queuedBlockTimestamp: string | null;
+    strategies: Array<{
+      share: string;
+      strategy: {
+        id: string;
+        totalShares: string;
+      };
+    }>;
+  }>;
+};
 
 export type StakersRow = {
   key: string;
@@ -88,6 +123,41 @@ export const columns: Array<ColumnType<StakersRow>> = [
     render: renderDate,
   },
 ];
+
+export const transformToRow = (
+  { id, delegator, stakes, withdrawals, totalEigenShares, totalEigenWithdrawalsShares }: Staker,
+  strategyToEthBalance: StrategyToEthBalance,
+): StakersRow => {
+  const stakedEth = stakes.reduce((acc, { shares, strategy }) => {
+    if (strategy.id !== EIGEN_STRATEGY) {
+      acc = acc.plus(calculateTotalAssets(shares, strategyToEthBalance[strategy.id], strategy.totalShares));
+    }
+
+    return acc;
+  }, BN_ZERO);
+
+  const totalWithdrawalsEth = withdrawals.reduce((total, { strategies }) => {
+    strategies.forEach(({ share, strategy }) => {
+      total = total.plus(
+        calculateTotalAssets(share, strategyToEthBalance[strategy.id], strategy.totalShares),
+      );
+    });
+
+    return total;
+  }, BN_ZERO);
+  return {
+    key: id,
+    id,
+    delegatedTo: delegator?.operator?.id || null,
+    totalShares: Number(stakedEth) / 1e18,
+    totalWithdrawalsShares: Number(totalWithdrawalsEth) / 1e18,
+    // TODO bignumber
+    totalEigenShares: Number(totalEigenShares) / 1e18,
+    totalEigenWithdrawalsShares: Number(totalEigenWithdrawalsShares) / 1e18,
+    lastDelegatedAt: stakes.at(0)?.lastUpdatedTimestamp || null,
+    lastUndelegatedAt: withdrawals.at(0)?.queuedBlockTimestamp || null,
+  };
+};
 
 export const transformToCsvRow = ({
   id,

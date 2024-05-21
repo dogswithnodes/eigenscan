@@ -2,12 +2,17 @@
 import { ColumnType } from 'antd/es/table';
 
 import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
+import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { renderAddressLink, renderBigNumber, renderDate } from '@/app/_utils/render.utils';
-import { StrategyToTvlMap } from '@/app/_utils/strategies.utils';
 import { formatTableDate } from '@/app/_utils/table.utils';
+import { calculateTotalAssets, toEth } from '@/app/_utils/big-number.utils';
+import { BN_ZERO } from '@/app/_constants/big-number.constants';
 
-export type OperatorStakerServer = {
+export type OperatorStaker = {
   id: string;
+  staker: {
+    totalEigenShares: string;
+  };
   delegations: Array<{
     shares: string;
     strategy: {
@@ -23,7 +28,7 @@ export type OperatorStakersRow = {
   key: string;
   id: string;
   totalShares: number;
-  stakedEigen: number;
+  staker__totalEigenShares: number;
   delegatedAt: string;
   undelegatedAt: string | null;
 };
@@ -31,7 +36,7 @@ export type OperatorStakersRow = {
 const titles: Record<Exclude<keyof OperatorStakersRow, 'key'>, string> = {
   id: 'Staker',
   totalShares: 'Staked ETH',
-  stakedEigen: 'Staked Eigen',
+  staker__totalEigenShares: 'Staked Eigen',
   delegatedAt: 'Last delegation',
   undelegatedAt: 'Last undelegation',
 };
@@ -58,9 +63,9 @@ export const columns: Array<ColumnType<OperatorStakersRow>> = [
     render: renderBigNumber,
   },
   {
-    title: titles.stakedEigen,
-    dataIndex: 'stakedEigen',
-    key: 'stakedEigen',
+    title: titles.staker__totalEigenShares,
+    dataIndex: 'staker__totalEigenShares',
+    key: 'staker__totalEigenShares',
     render: renderBigNumber,
   },
   {
@@ -80,32 +85,22 @@ export const columns: Array<ColumnType<OperatorStakersRow>> = [
 ];
 
 export const transformToRow = (
-  { id, delegations, delegatedAt, undelegatedAt }: OperatorStakerServer,
-  strategyToTvl: StrategyToTvlMap,
+  { id, delegations, staker, delegatedAt, undelegatedAt }: OperatorStaker,
+  strategyToEthBalance: StrategyToEthBalance,
 ): OperatorStakersRow => {
-  const { stakedEth, stakedEigen } = delegations.reduce(
-    (tvls, { shares, strategy }) => {
-      const strategyTvl =
-        (BigInt(shares) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
-      if (strategy.id !== EIGEN_STRATEGY) {
-        tvls.stakedEth += strategyTvl;
-      } else {
-        tvls.stakedEigen += strategyTvl;
-      }
+  const stakedEth = delegations.reduce((acc, { shares, strategy }) => {
+    if (strategy.id !== EIGEN_STRATEGY) {
+      acc = acc.plus(calculateTotalAssets(shares, strategyToEthBalance[strategy.id], strategy.totalShares));
+    }
 
-      return tvls;
-    },
-    {
-      stakedEth: BigInt(0),
-      stakedEigen: BigInt(0),
-    },
-  );
+    return acc;
+  }, BN_ZERO);
 
   return {
     key: id,
     id,
-    totalShares: Number(stakedEth) / 1e18,
-    stakedEigen: Number(stakedEigen) / 1e18,
+    totalShares: Number(toEth(stakedEth)),
+    staker__totalEigenShares: Number(toEth(staker.totalEigenShares)),
     delegatedAt: delegatedAt,
     undelegatedAt: undelegatedAt,
   };
@@ -114,13 +109,13 @@ export const transformToRow = (
 export const transformToCsvRow = ({
   id,
   totalShares,
-  stakedEigen,
+  staker__totalEigenShares,
   delegatedAt,
   undelegatedAt,
 }: OperatorStakersRow) => ({
   [titles.id]: id,
   [titles.totalShares]: totalShares,
-  [titles.stakedEigen]: stakedEigen,
+  [titles.staker__totalEigenShares]: staker__totalEigenShares,
   [titles.delegatedAt]: delegatedAt ? formatTableDate(delegatedAt) : null,
   [titles.undelegatedAt]: undelegatedAt ? formatTableDate(undelegatedAt) : null,
 });

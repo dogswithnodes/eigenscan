@@ -2,7 +2,7 @@
 import { useCallback, useMemo } from 'react';
 import { compose, prop, tap, map } from 'ramda';
 
-import { AVSsRow, columns, columnsWidth, transformToCsvRow, transformToRow } from './avss.model';
+import { AVSsRow, columns, columnsWidth, transformToCsvRow } from './avss.model';
 import { useAVSs } from './avss.service';
 
 import { HomeTabTableCommonProps } from '../../home-tabs.model';
@@ -55,17 +55,13 @@ export const AVSs: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) => {
 
               return filtered;
             },
-            map(transformToRow),
           )(avss)
         : [],
     [avss, currentPage, perPage, searchTerm, setCurrentPage, setTotal, sortParams],
   );
 
   const handleCsvDownload = useCallback(() => {
-    downloadCsv(
-      compose(map(transformToCsvRow), sortTableRows(sortParams), map(transformToRow))(avss || []),
-      'avss',
-    );
+    downloadCsv(compose(map(transformToCsvRow), sortTableRows(sortParams))(avss || []), 'avss');
   }, [avss, sortParams]);
 
   if (isPending) {

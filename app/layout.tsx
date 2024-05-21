@@ -10,6 +10,8 @@ import StyledComponentsRegistry from './_components/styled-components-registry/s
 import { Tooltip } from './_components/tooltip/tooltip.component';
 import { GLOBAL_TOOLTIP_ID } from './_constants/tooltip.constants';
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
   title: 'Eigen Layer Explorer',
   description: 'Explorer for EigenLayer',

@@ -9,31 +9,29 @@ type ProtocolDataResponse = {
   eigenLayer: ProtocolData;
 };
 
-export const fetchProtocolData = async () => {
-  const { eigenLayer } = await request<ProtocolDataResponse>(gql`
-    query {
-      eigenLayer(id: "0") {
-        id
-        avsCount
-        avsDirectory
-        delegationManager
-        eigenPodManager
-        operatorsCount
-        slasher
-        stakersCount
-        stakersWhoDelegateCount
-        strategiesCount
-        strategyManager
-      }
-    }
-  `);
-
-  return eigenLayer;
-};
-
 export const useProtocolData = (options?: Omit<UseQueryOptions<ProtocolData>, 'queryKey' | 'queryFn'>) =>
   useQuery({
     queryKey: ['protocol-data'],
-    queryFn: fetchProtocolData,
+    queryFn: async () => {
+      const { eigenLayer } = await request<ProtocolDataResponse>(gql`
+        query {
+          eigenLayer(id: "0") {
+            id
+            avsCount
+            avsDirectory
+            delegationManager
+            eigenPodManager
+            operatorsCount
+            slasher
+            stakersCount
+            stakersWhoDelegateCount
+            strategiesCount
+            strategyManager
+          }
+        }
+      `);
+
+      return eigenLayer;
+    },
     ...options,
   });
