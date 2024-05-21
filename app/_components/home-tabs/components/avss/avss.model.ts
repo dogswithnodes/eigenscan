@@ -1,10 +1,31 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
+import type BigNumber from 'bignumber.js';
 
-import { AVS } from './avss.service';
-
-import { renderAddressLink, renderBigNumber, renderDate, renderImage } from '@/app/_utils/render.utils';
+import { AVSOperatorBase } from '@/app/_models/avs.model';
+import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { renderAddressLink, renderBN, renderDate, renderImage } from '@/app/_utils/render.utils';
 import { formatTableDate } from '@/app/_utils/table.utils';
+import { calculateAVSTVLs } from '@/app/_utils/avs.utils';
+
+export type AVS = {
+  id: string;
+  metadataURI: string | null;
+  created: string;
+  registrationsCount: number;
+  quorums: Array<{
+    multipliers: Array<{
+      strategy: {
+        id: string;
+      };
+    }>;
+    operators: Array<AVSOperatorBase>;
+    operatorsCount: number;
+  }>;
+  registrations: Array<AVSOperatorBase>;
+};
+
+export type AVSEnriched = AVS & { logo: string; name: string };
 
 export type AVSsRow = {
   key: string;
@@ -12,9 +33,9 @@ export type AVSsRow = {
   logo: string;
   name: string;
   created: string;
-  ethTvl: number;
-  eigenTvl: number;
-  operatorsCount: number;
+  ethTvl: BigNumber;
+  eigenTvl: BigNumber;
+  registrationsCount: number;
 };
 
 const titles: Record<Exclude<keyof AVSsRow, 'key'>, string> = {
@@ -24,7 +45,7 @@ const titles: Record<Exclude<keyof AVSsRow, 'key'>, string> = {
   created: 'Created',
   ethTvl: 'TVL ETH',
   eigenTvl: 'TVL EIGEN',
-  operatorsCount: 'Operators count',
+  registrationsCount: 'Operators count',
 };
 
 export const columnsWidth = {
@@ -66,38 +87,35 @@ export const columns: Array<ColumnType<AVSsRow>> = [
     title: titles.ethTvl,
     dataIndex: 'ethTvl',
     key: 'ethTvl',
-    render: renderBigNumber,
+    render: renderBN,
   },
   {
     title: titles.eigenTvl,
     dataIndex: 'eigenTvl',
     key: 'eigenTvl',
-    render: renderBigNumber,
+    render: renderBN,
   },
   {
-    title: titles.operatorsCount,
-    dataIndex: 'operatorsCount',
-    key: 'operatorsCount',
+    title: titles.registrationsCount,
+    dataIndex: 'registrationsCount',
+    key: 'registrationsCount',
   },
 ];
 
-export const transformToRow = ({
-  id,
-  name,
-  logo,
-  registrationsCount,
-  ethTvl,
-  eigenTvl,
-  created,
-}: AVS): AVSsRow => {
+export const transformToRow = (
+  { id, registrationsCount, quorums, registrations, created, logo, name }: AVSEnriched,
+  strategyToEthBalance: StrategyToEthBalance,
+): AVSsRow => {
+  const { ethTvl, eigenTvl } = calculateAVSTVLs(quorums, registrations, strategyToEthBalance);
+
   return {
     key: id,
     id,
     name,
     logo,
-    operatorsCount: registrationsCount,
-    ethTvl: Number(BigInt(ethTvl) / BigInt(1e18)),
-    eigenTvl: Number(BigInt(eigenTvl) / BigInt(1e18)),
+    registrationsCount,
+    ethTvl,
+    eigenTvl,
     created,
   };
 };
@@ -109,7 +127,7 @@ export const transformToCsvRow = ({
   created,
   ethTvl,
   eigenTvl,
-  operatorsCount,
+  registrationsCount,
 }: AVSsRow) => ({
   [titles.logo]: logo,
   [titles.id]: id,
@@ -117,5 +135,5 @@ export const transformToCsvRow = ({
   [titles.created]: formatTableDate(created),
   [titles.ethTvl]: ethTvl,
   [titles.ethTvl]: eigenTvl,
-  [titles.operatorsCount]: operatorsCount,
+  [titles.registrationsCount]: registrationsCount,
 });

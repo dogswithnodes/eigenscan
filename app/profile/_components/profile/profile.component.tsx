@@ -8,8 +8,7 @@ import { ProfileTabs } from './components/profile-tabs/profile-tabs.component';
 import { AccountPreloader } from '@/app/_components/account-preloader/account-preloader.component';
 import { Empty } from '@/app/_components/empty/empty.component';
 import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
-import { useStrategies } from '@/app/_services/strategies.service';
-import { createStrategyToTvlMap } from '@/app/_utils/strategies.utils';
+import { useEnrichedStrategies } from '@/app/_services/strategies.service';
 
 type Props = {
   id: string;
@@ -18,31 +17,29 @@ type Props = {
 
 export const Profile: React.FC<Props> = ({ id, tab }) => {
   const account = useAccount(id);
-  const strategies = useStrategies();
-
-  const strategyToTvl = useMemo(
-    () => (strategies.data ? createStrategyToTvlMap(strategies.data) : null),
-    [strategies.data],
-  );
+  const strategies = useEnrichedStrategies();
 
   const operatorTVL = useMemo(() => {
-    if (account.data?.operator && strategyToTvl) {
+    if (account.data?.operator && strategies.data?.strategyToEthBalance) {
       return Number(
         account.data.operator.strategies.reduce((tvl, { totalShares, strategy }) => {
-          tvl += (BigInt(totalShares) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
+          tvl +=
+            (BigInt(totalShares) * BigInt(strategies.data.strategyToEthBalance[strategy.id])) /
+            BigInt(strategy.totalShares);
           return tvl;
         }, BigInt(0)) / BigInt(1e18),
       );
     }
-  }, [account, strategyToTvl]);
+  }, [account, strategies]);
 
   const stakerStakesAndWithdrawals = useMemo(() => {
-    if (account.data?.staker && strategyToTvl) {
+    if (account.data?.staker && strategies.data?.strategyToEthBalance) {
       const { staker } = account.data;
+      const { strategyToEthBalance } = strategies.data;
 
       const stakedEth = staker.stakes.reduce((acc, { shares, strategy }) => {
         const strategyTvl =
-          (BigInt(shares) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
+          (BigInt(shares) * BigInt(strategyToEthBalance[strategy.id])) / BigInt(strategy.totalShares);
         if (strategy.id !== EIGEN_STRATEGY) {
           acc += strategyTvl;
         }
@@ -52,7 +49,7 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
 
       const totalWithdrawalsEth = staker.withdrawals.reduce((total, { strategies }) => {
         strategies.forEach(({ share, strategy }) => {
-          total += (BigInt(share) * BigInt(strategyToTvl[strategy.id])) / BigInt(strategy.totalShares);
+          total += (BigInt(share) * BigInt(strategyToEthBalance[strategy.id])) / BigInt(strategy.totalShares);
         });
 
         return total;
@@ -63,7 +60,7 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
         totalWithdrawalsEth: Number(totalWithdrawalsEth) / 1e18,
       };
     }
-  }, [account, strategyToTvl]);
+  }, [account, strategies]);
 
   if (account.isPending || strategies.isPending) {
     return <AccountPreloader />;
@@ -114,7 +111,7 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
             : undefined,
         }}
         stakerStakes={staker?.stakes}
-        strategies={strategies.data}
+        strategiesData={strategies.data}
         operatorActions={operator?.actions}
         stakerActions={staker?.actions}
       />

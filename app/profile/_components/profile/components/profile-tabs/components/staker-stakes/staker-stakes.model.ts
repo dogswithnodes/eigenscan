@@ -3,9 +3,9 @@ import { ColumnType } from 'antd/es/table';
 
 import { StakerStake } from '../../../../profile.model';
 
-import { Strategy } from '@/app/_models/strategies.model';
+import { StrategyEnriched, StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { renderBigNumber, renderDate, renderImage } from '@/app/_utils/render.utils';
-import { StrategyToTvlMap } from '@/app/_utils/strategies.utils';
+import { calculateTotalAssets, toEth } from '@/app/_utils/big-number.utils';
 
 export type StakerStakesRow = {
   key: string;
@@ -83,7 +83,7 @@ export const columns: Array<ColumnType<StakerStakesRow>> = [
 ];
 
 export const transformToRow =
-  (strategies: Array<Strategy>, strategyToTvl: StrategyToTvlMap) =>
+  (strategies: Array<StrategyEnriched>, strategyToEthBalance: StrategyToEthBalance) =>
   ({
     id: key,
     shares,
@@ -96,6 +96,8 @@ export const transformToRow =
     if (!strategy) throw `Invalid stake strategy id: ${stakeStrategy.id}`;
 
     const { logo, tokenSymbol, totalShares, balance } = strategy;
+    const strategyEthBalance = strategyToEthBalance[strategy.id];
+    const strategyTotalShares = strategy.totalShares;
 
     return {
       key,
@@ -103,12 +105,10 @@ export const transformToRow =
       tokenSymbol,
       created: createdTimestamp,
       updated: lastUpdatedTimestamp,
-      lstBalance: (Number(shares) * Number(balance)) / (Number(totalShares) * Number(1e18)),
-      ethBalance: (Number(shares) * Number(strategyToTvl[strategy.id])) / Number(strategy.totalShares) / 1e18,
+      lstBalance: Number(toEth(calculateTotalAssets(shares, balance, totalShares))),
+      ethBalance: Number(toEth(calculateTotalAssets(shares, strategyEthBalance, strategyTotalShares))),
       withdrawingAmount: withdrawal
-        ? Number(
-            (Number(withdrawal.share) * Number(strategyToTvl[strategy.id])) / Number(strategy.totalShares),
-          ) / 1e18
+        ? Number(toEth(calculateTotalAssets(withdrawal.share, strategyEthBalance, strategyTotalShares)))
         : 0,
     };
   };

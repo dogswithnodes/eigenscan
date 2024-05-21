@@ -14,6 +14,7 @@ import { SortParams } from '@/app/_models/sort.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { downloadCsv } from '@/app/_utils/csv.utils';
 import { sortTableRows } from '@/app/_utils/sort.utils';
+import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 
 type StrategyOperatorsResponse = {
   operatorStrategies: Array<StrategyOperator>;
@@ -36,23 +37,20 @@ const fetchStrategyOperators = async (requestOptions: string) => {
       }
     `,
   );
-  const metadata = await Promise.all(
-    operatorStrategies.map(({ operator: { metadataURI } }) =>
-      metadataURI
-        ? fetch(
-            `${process.env.NEXT_PUBLIC_URL}/api/metadata?${new URLSearchParams({
-              uri: metadataURI,
-            })}`,
-          ).then((res) => res.json())
-        : null,
-    ),
+
+  const metadata = await fetchProtocolEntitiesMetadata(
+    operatorStrategies.map(({ operator: { metadataURI } }) => metadataURI),
   );
 
-  return operatorStrategies.map((operator, i) => ({
-    ...operator,
-    logo: metadata[i]?.logo ?? null,
-    name: metadata[i]?.name ?? null,
-  }));
+  return operatorStrategies.map((operator, i) => {
+    const { logo, name } = metadata[i];
+
+    return {
+      ...operator,
+      logo,
+      name,
+    };
+  });
 };
 
 // TODO generic

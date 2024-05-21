@@ -10,7 +10,7 @@ import { AVSOperators } from './components/avs-operators/avs-operators.component
 import { AVSActions } from './components/avs-actions/avs-actions.component';
 
 import { AVSAction, AVSOperator, Quorum } from '../../avs.model';
-import { calculateAVSTVLS } from '../../avs.utils';
+import { calculateAVSTVLs } from '../../../../../_utils/avs.utils';
 
 import {
   Tabs,
@@ -20,8 +20,7 @@ import {
   Fieldset,
   Legend,
 } from '@/app/_components/tabs/tabs.styled';
-import { Strategy } from '@/app/_models/strategies.model';
-import { createStrategyToTvlMap } from '@/app/_utils/strategies.utils';
+import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 
 const AVS_TABS = {
   details: 'avs-details',
@@ -34,8 +33,8 @@ type Props = {
   tab: string | undefined;
   avsDetails: Omit<AVSDetailsProps, 'ethTvl' | 'eigenTvl' | 'weights' | 'minimalStake'>;
   quorums: Array<Quorum>;
-  strategies: Array<Strategy>;
   registrations: Array<AVSOperator>;
+  strategyToEthBalance: StrategyToEthBalance;
   actions: Array<AVSAction>;
 };
 
@@ -44,9 +43,9 @@ export const AVSTabs: React.FC<Props> = ({
   tab,
   avsDetails,
   quorums,
-  strategies,
   registrations,
   actions,
+  strategyToEthBalance,
 }) => {
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -65,15 +64,14 @@ export const AVSTabs: React.FC<Props> = ({
     () => quorums.map(({ quorum }) => ({ value: String(quorum), label: `Quorum ${quorum}` })),
     [quorums],
   );
-  const strategyToTvl = useMemo(() => createStrategyToTvlMap(strategies), [strategies]);
 
   const [quorum, setQuorum] = useState(quorumsOptions.length > 0 ? Number(quorumsOptions[0].value) : null);
 
   const selectedQuorums = useMemo(() => quorums.filter((q) => q.quorum === quorum), [quorum, quorums]);
 
   const { ethTvl, eigenTvl } = useMemo(
-    () => calculateAVSTVLS(selectedQuorums, registrations, strategyToTvl),
-    [registrations, selectedQuorums, strategyToTvl],
+    () => calculateAVSTVLs(selectedQuorums, registrations, strategyToEthBalance),
+    [registrations, selectedQuorums, strategyToEthBalance],
   );
 
   const operatorsQuorumWeights = useMemo(
@@ -130,8 +128,8 @@ export const AVSTabs: React.FC<Props> = ({
           <AVSDetails
             {...avsDetails}
             minimalStake={selectedQuorums.length > 0 ? Number(selectedQuorums[0].minimalStake) / 1e18 : null}
-            eigenTvl={eigenTvl}
-            ethTvl={ethTvl}
+            ethTvl={Number(ethTvl.toFixed())}
+            eigenTvl={Number(eigenTvl.toFixed())}
             weights={operatorsQuorumWeights}
           />
         )}
@@ -143,7 +141,7 @@ export const AVSTabs: React.FC<Props> = ({
                 : registrations
             }
             weights={operatorsQuorumWeights}
-            strategyToTvl={strategyToTvl}
+            strategyToEthBalance={strategyToEthBalance}
           />
         )}
         {isActions && <AVSActions actions={actions} />}

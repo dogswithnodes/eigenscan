@@ -9,7 +9,7 @@ import { HomeTabTableCommonProps } from '../../home-tabs.model';
 import { Table } from '@/app/_components/table/table.component';
 import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
 import { Empty } from '@/app/_components/empty/empty.component';
-import { useStrategies } from '@/app/_services/strategies.service';
+import { useEnrichedStrategies } from '@/app/_services/strategies.service';
 import { downloadCsv } from '@/app/_utils/csv.utils';
 import { sortTableRows } from '@/app/_utils/sort.utils';
 import { useTable } from '@/app/_utils/table.utils';
@@ -29,12 +29,12 @@ export const Strategies: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) =>
   } = useTable<StrategiesRow>({
     tableName: 'strategies',
     sortParams: {
-      orderBy: 'tvlEth',
+      orderBy: 'ethBalance',
       orderDirection: 'desc',
     },
   });
 
-  const { data: strategies, isPending, error } = useStrategies();
+  const { data, isPending, error } = useEnrichedStrategies();
 
   const rows = useMemo(
     () =>
@@ -57,16 +57,16 @@ export const Strategies: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) =>
           return filtered;
         },
         map(transformToRow),
-      )(strategies || []),
-    [sortParams, setTotal, strategies, perPage, currentPage, searchTerm, setCurrentPage],
+      )(data?.strategies || []),
+    [sortParams, setTotal, data, perPage, currentPage, searchTerm, setCurrentPage],
   );
 
   const handleCsvDownload = useCallback(() => {
     downloadCsv(
-      compose(map(transformToCsvRow), sortTableRows(sortParams), map(transformToRow))(strategies || []),
+      compose(map(transformToCsvRow), sortTableRows(sortParams), map(transformToRow))(data?.strategies || []),
       'strategies',
     );
-  }, [strategies, sortParams]);
+  }, [data, sortParams]);
 
   if (isPending) {
     return <TablePreloader />;

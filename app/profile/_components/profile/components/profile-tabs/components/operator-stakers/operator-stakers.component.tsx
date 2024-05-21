@@ -7,16 +7,16 @@ import { useOperatorStakers, useOperatorStakersCsv } from './operator-stakers.se
 import { Empty } from '@/app/_components/empty/empty.component';
 import { Table } from '@/app/_components/table/table.component';
 import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
+import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { useTable } from '@/app/_utils/table.utils';
-import { StrategyToTvlMap } from '@/app/_utils/strategies.utils';
 
 type Props = {
   id: string;
   delegatorsCount: number | undefined;
-  strategyToTvl: StrategyToTvlMap;
+  strategyToEthBalance: StrategyToEthBalance;
 };
 
-export const OperatorStakers: React.FC<Props> = ({ id, delegatorsCount = 0, strategyToTvl }) => {
+export const OperatorStakers: React.FC<Props> = ({ id, delegatorsCount = 0, strategyToEthBalance }) => {
   const {
     currentPage,
     perPage,
@@ -54,14 +54,14 @@ export const OperatorStakers: React.FC<Props> = ({ id, delegatorsCount = 0, stra
       perPage,
       sortParams,
     },
-    strategyToTvl,
+    strategyToEthBalance,
   );
 
   const { isCsvLoading, handleCsvDownload } = useOperatorStakersCsv(
     id,
     delegatorsCount,
     sortParams,
-    strategyToTvl,
+    strategyToEthBalance,
   );
 
   const rows = useMemo(() => stakers ?? [], [stakers]);
@@ -99,7 +99,6 @@ export const OperatorStakers: React.FC<Props> = ({ id, delegatorsCount = 0, stra
       sortingOptions={{
         sortParams,
         setSortParams,
-        unsortableKeys: ['stakedEigen'],
       }}
     />
   );

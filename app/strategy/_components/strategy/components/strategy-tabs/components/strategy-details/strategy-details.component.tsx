@@ -17,7 +17,7 @@ import { clampMiddle } from '@/app/_utils/text.utils';
 export type Props = {
   whitelisted: boolean;
   balance: number;
-  ethTvl: number;
+  ethBalance: number;
   totalDelegated: number;
   totalWithdrawals: number;
   operatorsCount: number;
@@ -32,7 +32,7 @@ export type Props = {
 export const StrategyDetails: React.FC<Props> = ({
   whitelisted,
   balance,
-  ethTvl,
+  ethBalance,
   totalDelegated,
   totalWithdrawals,
   operatorsCount,
@@ -99,9 +99,9 @@ export const StrategyDetails: React.FC<Props> = ({
                   <Td>
                     <span
                       data-tooltip-id={GLOBAL_TOOLTIP_ID}
-                      data-tooltip-content={formatOptionalTooltipNumber(ethTvl)}
+                      data-tooltip-content={formatOptionalTooltipNumber(ethBalance)}
                     >
-                      {formatNumber(ethTvl)}
+                      {formatNumber(ethBalance)}
                     </span>
                     <Postfix> ETH</Postfix>
                   </Td>
