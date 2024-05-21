@@ -8,12 +8,10 @@ import { ProtocolContracts } from './components/protocol-contracts/protocol-cont
 import { Spinner } from '../spinner/spinner.component';
 
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
-import { GLOBAL_TOOLTIP_ID } from '@/app/_constants/tooltip.constants';
 import { useProtocolData } from '@/app/_services/protocol-data.service';
 import { useStrategies } from '@/app/_services/strategies.service';
 import { preventDefault } from '@/app/_utils/events.utils';
-import { formatNumber } from '@/app/_utils/number.utils';
-import { toEth } from '@/app/_utils/big-number.utils';
+import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
 import noData from '@/app/_assets/images/no-data.svg';
 
 export const ProtocolData: React.FC = () => {
@@ -89,8 +87,6 @@ export const ProtocolData: React.FC = () => {
       totalDelegated: BN_ZERO,
     },
   );
-  const totalDeposit = toEth(totals.totalDeposit);
-  const totalDelegated = toEth(totals.totalDelegated);
 
   return (
     <>
@@ -98,20 +94,13 @@ export const ProtocolData: React.FC = () => {
         <section className="protocol-data-row" role="row">
           <section className="protocol-data-cell" role="cell">
             <span className="protocol-data-cell-title">Total deposit</span>
-            <span
-              data-tooltip-id={GLOBAL_TOOLTIP_ID}
-              data-tooltip-content={totalDeposit.decimalPlaces(0, 1).toFormat()}
-            >
-              {formatNumber(totalDeposit.toFixed())}
-            </span>
+            {renderBNWithOptionalTooltip(totals.totalDeposit)}
             &nbsp;
             <span className="protocol-data-units">ETH</span>
           </section>
           <section className="protocol-data-cell" role="cell">
             <span className="protocol-data-cell-title">Total delegated</span>
-            <span data-tooltip-id={GLOBAL_TOOLTIP_ID} data-tooltip-content={totalDelegated.toFormat()}>
-              {formatNumber(totalDelegated.toFixed())}
-            </span>
+            {renderBNWithOptionalTooltip(totals.totalDelegated)}
             &nbsp;
             <span className="protocol-data-units">ETH</span>
           </section>

@@ -1,11 +1,11 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
+import type BigNumber from 'bignumber.js';
 
 import { AVSOperatorBase } from '@/app/_models/avs.model';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
-import { renderAddressLink, renderBigNumber, renderDate, renderImage } from '@/app/_utils/render.utils';
+import { renderAddressLink, renderBN, renderDate, renderImage } from '@/app/_utils/render.utils';
 import { formatTableDate } from '@/app/_utils/table.utils';
-import { toEth } from '@/app/_utils/big-number.utils';
 import { calculateAVSTVLs } from '@/app/_utils/avs.utils';
 
 export type AVS = {
@@ -33,8 +33,8 @@ export type AVSsRow = {
   logo: string;
   name: string;
   created: string;
-  ethTvl: number;
-  eigenTvl: number;
+  ethTvl: BigNumber;
+  eigenTvl: BigNumber;
   registrationsCount: number;
 };
 
@@ -87,13 +87,13 @@ export const columns: Array<ColumnType<AVSsRow>> = [
     title: titles.ethTvl,
     dataIndex: 'ethTvl',
     key: 'ethTvl',
-    render: renderBigNumber,
+    render: renderBN,
   },
   {
     title: titles.eigenTvl,
     dataIndex: 'eigenTvl',
     key: 'eigenTvl',
-    render: renderBigNumber,
+    render: renderBN,
   },
   {
     title: titles.registrationsCount,
@@ -114,9 +114,8 @@ export const transformToRow = (
     name,
     logo,
     registrationsCount,
-    // TODO bignumber
-    ethTvl: Number(toEth(ethTvl).toFixed()),
-    eigenTvl: Number(toEth(eigenTvl).toFixed()),
+    ethTvl,
+    eigenTvl,
     created,
   };
 };

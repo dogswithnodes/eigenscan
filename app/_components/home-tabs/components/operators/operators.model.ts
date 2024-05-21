@@ -1,13 +1,14 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
+import type BigNumber from 'bignumber.js';
 
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
-import { calculateTotalAssets, toEth } from '@/app/_utils/big-number.utils';
+import { calculateTotalAssets } from '@/app/_utils/big-number.utils';
 import { formatTableDate } from '@/app/_utils/table.utils';
 import {
   renderAddressLink,
-  renderBigNumber,
+  renderBN,
   renderDate,
   renderImage,
   renderImageGroup,
@@ -45,7 +46,7 @@ export type OperatorsRow = {
   logo: string;
   name: string;
   created: string;
-  tvl: number;
+  tvl: BigNumber;
   delegatorsCount: number;
   avsLogos: Array<string>;
 };
@@ -98,7 +99,7 @@ export const columns: Array<ColumnType<OperatorsRow>> = [
     title: titles.tvl,
     dataIndex: 'tvl',
     key: 'tvl',
-    render: renderBigNumber,
+    render: renderBN,
   },
   {
     title: titles.delegatorsCount,
@@ -128,8 +129,7 @@ export const transformToRow = (
     id,
     logo,
     name,
-    // TODO bn
-    tvl: Number(toEth(tvl)),
+    tvl,
     created: registered,
     delegatorsCount,
     avsLogos,
