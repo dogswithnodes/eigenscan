@@ -18,7 +18,7 @@ export const fetchTokensMetadata = async (
   );
 
   if (!res.ok) return {};
-
+  // @ts-expect-error TODO: fix this
   const { data } = await res.json();
 
   if (data && typeof data === 'object') {

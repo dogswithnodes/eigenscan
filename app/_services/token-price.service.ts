@@ -19,6 +19,7 @@ export const fetchTokenPrice = async (symbol: string) => {
     return '0';
   }
 
+  // @ts-expect-error TODO: fix this
   const { data } = await res.json();
 
   return data ? new BigNumber(data[0].quote.ETH.price).times(1e18).toString() : '0';
