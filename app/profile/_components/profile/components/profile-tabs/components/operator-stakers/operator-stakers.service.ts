@@ -10,6 +10,8 @@ import {
   transformToRow,
 } from './operator-stakers.model';
 
+import { ProfileTabTableFetchParams } from '../../../../profile.model';
+
 import { SortParams } from '@/app/_models/sort.model';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
@@ -29,6 +31,7 @@ const fetchOperatorStakers = async (requestOptions: string) => {
         ) {
           id
           staker {
+            id
             totalEigenShares
           }
           delegations(
@@ -50,13 +53,7 @@ const fetchOperatorStakers = async (requestOptions: string) => {
   return delegators;
 };
 
-// TODO generic
-type FetchOperatorStakersParams = {
-  id: string;
-  currentPage: number;
-  perPage: number;
-  sortParams: SortParams<OperatorStakersRow>;
-};
+type FetchOperatorStakersParams = ProfileTabTableFetchParams<OperatorStakersRow>;
 
 export const useOperatorStakers = (
   { id, currentPage, perPage, sortParams }: FetchOperatorStakersParams,

@@ -125,7 +125,13 @@ export const AVSTabs: React.FC<Props> = ({
       <TabContent $footerPressedToBottom={isDetails}>
         {isDetails && (
           <AVSDetails
-            {...avsDetails}
+            {...{
+              ...avsDetails,
+              registrationsCount:
+                selectedQuorums.length > 0
+                  ? selectedQuorums[0].operatorsCount
+                  : avsDetails.registrationsCount,
+            }}
             minimalStake={selectedQuorums.length > 0 ? selectedQuorums[0].minimalStake : null}
             ethTvl={ethTvl.toFixed()}
             eigenTvl={eigenTvl.toFixed()}
