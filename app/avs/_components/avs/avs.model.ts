@@ -15,15 +15,18 @@ export type AVSOperator = {
   };
 };
 
+export type Multiplier = {
+  id: string;
+  multiply: string;
+  strategy: {
+    id: string;
+  };
+};
+
 export type Quorum = {
   minimalStake: string;
   quorum: number;
-  multipliers: Array<{
-    multiply: string;
-    strategy: {
-      id: string;
-    };
-  }>;
+  multipliers: Array<Multiplier>;
   operators: Array<
     AVSOperator & {
       totalWeight: string;

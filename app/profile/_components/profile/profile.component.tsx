@@ -92,6 +92,7 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
         logo={logo}
         created={operator?.registered}
         description={description}
+        url={isOperator ? 'https://app.eigenlayer.xyz/operator' : undefined}
       />
       <ProfileTabs
         id={id}

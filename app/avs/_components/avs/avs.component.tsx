@@ -5,7 +5,7 @@ import { AVSTabs } from './components/avs-tabs/avs-tabs.component';
 
 import { AccountPreloader } from '@/app/_components/account-preloader/account-preloader.component';
 import { Empty } from '@/app/_components/empty/empty.component';
-import { useStrategies } from '@/app/_services/strategies.service';
+import { useEnrichedStrategies } from '@/app/_services/strategies.service';
 
 type Props = {
   id: string;
@@ -13,7 +13,7 @@ type Props = {
 };
 
 export const AVS: React.FC<Props> = ({ id, tab }) => {
-  const strategies = useStrategies();
+  const strategies = useEnrichedStrategies();
 
   const avs = useAVS(id);
 
@@ -64,7 +64,7 @@ export const AVS: React.FC<Props> = ({ id, tab }) => {
         quorums={quorums}
         registrations={registrations}
         actions={actions}
-        strategyToEthBalance={strategies.data.strategyToEthBalance}
+        {...strategies.data}
       />
     </>
   );

@@ -20,9 +20,10 @@ export type Props = {
   name: string | undefined;
   created: string | undefined;
   logo: string | undefined;
+  url?: string;
 };
 
-export const AccountCard: React.FC<Props> = ({ id, name, created, logo }) => {
+export const AccountCard: React.FC<Props> = ({ id, name, created, logo, url }) => {
   return (
     <Container>
       <Left>
@@ -42,7 +43,7 @@ export const AccountCard: React.FC<Props> = ({ id, name, created, logo }) => {
       <Right>
         <Title>
           <Heading>{clampMiddle(id)}</Heading>
-          <AccountButtons id={id} />
+          <AccountButtons id={id} url={url} />
           {created && <Created>{renderDate(created)}</Created>}
         </Title>
       </Right>

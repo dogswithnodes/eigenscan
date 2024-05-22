@@ -48,6 +48,7 @@ export const useAVS = (id: string) => {
               multipliers(
                 first: ${REQUEST_LIMIT},
               ) {
+                id
                 multiply
                 strategy {
                   id

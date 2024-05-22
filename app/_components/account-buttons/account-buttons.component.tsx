@@ -9,9 +9,10 @@ import { GLOBAL_TOOLTIP_ID } from '@/app/_constants/tooltip.constants';
 
 type Props = {
   id: string;
+  url?: string;
 };
 
-export const AccountButtons: React.FC<Props> = ({ id }) => {
+export const AccountButtons: React.FC<Props> = ({ id, url = 'https://etherscan.io/address' }) => {
   return (
     <StyledAccountButtons>
       <CopyToClipboard text={id}>
@@ -23,13 +24,7 @@ export const AccountButtons: React.FC<Props> = ({ id }) => {
           <img src={copy.src} alt="" width={12} height={13} />
         </AccountButton>
       </CopyToClipboard>
-      <a
-        href={`https://etherscan.io/address/${id}`}
-        target="_blank"
-        rel="noreferrer"
-        style={{ outline: 'none' }}
-        tabIndex={-1}
-      >
+      <a href={`${url}/${id}`} target="_blank" rel="noreferrer" style={{ outline: 'none' }} tabIndex={-1}>
         <AccountButton onMouseDown={preventDefault}>
           <img src={external.src} alt="" width={9} height={10} />
         </AccountButton>

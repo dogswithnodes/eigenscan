@@ -8,6 +8,7 @@ import { Select } from './components/select/select.component';
 import { AVSDetails, Props as AVSDetailsProps } from './components/avs-details/avs-details.component';
 import { AVSOperators } from './components/avs-operators/avs-operators.component';
 import { AVSActions } from './components/avs-actions/avs-actions.component';
+import { AVSTokens } from './components/avs-tokens/avs-tokens.component';
 
 import { AVSAction, AVSOperator, Quorum } from '../../avs.model';
 import { calculateAVSTVLs } from '../../../../../_utils/avs.utils';
@@ -20,13 +21,14 @@ import {
   Fieldset,
   Legend,
 } from '@/app/_components/tabs/tabs.styled';
-import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategyEnriched, StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { add } from '@/app/_utils/big-number.utils';
 
 const AVS_TABS = {
   details: 'avs-details',
   operators: 'avs-operators',
   actions: 'avs-actions',
+  tokens: 'avs-tokens',
 };
 
 type Props = {
@@ -37,6 +39,7 @@ type Props = {
   registrations: Array<AVSOperator>;
   strategyToEthBalance: StrategyToEthBalance;
   actions: Array<AVSAction>;
+  strategies: Array<StrategyEnriched>;
 };
 
 export const AVSTabs: React.FC<Props> = ({
@@ -47,6 +50,7 @@ export const AVSTabs: React.FC<Props> = ({
   registrations,
   actions,
   strategyToEthBalance,
+  strategies,
 }) => {
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -60,6 +64,7 @@ export const AVSTabs: React.FC<Props> = ({
   const isDetails = tab === AVS_TABS.details;
   const isOperators = tab === AVS_TABS.operators;
   const isActions = tab === AVS_TABS.actions;
+  const isTokens = tab === AVS_TABS.tokens;
 
   const quorumsOptions = useMemo(
     () => quorums.map(({ quorum }) => ({ value: String(quorum), label: `Quorum ${quorum}` })),
@@ -104,6 +109,9 @@ export const AVSTabs: React.FC<Props> = ({
               </Link>
               <Link href={{ query: { id, tab: AVS_TABS.actions } }}>
                 <TabButton $active={isActions}>Actions</TabButton>
+              </Link>
+              <Link href={{ query: { id, tab: AVS_TABS.tokens } }}>
+                <TabButton $active={isTokens}>Allowed Tokens</TabButton>
               </Link>
             </TabButtons>
             {quorums.length > 0 && (
@@ -150,6 +158,9 @@ export const AVSTabs: React.FC<Props> = ({
           />
         )}
         {isActions && <AVSActions actions={actions} />}
+        {selectedQuorums.at(0)?.multipliers.length && isTokens && (
+          <AVSTokens multipliers={selectedQuorums[0].multipliers} strategies={strategies} />
+        )}
       </TabContent>
     </>
   );

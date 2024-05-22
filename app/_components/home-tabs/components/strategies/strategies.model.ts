@@ -49,7 +49,7 @@ export const columns: Array<ColumnType<StrategiesRow>> = [
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    render: renderAddressLink('strategy'),
+    render: renderAddressLink('strategy', 'strategy-details'),
   },
   {
     title: titles.name,
