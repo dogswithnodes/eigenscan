@@ -75,15 +75,16 @@ id = "b3243c54deed44f2a26b6f55a8434265"
 NEXT_PUBLIC_ETH_NODE = "https://ethereum-rpc.publicnode.com"
 NEXT_PUBLIC_SUBGRAPH_URL= "https://graph-node-tmp.dogswithnodes.com/subgraphs/name/eigen-next"
 
-# [[env.preview.kv_namespaces]]
-# binding = "MY_KV_NAMESPACE"
-# id = "<PREVIEW_NAMESPACE_ID>"
+[[env.preview.kv_namespaces]]
+binding = "METADATA_CACHE"
+id = "b3243c54deed44f2a26b6f55a8434265"
 
 ######## PRODUCTION environment config ########
 
 [env.production.vars]
 NEXT_PUBLIC_ETH_NODE = "https://ethereum-rpc.publicnode.com"
 NEXT_PUBLIC_SUBGRAPH_URL= "https://graph-node-tmp.dogswithnodes.com/subgraphs/name/eigen-next"
-# [[env.production.kv_namespaces]]
-# binding = "MY_KV_NAMESPACE"
-# id = "<PRODUCTION_NAMESPACE_ID>"
+[[env.production.kv_namespaces]]
+
+binding = "METADATA_CACHE"
+id = "b3243c54deed44f2a26b6f55a8434265"
