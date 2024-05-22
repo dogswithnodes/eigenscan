@@ -1,12 +1,13 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
+import type BigNumber from 'bignumber.js';
 
 import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { formatTableDate } from '@/app/_utils/table.utils';
 import { renderAddressLink, renderBigNumber, renderDate } from '@/app/_utils/render.utils';
-import { calculateTotalAssets } from '@/app/_utils/big-number.utils';
+import { mulDiv } from '@/app/_utils/big-number.utils';
 
 export type Staker = {
   id: string;
@@ -42,10 +43,10 @@ export type Staker = {
 export type StakersRow = {
   key: string;
   id: string;
-  totalShares: number;
-  totalEigenShares: number;
-  totalWithdrawalsShares: number;
-  totalEigenWithdrawalsShares: number;
+  totalShares: BigNumber;
+  totalEigenShares: string;
+  totalWithdrawalsShares: BigNumber;
+  totalEigenWithdrawalsShares: string;
   delegatedTo: string | null;
   lastDelegatedAt: string | null;
   lastUndelegatedAt: string | null;
@@ -130,7 +131,7 @@ export const transformToRow = (
 ): StakersRow => {
   const stakedEth = stakes.reduce((acc, { shares, strategy }) => {
     if (strategy.id !== EIGEN_STRATEGY) {
-      acc = acc.plus(calculateTotalAssets(shares, strategyToEthBalance[strategy.id], strategy.totalShares));
+      acc = acc.plus(mulDiv(shares, strategyToEthBalance[strategy.id], strategy.totalShares));
     }
 
     return acc;
@@ -138,9 +139,7 @@ export const transformToRow = (
 
   const totalWithdrawalsEth = withdrawals.reduce((total, { strategies }) => {
     strategies.forEach(({ share, strategy }) => {
-      total = total.plus(
-        calculateTotalAssets(share, strategyToEthBalance[strategy.id], strategy.totalShares),
-      );
+      total = total.plus(mulDiv(share, strategyToEthBalance[strategy.id], strategy.totalShares));
     });
 
     return total;
@@ -149,11 +148,10 @@ export const transformToRow = (
     key: id,
     id,
     delegatedTo: delegator?.operator?.id || null,
-    totalShares: Number(stakedEth) / 1e18,
-    totalWithdrawalsShares: Number(totalWithdrawalsEth) / 1e18,
-    // TODO bignumber
-    totalEigenShares: Number(totalEigenShares) / 1e18,
-    totalEigenWithdrawalsShares: Number(totalEigenWithdrawalsShares) / 1e18,
+    totalShares: stakedEth,
+    totalWithdrawalsShares: totalWithdrawalsEth,
+    totalEigenShares,
+    totalEigenWithdrawalsShares,
     lastDelegatedAt: stakes.at(0)?.lastUpdatedTimestamp || null,
     lastUndelegatedAt: withdrawals.at(0)?.queuedBlockTimestamp || null,
   };

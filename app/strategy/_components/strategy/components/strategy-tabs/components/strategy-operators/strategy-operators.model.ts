@@ -2,6 +2,7 @@
 import { ColumnType } from 'antd/es/table';
 
 import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
+import { mulDiv } from '@/app/_utils/big-number.utils';
 
 export type StrategyOperator = {
   operator: {
@@ -17,7 +18,7 @@ export type StrategyOperatorsRow = {
   id: string;
   logo: string;
   name: string;
-  totalShares: number;
+  totalShares: string;
   delegationsCount: number;
 };
 
@@ -88,7 +89,7 @@ export const transformToRow = ({
     id,
     logo,
     name,
-    totalShares: (Number(totalShares) * Number(balance)) / (Number(strategyTotalShares) * 1e18),
+    totalShares: mulDiv(totalShares, balance, strategyTotalShares).toFixed(),
     delegationsCount,
   };
 };

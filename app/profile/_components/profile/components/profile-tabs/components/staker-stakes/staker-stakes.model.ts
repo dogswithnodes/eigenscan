@@ -1,19 +1,21 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
+import BigNumber from 'bignumber.js';
 
 import { StakerStake } from '../../../../profile.model';
 
+import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { StrategyEnriched, StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { renderBigNumber, renderDate, renderImage } from '@/app/_utils/render.utils';
-import { calculateTotalAssets, toEth } from '@/app/_utils/big-number.utils';
+import { add, mulDiv } from '@/app/_utils/big-number.utils';
 
 export type StakerStakesRow = {
   key: string;
   logo: string | null;
   tokenSymbol: string;
-  lstBalance: number;
-  ethBalance: number;
-  withdrawingAmount: number;
+  lstBalance: BigNumber;
+  ethBalance: BigNumber;
+  withdrawingAmount: BigNumber;
   created: string;
   updated: string;
 };
@@ -23,7 +25,7 @@ const titles: Record<Exclude<keyof StakerStakesRow, 'key'>, string> = {
   tokenSymbol: 'Token symbol',
   lstBalance: 'Balance',
   ethBalance: 'Balance ETH',
-  withdrawingAmount: 'Withdrawing Amount',
+  withdrawingAmount: 'Withdrawing Amount ETH',
   created: 'Created At',
   updated: 'Updated At',
 };
@@ -105,11 +107,15 @@ export const transformToRow =
       tokenSymbol,
       created: createdTimestamp,
       updated: lastUpdatedTimestamp,
-      lstBalance: Number(toEth(calculateTotalAssets(shares, balance, totalShares))),
-      ethBalance: Number(toEth(calculateTotalAssets(shares, strategyEthBalance, strategyTotalShares))),
+      lstBalance: mulDiv(shares, balance, totalShares),
+      ethBalance: mulDiv(shares, strategyEthBalance, strategyTotalShares),
       withdrawingAmount: withdrawal
-        ? Number(toEth(calculateTotalAssets(withdrawal.share, strategyEthBalance, strategyTotalShares)))
-        : 0,
+        ? mulDiv(
+            withdrawal.share,
+            strategyEthBalance,
+            add(strategyTotalShares, strategy.totalWithdrawing).toFixed(),
+          )
+        : BN_ZERO,
     };
   };
 

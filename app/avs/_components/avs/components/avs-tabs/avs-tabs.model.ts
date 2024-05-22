@@ -1,1 +1,1 @@
-export type OperatorsQuorumWeights = { totalWeight: number } & Record<string, number>;
+export type OperatorsQuorumWeights = { totalWeight: string } & Record<string, string>;

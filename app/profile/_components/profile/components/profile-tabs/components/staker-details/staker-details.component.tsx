@@ -9,28 +9,26 @@ import {
   Postfix,
 } from '@/app/_components/details/details.styled';
 import { Footer } from '@/app/_components/footer/footer.component';
-import { GLOBAL_TOOLTIP_ID } from '@/app/_constants/tooltip.constants';
-import { formatNumber, formatOptionalTooltipNumber } from '@/app/_utils/number.utils';
-import { renderAddressLink } from '@/app/_utils/render.utils';
+import { renderAddressLink, renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
 
 export type Props = {
   operator: string | undefined;
-  stakedEth?: number;
-  stakedEigen?: number;
-  withdrawnEigen: number | undefined;
-  totalWithdrawalsEth?: number;
+  stakedEth: string | undefined;
+  withdrawnEth: string | undefined;
+  stakedEigen: string | undefined;
+  withdrawnEigen: string | undefined;
   withdrawalsCount: number | undefined;
   stakesCount: number | undefined;
 };
 
 export const StakerDetails: React.FC<Props> = ({
-  stakedEth = 0,
-  stakedEigen = 0,
+  stakedEth = '0',
+  stakedEigen = '0',
+  withdrawnEth = '0',
+  withdrawnEigen = '0',
   operator,
-  totalWithdrawalsEth = 0,
   withdrawalsCount = 0,
   stakesCount = 0,
-  withdrawnEigen = 0,
 }) => {
   return (
     <>
@@ -42,48 +40,28 @@ export const StakerDetails: React.FC<Props> = ({
                 <Tr>
                   <Th>Staked ETH</Th>
                   <Td>
-                    <span
-                      data-tooltip-id={GLOBAL_TOOLTIP_ID}
-                      data-tooltip-content={formatOptionalTooltipNumber(stakedEth)}
-                    >
-                      {formatNumber(stakedEth)}
-                    </span>
+                    {renderBNWithOptionalTooltip(stakedEth)}
                     <Postfix> ETH</Postfix>
                   </Td>
                 </Tr>
                 <Tr>
                   <Th>Withdrawn ETH</Th>
                   <Td>
-                    <span
-                      data-tooltip-id={GLOBAL_TOOLTIP_ID}
-                      data-tooltip-content={formatOptionalTooltipNumber(totalWithdrawalsEth)}
-                    >
-                      {formatNumber(totalWithdrawalsEth)}
-                    </span>
+                    {renderBNWithOptionalTooltip(withdrawnEth)}
                     <Postfix> ETH</Postfix>
                   </Td>
                 </Tr>
                 <Tr>
                   <Th>Staked Eigen</Th>
                   <Td>
-                    <span
-                      data-tooltip-id={GLOBAL_TOOLTIP_ID}
-                      data-tooltip-content={formatOptionalTooltipNumber(stakedEigen)}
-                    >
-                      {formatNumber(stakedEigen)}
-                    </span>
+                    {renderBNWithOptionalTooltip(stakedEigen)}
                     <Postfix> EIGEN</Postfix>
                   </Td>
                 </Tr>
                 <Tr>
                   <Th>Withdrawn Eigen</Th>
                   <Td>
-                    <span
-                      data-tooltip-id={GLOBAL_TOOLTIP_ID}
-                      data-tooltip-content={formatOptionalTooltipNumber(withdrawnEigen)}
-                    >
-                      {formatNumber(withdrawnEigen)}
-                    </span>
+                    {renderBNWithOptionalTooltip(withdrawnEigen)}
                     <Postfix> EIGEN</Postfix>
                   </Td>
                 </Tr>

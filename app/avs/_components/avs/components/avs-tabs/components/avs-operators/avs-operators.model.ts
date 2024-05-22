@@ -1,5 +1,6 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
+import type BigNumber from 'bignumber.js';
 
 import { renderQuorumShares } from './avs-operators.utils';
 
@@ -10,9 +11,9 @@ export type AvsOperatorsRow = {
   key: string;
   logo: string;
   name: string;
-  tvl: number;
-  quorumShares: number;
-  quorumTotalShares: number;
+  tvl: BigNumber;
+  quorumShares: BigNumber;
+  quorumTotalShares: string;
 };
 
 const titles: Record<Exclude<keyof AvsOperatorsRow, 'key' | 'quorumTotalShares'>, string> = {

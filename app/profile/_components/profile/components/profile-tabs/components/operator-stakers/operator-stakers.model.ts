@@ -5,7 +5,7 @@ import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { renderAddressLink, renderBigNumber, renderDate } from '@/app/_utils/render.utils';
 import { formatTableDate } from '@/app/_utils/table.utils';
-import { calculateTotalAssets, toEth } from '@/app/_utils/big-number.utils';
+import { mulDiv } from '@/app/_utils/big-number.utils';
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
 
 export type OperatorStaker = {
@@ -27,8 +27,8 @@ export type OperatorStaker = {
 export type OperatorStakersRow = {
   key: string;
   id: string;
-  totalShares: number;
-  staker__totalEigenShares: number;
+  totalShares: string;
+  staker__totalEigenShares: string;
   delegatedAt: string;
   undelegatedAt: string | null;
 };
@@ -90,7 +90,7 @@ export const transformToRow = (
 ): OperatorStakersRow => {
   const stakedEth = delegations.reduce((acc, { shares, strategy }) => {
     if (strategy.id !== EIGEN_STRATEGY) {
-      acc = acc.plus(calculateTotalAssets(shares, strategyToEthBalance[strategy.id], strategy.totalShares));
+      acc = acc.plus(mulDiv(shares, strategyToEthBalance[strategy.id], strategy.totalShares));
     }
 
     return acc;
@@ -99,8 +99,8 @@ export const transformToRow = (
   return {
     key: id,
     id,
-    totalShares: Number(toEth(stakedEth)),
-    staker__totalEigenShares: Number(toEth(staker.totalEigenShares)),
+    totalShares: stakedEth.toFixed(),
+    staker__totalEigenShares: staker.totalEigenShares,
     delegatedAt: delegatedAt,
     undelegatedAt: undelegatedAt,
   };

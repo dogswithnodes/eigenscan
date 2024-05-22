@@ -89,7 +89,6 @@ export const useAVS = (id: string) => {
                   where: {strategy_not: null, totalShares_gt: "0"}
                 ) {
                 totalShares
-                
                 strategy {
                   id
                   totalShares

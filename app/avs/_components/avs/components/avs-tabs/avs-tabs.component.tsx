@@ -21,6 +21,7 @@ import {
   Legend,
 } from '@/app/_components/tabs/tabs.styled';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { add } from '@/app/_utils/big-number.utils';
 
 const AVS_TABS = {
   details: 'avs-details',
@@ -78,14 +79,12 @@ export const AVSTabs: React.FC<Props> = ({
     () =>
       selectedQuorums.at(0)?.operators.reduce<OperatorsQuorumWeights>(
         (weights, { operator, totalWeight }) => {
-          const weight = Number(totalWeight);
-          weights[operator.id] ??= 0;
-          weights[operator.id] += weight;
-          weights.totalWeight += weight;
+          weights[operator.id] = totalWeight;
+          weights.totalWeight = add(weights.totalWeight, totalWeight).toFixed();
 
           return weights;
         },
-        { totalWeight: 0 },
+        { totalWeight: '0' },
       ) ?? null,
     [selectedQuorums],
   );
@@ -127,9 +126,9 @@ export const AVSTabs: React.FC<Props> = ({
         {isDetails && (
           <AVSDetails
             {...avsDetails}
-            minimalStake={selectedQuorums.length > 0 ? Number(selectedQuorums[0].minimalStake) / 1e18 : null}
-            ethTvl={Number(ethTvl.toFixed())}
-            eigenTvl={Number(eigenTvl.toFixed())}
+            minimalStake={selectedQuorums.length > 0 ? selectedQuorums[0].minimalStake : null}
+            ethTvl={ethTvl.toFixed()}
+            eigenTvl={eigenTvl.toFixed()}
             weights={operatorsQuorumWeights}
           />
         )}

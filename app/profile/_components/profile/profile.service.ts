@@ -62,7 +62,9 @@ export const useAccount = (id: string) => {
               registered
               metadataURI
               delegatorsCount
-              actions {
+              actions(
+                first: ${REQUEST_LIMIT}
+              ) {
                 id
                 type
                 blockNumber
@@ -84,7 +86,9 @@ export const useAccount = (id: string) => {
               id
               totalEigenWithdrawalsShares
               totalEigenShares
-              actions {
+              actions(
+                first: ${REQUEST_LIMIT}
+              ) {
                 id
                 type
                 blockNumber
@@ -102,7 +106,6 @@ export const useAccount = (id: string) => {
                 id
                 createdTimestamp
                 lastUpdatedTimestamp
-                
                 shares
                 strategy {
                   id

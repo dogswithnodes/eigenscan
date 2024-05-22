@@ -9,18 +9,17 @@ import {
   Postfix,
 } from '@/app/_components/details/details.styled';
 import { Footer } from '@/app/_components/footer/footer.component';
-import { GLOBAL_TOOLTIP_ID } from '@/app/_constants/tooltip.constants';
 import { preventDefault } from '@/app/_utils/events.utils';
-import { formatNumber, formatOptionalTooltipNumber } from '@/app/_utils/number.utils';
+import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
 
 export type Props = {
   delegatorsCount: number | undefined;
-  tvl: number | undefined;
+  tvl: string | undefined;
   website: string | undefined;
   twitter: string | undefined;
 };
 
-export const OperatorDetails: React.FC<Props> = ({ delegatorsCount = 0, tvl = 0, website, twitter }) => {
+export const OperatorDetails: React.FC<Props> = ({ delegatorsCount = 0, tvl = '0', website, twitter }) => {
   return (
     <>
       <ContainerPad>
@@ -61,12 +60,7 @@ export const OperatorDetails: React.FC<Props> = ({ delegatorsCount = 0, tvl = 0,
                 <Tr>
                   <Th>TVL</Th>
                   <Td>
-                    <span
-                      data-tooltip-id={GLOBAL_TOOLTIP_ID}
-                      data-tooltip-content={formatOptionalTooltipNumber(tvl)}
-                    >
-                      {formatNumber(tvl)}
-                    </span>
+                    {renderBNWithOptionalTooltip(tvl)}
                     <Postfix> ETH</Postfix>
                   </Td>
                 </Tr>
