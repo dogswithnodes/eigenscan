@@ -42,8 +42,7 @@ export const OperatorAVSs: React.FC<Props> = ({ id }) => {
     () =>
       data
         ? compose(
-            (strategies: Array<OperatorAVSsRow>) =>
-              strategies.slice(perPage * (currentPage - 1), perPage * currentPage),
+            (avss: Array<OperatorAVSsRow>) => avss.slice(perPage * (currentPage - 1), perPage * currentPage),
             sortTableRows(sortParams),
             tap(compose(setTotal, prop('length'))),
           )(data)

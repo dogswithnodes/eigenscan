@@ -43,8 +43,8 @@ export const StakerActions: React.FC<Props> = ({ actions }) => {
   const rows = useMemo(
     () =>
       compose(
-        (strategies: Array<StakerActionsRow>) =>
-          strategies.slice(perPage * (currentPage - 1), perPage * currentPage),
+        (actions: Array<StakerActionsRow>) =>
+          actions.slice(perPage * (currentPage - 1), perPage * currentPage),
         sortTableRows(sortParams),
         tap(compose(setTotal, prop('length'))),
         map(transformToRow),

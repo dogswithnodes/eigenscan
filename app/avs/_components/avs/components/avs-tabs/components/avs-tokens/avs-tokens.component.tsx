@@ -39,8 +39,7 @@ export const AVSTokens: React.FC<Props> = ({ multipliers, strategies }) => {
   const rows = useMemo(
     () =>
       compose(
-        (strategies: Array<AVSTokensRow>) =>
-          strategies.slice(perPage * (currentPage - 1), perPage * currentPage),
+        (tokens: Array<AVSTokensRow>) => tokens.slice(perPage * (currentPage - 1), perPage * currentPage),
         sortTableRows(sortParams),
         tap(compose(setTotal, prop('length'))),
       )(transformToRows(strategies, multipliers)),

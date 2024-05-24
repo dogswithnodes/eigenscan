@@ -1,4 +1,5 @@
 'use client';
+import { renderToStaticMarkup } from 'react-dom/server';
 import Link from 'next/link';
 import { styled } from 'styled-components';
 import type BigNumber from 'bignumber.js';
@@ -28,15 +29,40 @@ const ImageGroup = styled.section`
   }
 `;
 
+const TooltipImageGroup = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
+const visibleImages = 4;
+
 export const renderImageGroup = (srcs: Array<string>) => {
-  const plusMore = srcs.length > 4 ? srcs.length - 4 : 0;
+  const plusMore = srcs.length > visibleImages ? srcs.length - visibleImages : 0;
 
   return (
     <ImageGroup>
-      {srcs.slice(0, 4).map((src) => (
+      {srcs.slice(0, visibleImages).map((src) => (
         <img key={src} src={src} alt="" width="25" height="25" />
-      ))}{' '}
-      {plusMore > 0 && `+${plusMore}`}
+      ))}
+      {plusMore > 0 && (
+        <>
+          {' '}
+          <span
+            data-tooltip-id={GLOBAL_TOOLTIP_ID}
+            data-tooltip-html={renderToStaticMarkup(
+              <TooltipImageGroup>
+                {srcs.slice(visibleImages).map((src) => (
+                  <img key={src} src={src} alt="" width="25" height="25" />
+                ))}
+              </TooltipImageGroup>,
+            )}
+          >
+            +{plusMore}
+          </span>
+        </>
+      )}
     </ImageGroup>
   );
 };
