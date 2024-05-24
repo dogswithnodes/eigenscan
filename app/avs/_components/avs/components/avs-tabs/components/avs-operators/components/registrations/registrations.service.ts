@@ -18,33 +18,35 @@ type RegistrationsFetchParams = FetchParams<RegistrationsRow> & {
 };
 
 type RegistrationsResponse = {
-  operators: Array<Registration>;
+  avsoperatorStatuses: Array<Registration>;
 };
 
 const fetchRegistrations = async (requestParams: string): Promise<Array<Registration>> => {
-  const { operators } = await request<RegistrationsResponse>(gql`
+  const { avsoperatorStatuses } = await request<RegistrationsResponse>(gql`
     query {
-      operators(
+      avsoperatorStatuses(
         ${requestParams}
       ) {
-        id
-        metadataURI
-        totalEigenShares
-        strategies(
-          first: ${REQUEST_LIMIT}
-          where: {strategy_not: null, totalShares_gt: "0"}
-        ) {
-          totalShares
-          strategy {
-            id
+        operator {
+          id
+          metadataURI
+          totalEigenShares
+          strategies(
+            first: ${REQUEST_LIMIT}
+            where: {strategy_not: null, totalShares_gt: "0"}
+          ) {
             totalShares
+            strategy {
+              id
+              totalShares
+            }
           }
         }
       }
     }
   `);
 
-  return operators;
+  return avsoperatorStatuses;
 };
 
 export const useRegistrations = (
@@ -54,17 +56,21 @@ export const useRegistrations = (
   return useQuery({
     queryKey: ['registrations', avsId, currentPage, perPage, sortParams],
     queryFn: async () => {
-      const operators = await fetchRegistrations(`
+      const registrations = await fetchRegistrations(`
         first: ${perPage}
         skip: ${perPage * (currentPage - 1)}
         orderBy: ${sortParams.orderBy}
         orderDirection: ${sortParams.orderDirection}
-        where: {avsStatuses_: {avs: ${JSON.stringify(avsId)}}}
+        where: {avs: ${JSON.stringify(avsId)}}
       `);
 
-      const metadata = await fetchProtocolEntitiesMetadata(operators.map(({ metadataURI }) => metadataURI));
+      const metadata = await fetchProtocolEntitiesMetadata(
+        registrations.map(({ operator }) => operator.metadataURI),
+      );
 
-      return operators.map((operator, i) => transformToRow(operator, metadata[i], strategyToEthBalance));
+      return registrations.map((registration, i) =>
+        transformToRow(registration, metadata[i], strategyToEthBalance),
+      );
     },
     placeholderData: (prev) => prev,
   });
@@ -75,17 +81,21 @@ const fetchAllRegistrations = async (
   operatorsCount: number,
   strategyToEthBalance: StrategyToEthBalance,
 ): Promise<Array<RegistrationsRow>> => {
-  const operators = await fetchAllParallel(operatorsCount, async (skip: number) => {
+  const registrations = await fetchAllParallel(operatorsCount, async (skip: number) => {
     return fetchRegistrations(`
       first: ${REQUEST_LIMIT}
       skip: ${skip}
-      where: {avsStatuses_: {avs: ${JSON.stringify(avsId)}}}
+      where: {avs: ${JSON.stringify(avsId)}}
     `);
   });
 
-  const metadata = await fetchProtocolEntitiesMetadata(operators.map(({ metadataURI }) => metadataURI));
+  const metadata = await fetchProtocolEntitiesMetadata(
+    registrations.map(({ operator }) => operator.metadataURI),
+  );
 
-  return operators.map((operator, i) => transformToRow(operator, metadata[i], strategyToEthBalance));
+  return registrations.map((registration, i) =>
+    transformToRow(registration, metadata[i], strategyToEthBalance),
+  );
 };
 
 const downloadCsv = (data: Array<RegistrationsRow>, sortParams: SortParams<RegistrationsRow>) =>
@@ -98,7 +108,7 @@ export const useRegistrationsCsv = (
   strategyToEthBalance: StrategyToEthBalance,
 ) => {
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ['avs-operators-csv', avsId, sortParams],
+    queryKey: ['registrations-csv', avsId, sortParams],
     queryFn: async () => {
       return fetchAllRegistrations(avsId, operatorsCount, strategyToEthBalance);
     },
