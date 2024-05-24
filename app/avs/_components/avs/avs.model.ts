@@ -3,7 +3,6 @@ import { BaseAction } from '@/app/_models/actions.model';
 export type AVSOperator = {
   operator: {
     id: string;
-    metadataURI: string | null;
     totalEigenShares: string;
     strategies: Array<{
       totalShares: string;

@@ -55,7 +55,7 @@ export const AVS: React.FC<Props> = ({ id, tab }) => {
         id={id}
         tab={tab}
         avsDetails={{
-          registrationsCount,
+          operatorsCount: registrationsCount,
           website,
           twitter,
           blsApkRegistry: blsApkRegistry?.id,

@@ -74,7 +74,7 @@ export const useStrategyDelegations = (
     placeholderData: (prev) => prev,
   });
 
-const fetchAllStrategyDelegationsParallel = async (
+const fetchAllStrategyDelegations = async (
   id: string,
   delegationsCount: number,
   balance: string,
@@ -106,7 +106,7 @@ export const useStrategyDelegationsCsv = (
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['strategy-delegations-csv', id, sortParams],
     queryFn: async () => {
-      return fetchAllStrategyDelegationsParallel(id, delegationsCount, balance, strategyTotalShares);
+      return fetchAllStrategyDelegations(id, delegationsCount, balance, strategyTotalShares);
     },
     enabled: false,
   });

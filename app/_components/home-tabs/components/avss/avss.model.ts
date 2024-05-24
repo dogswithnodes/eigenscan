@@ -67,7 +67,7 @@ export const columns: Array<ColumnType<AVSsRow>> = [
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    render: renderAddressLink('avs'),
+    render: renderAddressLink('avs', 'avs-details'),
   },
   {
     title: titles.name,
@@ -75,7 +75,6 @@ export const columns: Array<ColumnType<AVSsRow>> = [
     key: 'name',
     onCell: () => ({ className: 'ant-table-cell_left-aligned' }),
   },
-
   {
     title: titles.created,
     dataIndex: 'created',

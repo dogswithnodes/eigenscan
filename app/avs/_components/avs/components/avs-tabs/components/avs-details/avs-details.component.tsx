@@ -15,7 +15,7 @@ import { clampMiddle } from '@/app/_utils/text.utils';
 import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
 
 export type Props = {
-  registrationsCount: number;
+  operatorsCount: number;
   ethTvl: string;
   eigenTvl: string;
   website: string | undefined;
@@ -29,7 +29,7 @@ export type Props = {
 export const AVSDetails: React.FC<Props> = ({
   website,
   twitter,
-  registrationsCount,
+  operatorsCount,
   eigenTvl,
   ethTvl,
   minimalStake,
@@ -138,7 +138,7 @@ export const AVSDetails: React.FC<Props> = ({
             </Tr>
             <Tr>
               <Th>Operators count</Th>
-              <Td>{registrationsCount}</Td>
+              <Td>{operatorsCount}</Td>
             </Tr>
           </tbody>
         </Table>

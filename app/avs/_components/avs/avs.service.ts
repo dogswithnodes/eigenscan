@@ -60,7 +60,6 @@ export const useAVS = (id: string) => {
                 totalWeight
                 operator {
                   id
-                  metadataURI
                   totalEigenShares
                   strategies(
                     first: ${REQUEST_LIMIT}
@@ -83,7 +82,6 @@ export const useAVS = (id: string) => {
             ) {
               operator {
                 id
-                metadataURI
                 totalEigenShares
                 strategies(
                   first: ${REQUEST_LIMIT}

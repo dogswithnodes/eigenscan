@@ -7,12 +7,13 @@ import {
   Props as OperatorDetailsProps,
 } from './components/operator-details/operator-details.component';
 import { OperatorStakers } from './components/operator-stakers/operator-stakers.component';
+import { OperatorAVSs } from './components/operator-avss/operator-avss.component';
+import { OperatorActions } from './components/operator-actions/operator-actions.component';
 import {
   StakerDetails,
   Props as StakerDetailsProps,
 } from './components/staker-details/staker-details.component';
 import { StakerStakes } from './components/staker-stakes/staker-stakes.component';
-import { OperatorActions } from './components/operator-actions/operator-actions.component';
 import { StakerActions } from './components/staker-actions/staker-actions.component';
 
 import { OperatorAction, StakerStake, StakerAction } from '../../profile.model';
@@ -32,6 +33,7 @@ const PROFILE_TABS = {
   operatorDetails: 'operator-details',
   operatorStakers: 'operator-stakers',
   operatorActions: 'operator-actions',
+  operatorAVSs: 'operator-avss',
   stakerDetails: 'staker-details',
   stakerStakes: 'staker-stakes',
   stakerActions: 'staker-actions',
@@ -79,6 +81,7 @@ export const ProfileTabs: React.FC<Props> = ({
   const isOperatorDetals = tab === PROFILE_TABS.operatorDetails;
   const isOperatorStakers = tab === PROFILE_TABS.operatorStakers;
   const isOperatorActions = tab === PROFILE_TABS.operatorActions;
+  const isOperatorAVSs = tab === PROFILE_TABS.operatorAVSs;
   const isStakerDetails = tab === PROFILE_TABS.stakerDetails;
   const isStakerStakes = tab === PROFILE_TABS.stakerStakes;
   const isStakerActions = tab === PROFILE_TABS.stakerActions;
@@ -99,6 +102,9 @@ export const ProfileTabs: React.FC<Props> = ({
               </Link>
               <Link href={{ query: { id, tab: PROFILE_TABS.operatorActions } }}>
                 <TabButton $active={isOperatorActions}>Actions</TabButton>
+              </Link>
+              <Link href={{ query: { id, tab: PROFILE_TABS.operatorAVSs } }}>
+                <TabButton $active={isOperatorAVSs}>AVSs</TabButton>
               </Link>
             </TabButtons>
           </Fieldset>
@@ -129,6 +135,7 @@ export const ProfileTabs: React.FC<Props> = ({
             delegatorsCount={operatorDetails.delegatorsCount}
           />
         )}
+        {isOperatorAVSs && <OperatorAVSs id={id} />}
         {isOperatorActions && operatorActions && <OperatorActions actions={operatorActions} />}
         {isStakerDetails && <StakerDetails {...stakerDetails} />}
         {isStakerStakes && stakerStakes && (

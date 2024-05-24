@@ -76,7 +76,7 @@ export const useOperatorStakers = (
     placeholderData: (prev) => prev,
   });
 
-const fetchAllStakersParallel = async (
+const fetchAllStakers = async (
   id: string,
   stakersCount: number,
   strategyToEthBalance: StrategyToEthBalance,
@@ -106,7 +106,7 @@ export const useOperatorStakersCsv = (
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['operator-stakers-csv', id, sortParams],
     queryFn: async () => {
-      return fetchAllStakersParallel(id, stakersCount, strategyToEthBalance);
+      return fetchAllStakers(id, stakersCount, strategyToEthBalance);
     },
     enabled: false,
   });

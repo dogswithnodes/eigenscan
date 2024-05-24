@@ -75,6 +75,9 @@ export const AVSTabs: React.FC<Props> = ({
 
   const selectedQuorums = useMemo(() => quorums.filter((q) => q.quorum === quorum), [quorum, quorums]);
 
+  const operatorsCount =
+    selectedQuorums.length > 0 ? selectedQuorums[0].operatorsCount : avsDetails.operatorsCount;
+
   const { ethTvl, eigenTvl } = useMemo(
     () => calculateAVSTVLs(selectedQuorums, registrations, strategyToEthBalance),
     [registrations, selectedQuorums, strategyToEthBalance],
@@ -135,10 +138,7 @@ export const AVSTabs: React.FC<Props> = ({
           <AVSDetails
             {...{
               ...avsDetails,
-              registrationsCount:
-                selectedQuorums.length > 0
-                  ? selectedQuorums[0].operatorsCount
-                  : avsDetails.registrationsCount,
+              operatorsCount,
             }}
             minimalStake={selectedQuorums.length > 0 ? selectedQuorums[0].minimalStake : null}
             ethTvl={ethTvl.toFixed()}
@@ -148,19 +148,17 @@ export const AVSTabs: React.FC<Props> = ({
         )}
         {isOperators && (
           <AVSOperators
-            operators={
-              selectedQuorums.length > 0 && selectedQuorums[0].operatorsCount > 0
-                ? selectedQuorums[0].operators
-                : registrations
-            }
-            weights={operatorsQuorumWeights}
+            avsId={id}
+            operatorsCount={operatorsCount}
+            quorum={quorum}
+            quorumWeight={operatorsQuorumWeights?.totalWeight ?? null}
             strategyToEthBalance={strategyToEthBalance}
           />
         )}
-        {isActions && <AVSActions actions={actions} />}
         {selectedQuorums.at(0)?.multipliers.length && isTokens && (
           <AVSTokens multipliers={selectedQuorums[0].multipliers} strategies={strategies} />
         )}
+        {isActions && <AVSActions actions={actions} />}
       </TabContent>
     </>
   );
