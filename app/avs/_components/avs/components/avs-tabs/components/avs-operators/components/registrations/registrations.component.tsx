@@ -31,7 +31,7 @@ export const Registrations: React.FC<Props> = ({ avsId, strategyToEthBalance, op
   } = useTable<RegistrationsRow>({
     tableName: 'registrations',
     sortParams: {
-      orderBy: 'totalShares',
+      orderBy: 'operator__totalShares',
       orderDirection: 'desc',
     },
   });

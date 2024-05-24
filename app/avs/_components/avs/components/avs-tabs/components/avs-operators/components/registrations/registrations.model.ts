@@ -9,25 +9,27 @@ import { mulDiv } from '@/app/_utils/big-number.utils';
 import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
 import { ProtocolEntityMetadata } from '@/app/_models/protocol-entity-metadata.model';
 
-export type Registration = AVSOperator['operator'] & {
-  metadataURI: string | null;
+export type Registration = {
+  operator: AVSOperator['operator'] & {
+    metadataURI: string | null;
+  };
 };
 
 export type RegistrationsRow = {
-  id: string;
+  operator__id: string;
   key: string;
   logo: string;
   name: string;
-  totalShares: string;
-  totalEigenShares: string;
+  operator__totalShares: string;
+  operator__totalEigenShares: string;
 };
 
 const titles: Record<Exclude<keyof RegistrationsRow, 'key'>, string> = {
   logo: 'Img',
   name: 'Name',
-  id: 'Operator',
-  totalShares: 'TVL ETH',
-  totalEigenShares: 'TVL Eigen',
+  operator__id: 'Operator',
+  operator__totalShares: 'TVL ETH',
+  operator__totalEigenShares: 'TVL Eigen',
 };
 
 export const columnsWidth = {
@@ -52,28 +54,28 @@ export const columns: Array<ColumnType<RegistrationsRow>> = [
     onCell: () => ({ className: 'ant-table-cell_left-aligned' }),
   },
   {
-    title: titles.id,
-    dataIndex: 'id',
-    key: 'id',
+    title: titles.operator__id,
+    dataIndex: 'operator__id',
+    key: 'operator__id',
     align: 'center',
     render: renderAddressLink('profile', 'operator-details'),
   },
   {
-    title: titles.totalShares,
-    dataIndex: 'totalShares',
-    key: 'totalShares',
+    title: titles.operator__totalShares,
+    dataIndex: 'operator__totalShares',
+    key: 'operator__totalShares',
     render: renderBigNumber,
   },
   {
-    title: titles.totalEigenShares,
-    dataIndex: 'totalEigenShares',
-    key: 'totalEigenShares',
+    title: titles.operator__totalEigenShares,
+    dataIndex: 'operator__totalEigenShares',
+    key: 'operator__totalEigenShares',
     render: renderBigNumber,
   },
 ];
 
 export const transformToRow = (
-  { id, totalEigenShares, strategies }: Registration,
+  { operator: { id, totalEigenShares, strategies } }: Registration,
   { logo, name }: ProtocolEntityMetadata,
   strategyToEthBalance: StrategyToEthBalance,
 ): RegistrationsRow => {
@@ -85,18 +87,24 @@ export const transformToRow = (
 
   return {
     key: id,
-    id: id,
+    operator__id: id,
     logo,
     name,
-    totalEigenShares: totalEigenShares,
-    totalShares: tvl.toFixed(),
+    operator__totalEigenShares: totalEigenShares,
+    operator__totalShares: tvl.toFixed(),
   };
 };
 
-export const transformToCsvRow = ({ id, logo, name, totalShares, totalEigenShares }: RegistrationsRow) => ({
-  [titles.id]: id,
+export const transformToCsvRow = ({
+  operator__id,
+  logo,
+  name,
+  operator__totalShares,
+  operator__totalEigenShares,
+}: RegistrationsRow) => ({
+  [titles.operator__id]: operator__id,
   [titles.logo]: logo,
   [titles.name]: name,
-  [titles.totalShares]: totalShares,
-  [titles.totalEigenShares]: totalEigenShares,
+  [titles.operator__totalShares]: operator__totalShares,
+  [titles.operator__totalEigenShares]: operator__totalEigenShares,
 });
