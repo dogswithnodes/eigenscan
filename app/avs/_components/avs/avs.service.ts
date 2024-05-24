@@ -48,6 +48,7 @@ export const useAVS = (id: string) => {
               multipliers(
                 first: ${REQUEST_LIMIT},
               ) {
+                id
                 multiply
                 strategy {
                   id
@@ -59,7 +60,6 @@ export const useAVS = (id: string) => {
                 totalWeight
                 operator {
                   id
-                  metadataURI
                   totalEigenShares
                   strategies(
                     first: ${REQUEST_LIMIT}
@@ -82,14 +82,12 @@ export const useAVS = (id: string) => {
             ) {
               operator {
                 id
-                metadataURI
                 totalEigenShares
                 strategies(
                   first: ${REQUEST_LIMIT}
                   where: {strategy_not: null, totalShares_gt: "0"}
                 ) {
                 totalShares
-                
                 strategy {
                   id
                   totalShares

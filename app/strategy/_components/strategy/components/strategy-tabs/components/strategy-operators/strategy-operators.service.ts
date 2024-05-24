@@ -82,7 +82,7 @@ export const useStrategyOperators = (
     placeholderData: (prev) => prev,
   });
 
-const fetchAllStrategyOperatorsParallel = async (
+const fetchAllStrategyOperators = async (
   id: string,
   operatorsCount: number,
   balance: string,
@@ -114,7 +114,7 @@ export const useStrategyOperatorsCsv = (
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['strategy-operators-csv', id, sortParams],
     queryFn: async () => {
-      return fetchAllStrategyOperatorsParallel(id, operatorsCount, balance, strategyTotalShares);
+      return fetchAllStrategyOperators(id, operatorsCount, balance, strategyTotalShares);
     },
     enabled: false,
   });

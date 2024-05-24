@@ -3,7 +3,6 @@ import { BaseAction } from '@/app/_models/actions.model';
 export type AVSOperator = {
   operator: {
     id: string;
-    metadataURI: string | null;
     totalEigenShares: string;
     strategies: Array<{
       totalShares: string;
@@ -15,15 +14,18 @@ export type AVSOperator = {
   };
 };
 
+export type Multiplier = {
+  id: string;
+  multiply: string;
+  strategy: {
+    id: string;
+  };
+};
+
 export type Quorum = {
   minimalStake: string;
   quorum: number;
-  multipliers: Array<{
-    multiply: string;
-    strategy: {
-      id: string;
-    };
-  }>;
+  multipliers: Array<Multiplier>;
   operators: Array<
     AVSOperator & {
       totalWeight: string;

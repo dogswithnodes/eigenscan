@@ -8,6 +8,7 @@ import { Select } from './components/select/select.component';
 import { AVSDetails, Props as AVSDetailsProps } from './components/avs-details/avs-details.component';
 import { AVSOperators } from './components/avs-operators/avs-operators.component';
 import { AVSActions } from './components/avs-actions/avs-actions.component';
+import { AVSTokens } from './components/avs-tokens/avs-tokens.component';
 
 import { AVSAction, AVSOperator, Quorum } from '../../avs.model';
 import { calculateAVSTVLs } from '../../../../../_utils/avs.utils';
@@ -20,12 +21,14 @@ import {
   Fieldset,
   Legend,
 } from '@/app/_components/tabs/tabs.styled';
-import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategyEnriched, StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { add } from '@/app/_utils/big-number.utils';
 
 const AVS_TABS = {
   details: 'avs-details',
   operators: 'avs-operators',
   actions: 'avs-actions',
+  tokens: 'avs-tokens',
 };
 
 type Props = {
@@ -36,8 +39,13 @@ type Props = {
   registrations: Array<AVSOperator>;
   strategyToEthBalance: StrategyToEthBalance;
   actions: Array<AVSAction>;
+  strategies: Array<StrategyEnriched>;
 };
 
+type QuorumOption = {
+  value: string;
+  label: string;
+};
 export const AVSTabs: React.FC<Props> = ({
   id,
   tab,
@@ -46,6 +54,7 @@ export const AVSTabs: React.FC<Props> = ({
   registrations,
   actions,
   strategyToEthBalance,
+  strategies,
 }) => {
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -59,15 +68,19 @@ export const AVSTabs: React.FC<Props> = ({
   const isDetails = tab === AVS_TABS.details;
   const isOperators = tab === AVS_TABS.operators;
   const isActions = tab === AVS_TABS.actions;
+  const isTokens = tab === AVS_TABS.tokens;
 
   const quorumsOptions = useMemo(
-    () => quorums.map(({ quorum }) => ({ value: String(quorum), label: `Quorum ${quorum}` })),
+    () => quorums.map(({ quorum }): QuorumOption => ({ value: String(quorum), label: `Quorum ${quorum}` })),
     [quorums],
   );
 
   const [quorum, setQuorum] = useState(quorumsOptions.length > 0 ? Number(quorumsOptions[0].value) : null);
 
   const selectedQuorums = useMemo(() => quorums.filter((q) => q.quorum === quorum), [quorum, quorums]);
+
+  const operatorsCount =
+    selectedQuorums.length > 0 ? selectedQuorums[0].operatorsCount : avsDetails.operatorsCount;
 
   const { ethTvl, eigenTvl } = useMemo(
     () => calculateAVSTVLs(selectedQuorums, registrations, strategyToEthBalance),
@@ -78,14 +91,12 @@ export const AVSTabs: React.FC<Props> = ({
     () =>
       selectedQuorums.at(0)?.operators.reduce<OperatorsQuorumWeights>(
         (weights, { operator, totalWeight }) => {
-          const weight = Number(totalWeight);
-          weights[operator.id] ??= 0;
-          weights[operator.id] += weight;
-          weights.totalWeight += weight;
+          weights[operator.id] = totalWeight;
+          weights.totalWeight = add(weights.totalWeight, totalWeight).toFixed();
 
           return weights;
         },
-        { totalWeight: 0 },
+        { totalWeight: '0' },
       ) ?? null,
     [selectedQuorums],
   );
@@ -106,9 +117,12 @@ export const AVSTabs: React.FC<Props> = ({
               <Link href={{ query: { id, tab: AVS_TABS.actions } }}>
                 <TabButton $active={isActions}>Actions</TabButton>
               </Link>
+              <Link href={{ query: { id, tab: AVS_TABS.tokens } }}>
+                <TabButton $active={isTokens}>Allowed Tokens</TabButton>
+              </Link>
             </TabButtons>
             {quorums.length > 0 && (
-              <Select
+              <Select<QuorumOption>
                 defaultValue={quorumsOptions[0]}
                 options={quorumsOptions}
                 onChange={(option) => {
@@ -126,23 +140,27 @@ export const AVSTabs: React.FC<Props> = ({
       <TabContent $footerPressedToBottom={isDetails}>
         {isDetails && (
           <AVSDetails
-            {...avsDetails}
-            minimalStake={selectedQuorums.length > 0 ? Number(selectedQuorums[0].minimalStake) / 1e18 : null}
-            ethTvl={Number(ethTvl.toFixed())}
-            eigenTvl={Number(eigenTvl.toFixed())}
+            {...{
+              ...avsDetails,
+              operatorsCount,
+            }}
+            minimalStake={selectedQuorums.length > 0 ? selectedQuorums[0].minimalStake : null}
+            ethTvl={ethTvl.toFixed()}
+            eigenTvl={eigenTvl.toFixed()}
             weights={operatorsQuorumWeights}
           />
         )}
         {isOperators && (
           <AVSOperators
-            operators={
-              selectedQuorums.length > 0 && selectedQuorums[0].operatorsCount > 0
-                ? selectedQuorums[0].operators
-                : registrations
-            }
-            weights={operatorsQuorumWeights}
+            avsId={id}
+            operatorsCount={operatorsCount}
+            quorum={quorum}
+            quorumWeight={operatorsQuorumWeights?.totalWeight ?? null}
             strategyToEthBalance={strategyToEthBalance}
           />
+        )}
+        {selectedQuorums.at(0)?.multipliers.length && isTokens && (
+          <AVSTokens multipliers={selectedQuorums[0].multipliers} strategies={strategies} />
         )}
         {isActions && <AVSActions actions={actions} />}
       </TabContent>

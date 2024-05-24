@@ -174,4 +174,4 @@ export const StyledSelect = styled(Select)`
       }
     }
   }
-`;
+` as typeof Select;

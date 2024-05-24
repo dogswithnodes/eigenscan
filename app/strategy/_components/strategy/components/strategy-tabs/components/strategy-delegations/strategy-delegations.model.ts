@@ -7,6 +7,7 @@ import {
   renderDate,
   renderTransactionHash,
 } from '@/app/_utils/render.utils';
+import { mulDiv } from '@/app/_utils/big-number.utils';
 
 export type StrategyDelegation = {
   id: string;
@@ -25,7 +26,7 @@ export type StrategyDelegation = {
 export type StrategyDelegationsRow = {
   key: string;
   operator: string;
-  shares: number;
+  shares: string;
   createdTimestamp: string;
   createdTransactionHash: string;
   lastUpdatedTimestamp: string;
@@ -108,7 +109,7 @@ export const transformToRow = ({
   return {
     key: id,
     operator: operator.id,
-    shares: (Number(shares) * Number(balance)) / (Number(strategyTotalShares) * 1e18),
+    shares: mulDiv(shares, balance, strategyTotalShares).toFixed(),
     createdTimestamp,
     createdTransactionHash,
     lastUpdatedTimestamp,

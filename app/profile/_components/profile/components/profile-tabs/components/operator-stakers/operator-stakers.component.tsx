@@ -31,7 +31,7 @@ export const OperatorStakers: React.FC<Props> = ({ id, delegatorsCount = 0, stra
   } = useTable<OperatorStakersRow>({
     tableName: 'operator-stakers',
     sortParams: {
-      orderBy: 'totalShares',
+      orderBy: 'staker__totalShares',
       orderDirection: 'desc',
     },
   });

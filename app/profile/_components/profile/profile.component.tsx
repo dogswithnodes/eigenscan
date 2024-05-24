@@ -5,10 +5,12 @@ import { useAccount } from './profile.service';
 import { ProfileCards } from './components/profile-cards/profile-cards.component';
 import { ProfileTabs } from './components/profile-tabs/profile-tabs.component';
 
+import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
+import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { AccountPreloader } from '@/app/_components/account-preloader/account-preloader.component';
 import { Empty } from '@/app/_components/empty/empty.component';
-import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
 import { useEnrichedStrategies } from '@/app/_services/strategies.service';
+import { mulDiv } from '@/app/_utils/big-number.utils';
 
 type Props = {
   id: string;
@@ -21,14 +23,13 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
 
   const operatorTVL = useMemo(() => {
     if (account.data?.operator && strategies.data?.strategyToEthBalance) {
-      return Number(
-        account.data.operator.strategies.reduce((tvl, { totalShares, strategy }) => {
-          tvl +=
-            (BigInt(totalShares) * BigInt(strategies.data.strategyToEthBalance[strategy.id])) /
-            BigInt(strategy.totalShares);
-          return tvl;
-        }, BigInt(0)) / BigInt(1e18),
-      );
+      return account.data.operator.strategies.reduce((acc, { totalShares, strategy }) => {
+        acc = acc.plus(
+          mulDiv(totalShares, strategies.data.strategyToEthBalance[strategy.id], strategy.totalShares),
+        );
+
+        return acc;
+      }, BN_ZERO);
     }
   }, [account, strategies]);
 
@@ -38,28 +39,31 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
       const { strategyToEthBalance } = strategies.data;
 
       const stakedEth = staker.stakes.reduce((acc, { shares, strategy }) => {
-        const strategyTvl =
-          (BigInt(shares) * BigInt(strategyToEthBalance[strategy.id])) / BigInt(strategy.totalShares);
         if (strategy.id !== EIGEN_STRATEGY) {
-          acc += strategyTvl;
+          acc = acc.plus(mulDiv(shares, strategyToEthBalance[strategy.id], strategy.totalShares));
         }
 
         return acc;
-      }, BigInt(0));
+      }, BN_ZERO);
 
-      const totalWithdrawalsEth = staker.withdrawals.reduce((total, { strategies }) => {
+      const withdrawnEth = staker.withdrawals.reduce((acc, { strategies }) => {
         strategies.forEach(({ share, strategy }) => {
-          total += (BigInt(share) * BigInt(strategyToEthBalance[strategy.id])) / BigInt(strategy.totalShares);
+          acc = acc.plus(mulDiv(share, strategyToEthBalance[strategy.id], strategy.totalShares));
         });
 
-        return total;
-      }, BigInt(0));
+        return acc;
+      }, BN_ZERO);
 
       return {
-        stakedEth: Number(stakedEth) / 1e18,
-        totalWithdrawalsEth: Number(totalWithdrawalsEth) / 1e18,
+        stakedEth: stakedEth.toFixed(),
+        withdrawnEth: withdrawnEth.toFixed(),
       };
     }
+
+    return {
+      stakedEth: undefined,
+      withdrawnEth: undefined,
+    };
   }, [account, strategies]);
 
   if (account.isPending || strategies.isPending) {
@@ -88,6 +92,7 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
         logo={logo}
         created={operator?.registered}
         description={description}
+        url={isOperator ? 'https://app.eigenlayer.xyz/operator' : undefined}
       />
       <ProfileTabs
         id={id}
@@ -97,7 +102,7 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
         operatorDetails={{
           website,
           twitter,
-          tvl: operatorTVL,
+          tvl: operatorTVL?.toFixed(),
           delegatorsCount: operator?.delegatorsCount,
         }}
         stakerDetails={{
@@ -105,10 +110,8 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
           operator: staker?.delegator?.operator?.id,
           stakesCount: staker?.stakesCount,
           withdrawalsCount: staker?.withdrawalsCount,
-          stakedEigen: staker?.totalEigenShares ? Number(staker.totalEigenShares) / 1e18 : undefined,
-          withdrawnEigen: staker?.totalEigenWithdrawalsShares
-            ? Number(staker.totalEigenWithdrawalsShares) / 1e18
-            : undefined,
+          stakedEigen: staker?.totalEigenShares,
+          withdrawnEigen: staker?.totalEigenWithdrawalsShares,
         }}
         stakerStakes={staker?.stakes}
         strategiesData={strategies.data}

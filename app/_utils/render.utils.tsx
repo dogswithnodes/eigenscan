@@ -1,10 +1,10 @@
 'use client';
 import Link from 'next/link';
 import { styled } from 'styled-components';
-import BigNumber from 'bignumber.js';
+import type BigNumber from 'bignumber.js';
 import numbro from 'numbro';
 
-import { formatTableNumber, formatTooltipNumber } from './number.utils';
+import { divBy1e18 } from './big-number.utils';
 import { preventDefault } from './events.utils';
 import { formatTableDate } from './table.utils';
 import { clampMiddle } from './text.utils';
@@ -57,19 +57,13 @@ export const renderAddressLink = (type: 'avs' | 'profile' | 'strategy', tab?: st
 
 export const renderDate = (date: string | null) =>
   date ? <span className="ant-table-cell-monospaced-value">{formatTableDate(date)}</span> : null;
-// TODO bignumber
-export const renderBigNumber = (number: number) => (
-  <span data-tooltip-id={GLOBAL_TOOLTIP_ID} data-tooltip-content={formatTooltipNumber(number)}>
-    {formatTableNumber(number)}
-  </span>
-);
 
 const formatTooltipBnValue = (value: BigNumber) =>
   value.absoluteValue().gte(1) ? value.toFormat(2) : value.toString();
 
 export const _renderBN = (optionalTooltip?: boolean) => {
   return function RenderedBigNumber(bn: BigNumber | string) {
-    const value = new BigNumber(bn).div(1e18);
+    const value = divBy1e18(bn);
     const absValue = value.absoluteValue();
 
     const tooltipContent = !optionalTooltip
@@ -99,7 +93,7 @@ export const _renderBN = (optionalTooltip?: boolean) => {
 
 export const renderBNWithOptionalTooltip = _renderBN(true);
 
-export const renderBN = _renderBN();
+export const renderBigNumber = _renderBN();
 
 export const renderTransactionHash = (value: string) => (
   <a

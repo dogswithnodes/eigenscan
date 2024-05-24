@@ -5,7 +5,7 @@ import { StrategyTabs } from './components/strategy-tabs/strategy-tabs.component
 import { AccountPreloader } from '@/app/_components/account-preloader/account-preloader.component';
 import { Empty } from '@/app/_components/empty/empty.component';
 import { useEnrichedStrategies } from '@/app/_services/strategies.service';
-import { toEth } from '@/app/_utils/big-number.utils';
+import { add, mulDiv } from '@/app/_utils/big-number.utils';
 
 type Props = {
   id: string;
@@ -48,6 +48,8 @@ export const Strategy: React.FC<Props> = ({ id, tab }) => {
     ethBalance,
   } = strategy;
 
+  const denominator = add(totalShares, totalWithdrawing);
+
   return (
     <>
       <StrategyCards logo={logo} name={name} id={id} />
@@ -64,17 +66,11 @@ export const Strategy: React.FC<Props> = ({ id, tab }) => {
           underlyingToken,
           tokenSymbol,
           tokenDecimals,
-          balance: Number(toEth(balance)),
-          totalDelegated:
-            (Number(totalDelegated) * Number(balance)) /
-            (1e18 * (Number(totalShares) + Number(totalWithdrawing))),
-          ethBalance: Number(toEth(ethBalance)),
-          totalWithdrawals:
-            // TODO bn
-            (Number(totalWithdrawing) * Number(balance)) /
-            (1e18 * (Number(totalShares) + Number(totalWithdrawing))),
-          totalDelegatedPercent:
-            (Number(totalDelegated) * 100) / (Number(totalShares) + Number(totalWithdrawing)),
+          balance,
+          totalDelegated: mulDiv(totalDelegated, balance, denominator).toFixed(),
+          ethBalance,
+          totalWithdrawals: mulDiv(totalWithdrawing, balance, denominator).toFixed(),
+          totalDelegatedPercent: mulDiv(totalDelegated, 100, denominator).toFixed(1),
         }}
       />
     </>

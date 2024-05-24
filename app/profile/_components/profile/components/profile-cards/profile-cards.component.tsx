@@ -12,11 +12,12 @@ export const ProfileCards: React.FC<AccountCardProps & DescriptionCardProps> = (
   logo,
   created,
   description,
+  url,
 }) => {
   return (
     <Cards>
       <Card>
-        <AccountCard id={id} name={name} logo={logo} created={created} />
+        <AccountCard id={id} name={name} logo={logo} created={created} url={url} />
       </Card>
       <Card>
         <DescriptionCard description={description} />

@@ -67,7 +67,7 @@ export const useStrategyStakes = (
     placeholderData: (prev) => prev,
   });
 
-const fetchAllStrategyStakesParallel = async (
+const fetchAllStrategyStakers = async (
   id: string,
   stakesCount: number,
   balance: string,
@@ -99,7 +99,7 @@ export const useStrategyStakesCsv = (
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['strategy-stakes-csv', id, sortParams],
     queryFn: async () => {
-      return fetchAllStrategyStakesParallel(id, stakesCount, balance, strategyTotalShares);
+      return fetchAllStrategyStakers(id, stakesCount, balance, strategyTotalShares);
     },
     enabled: false,
   });

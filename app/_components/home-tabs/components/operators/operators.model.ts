@@ -4,11 +4,11 @@ import type BigNumber from 'bignumber.js';
 
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
-import { calculateTotalAssets } from '@/app/_utils/big-number.utils';
+import { mulDiv } from '@/app/_utils/big-number.utils';
 import { formatTableDate } from '@/app/_utils/table.utils';
 import {
   renderAddressLink,
-  renderBN,
+  renderBigNumber,
   renderDate,
   renderImage,
   renderImageGroup,
@@ -99,7 +99,7 @@ export const columns: Array<ColumnType<OperatorsRow>> = [
     title: titles.tvl,
     dataIndex: 'tvl',
     key: 'tvl',
-    render: renderBN,
+    render: renderBigNumber,
   },
   {
     title: titles.delegatorsCount,
@@ -119,9 +119,7 @@ export const transformToRow = (
   strategyToEthBalance: StrategyToEthBalance,
 ): OperatorsRow => {
   const tvl = strategies.reduce((acc, { totalShares, strategy }) => {
-    return acc.plus(
-      calculateTotalAssets(totalShares, strategyToEthBalance[strategy.id], strategy.totalShares),
-    );
+    return acc.plus(mulDiv(totalShares, strategyToEthBalance[strategy.id], strategy.totalShares));
   }, BN_ZERO);
 
   return {

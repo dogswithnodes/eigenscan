@@ -1,9 +1,9 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
+import BigNumber from 'bignumber.js';
 
 import { StrategyEnriched } from '@/app/_models/strategies.model';
 import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
-import { toEth } from '@/app/_utils/big-number.utils';
 
 export type StrategiesRow = {
   key: string;
@@ -11,9 +11,9 @@ export type StrategiesRow = {
   name: string;
   logo: string | null;
   tokenSymbol: string;
-  ethBalance: number;
-  balance: number;
-  totalDelegated: number;
+  ethBalance: BigNumber;
+  balance: BigNumber;
+  totalDelegated: BigNumber;
   stakesCount: number;
   delegationsCount: number;
 };
@@ -49,7 +49,7 @@ export const columns: Array<ColumnType<StrategiesRow>> = [
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    render: renderAddressLink('strategy'),
+    render: renderAddressLink('strategy', 'strategy-details'),
   },
   {
     title: titles.name,
@@ -111,10 +111,9 @@ export const transformToRow = ({
     name,
     logo: logo || null,
     tokenSymbol,
-    balance: Number(toEth(balance)),
-    // TODO bignumber
-    ethBalance: Number(toEth(ethBalance)),
-    totalDelegated: Number(toEth(totalDelegated)),
+    balance: new BigNumber(balance),
+    ethBalance: new BigNumber(ethBalance),
+    totalDelegated: new BigNumber(totalDelegated),
     stakesCount,
     delegationsCount,
   };

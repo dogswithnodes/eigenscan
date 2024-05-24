@@ -2,6 +2,7 @@
 import { ColumnType } from 'antd/es/table';
 
 import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
+import { mulDiv } from '@/app/_utils/big-number.utils';
 
 export type StrategyOperator = {
   operator: {
@@ -17,7 +18,7 @@ export type StrategyOperatorsRow = {
   id: string;
   logo: string;
   name: string;
-  totalShares: number;
+  totalShares: string;
   delegationsCount: number;
 };
 
@@ -30,10 +31,10 @@ const titles: Record<Exclude<keyof StrategyOperatorsRow, 'key'>, string> = {
 };
 
 export const columnsWidth = {
-  '2560': [65, 499, 499, 499, 499, 499],
-  '1920': [56, 345, 345, 345, 345, 345],
-  '1440': [52, 306, 306, 306, 306, 306],
-  '1280': [48, 283, 283, 283, 283, 283],
+  '2560': [65, 499, 499, 499, 499],
+  '1920': [56, 345, 345, 345, 345],
+  '1440': [52, 306, 306, 306, 306],
+  '1280': [48, 283, 283, 283, 283],
 };
 
 export const columns: Array<ColumnType<StrategyOperatorsRow>> = [
@@ -88,7 +89,7 @@ export const transformToRow = ({
     id,
     logo,
     name,
-    totalShares: (Number(totalShares) * Number(balance)) / (Number(strategyTotalShares) * 1e18),
+    totalShares: mulDiv(totalShares, balance, strategyTotalShares).toFixed(),
     delegationsCount,
   };
 };

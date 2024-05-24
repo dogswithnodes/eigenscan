@@ -4,7 +4,7 @@ import type BigNumber from 'bignumber.js';
 
 import { AVSOperatorBase } from '@/app/_models/avs.model';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
-import { renderAddressLink, renderBN, renderDate, renderImage } from '@/app/_utils/render.utils';
+import { renderAddressLink, renderBigNumber, renderDate, renderImage } from '@/app/_utils/render.utils';
 import { formatTableDate } from '@/app/_utils/table.utils';
 import { calculateAVSTVLs } from '@/app/_utils/avs.utils';
 
@@ -67,7 +67,7 @@ export const columns: Array<ColumnType<AVSsRow>> = [
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    render: renderAddressLink('avs'),
+    render: renderAddressLink('avs', 'avs-details'),
   },
   {
     title: titles.name,
@@ -75,7 +75,6 @@ export const columns: Array<ColumnType<AVSsRow>> = [
     key: 'name',
     onCell: () => ({ className: 'ant-table-cell_left-aligned' }),
   },
-
   {
     title: titles.created,
     dataIndex: 'created',
@@ -87,13 +86,13 @@ export const columns: Array<ColumnType<AVSsRow>> = [
     title: titles.ethTvl,
     dataIndex: 'ethTvl',
     key: 'ethTvl',
-    render: renderBN,
+    render: renderBigNumber,
   },
   {
     title: titles.eigenTvl,
     dataIndex: 'eigenTvl',
     key: 'eigenTvl',
-    render: renderBN,
+    render: renderBigNumber,
   },
   {
     title: titles.registrationsCount,

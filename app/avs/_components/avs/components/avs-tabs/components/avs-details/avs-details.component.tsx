@@ -10,25 +10,26 @@ import { Table, Tr, Th, Td, Postfix } from '@/app/_components/details/details.st
 import { Footer } from '@/app/_components/footer/footer.component';
 import { GLOBAL_TOOLTIP_ID } from '@/app/_constants/tooltip.constants';
 import { preventDefault } from '@/app/_utils/events.utils';
-import { formatNumber, formatOptionalTooltipNumber } from '@/app/_utils/number.utils';
+import { divBy1e18 } from '@/app/_utils/big-number.utils';
 import { clampMiddle } from '@/app/_utils/text.utils';
+import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
 
 export type Props = {
-  registrationsCount: number;
-  ethTvl: number;
-  eigenTvl: number;
+  operatorsCount: number;
+  ethTvl: string;
+  eigenTvl: string;
   website: string | undefined;
   twitter: string | undefined;
   weights: OperatorsQuorumWeights | null;
   blsApkRegistry: string | undefined;
   stakeRegistry: string | undefined;
-  minimalStake: number | null;
+  minimalStake: string | null;
 };
 
 export const AVSDetails: React.FC<Props> = ({
   website,
   twitter,
-  registrationsCount,
+  operatorsCount,
   eigenTvl,
   ethTvl,
   minimalStake,
@@ -42,7 +43,7 @@ export const AVSDetails: React.FC<Props> = ({
       weights
         ? Object.entries(weights)
             .flatMap(([id, weight]) =>
-              id === 'totalWeight' ? [] : { name: id, value: Number((weight / 1e18).toFixed(1)) },
+              id === 'totalWeight' ? [] : { name: id, value: Number(divBy1e18(weight).toFixed(2)) },
             )
             .sort((a, b) => b.value - a.value)
         : null,
@@ -118,43 +119,26 @@ export const AVSDetails: React.FC<Props> = ({
             {minimalStake && (
               <Tr>
                 <Th>Minimal stake</Th>
-                <Td>
-                  <span
-                    data-tooltip-id={GLOBAL_TOOLTIP_ID}
-                    data-tooltip-content={formatOptionalTooltipNumber(minimalStake)}
-                  >
-                    {formatNumber(minimalStake)}
-                  </span>
-                </Td>
+                <Td>{renderBNWithOptionalTooltip(minimalStake)}</Td>
               </Tr>
             )}
             <Tr>
               <Th>TVL ETH</Th>
               <Td>
-                <span
-                  data-tooltip-id={GLOBAL_TOOLTIP_ID}
-                  data-tooltip-content={formatOptionalTooltipNumber(ethTvl)}
-                >
-                  {formatNumber(ethTvl)}
-                </span>
+                {renderBNWithOptionalTooltip(ethTvl)}
                 <Postfix> ETH</Postfix>
               </Td>
             </Tr>
             <Tr>
               <Th>TVL EIGEN</Th>
               <Td>
-                <span
-                  data-tooltip-id={GLOBAL_TOOLTIP_ID}
-                  data-tooltip-content={formatOptionalTooltipNumber(eigenTvl)}
-                >
-                  {formatNumber(eigenTvl)}
-                </span>
+                {renderBNWithOptionalTooltip(eigenTvl)}
                 <Postfix> EIGEN</Postfix>
               </Td>
             </Tr>
             <Tr>
               <Th>Operators count</Th>
-              <Td>{registrationsCount}</Td>
+              <Td>{operatorsCount}</Td>
             </Tr>
           </tbody>
         </Table>

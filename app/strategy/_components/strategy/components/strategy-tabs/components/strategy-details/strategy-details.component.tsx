@@ -9,24 +9,23 @@ import {
   Postfix,
 } from '@/app/_components/details/details.styled';
 import { Footer } from '@/app/_components/footer/footer.component';
-import { GLOBAL_TOOLTIP_ID } from '@/app/_constants/tooltip.constants';
 import { preventDefault } from '@/app/_utils/events.utils';
-import { formatNumber, formatOptionalTooltipNumber } from '@/app/_utils/number.utils';
+import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
 import { clampMiddle } from '@/app/_utils/text.utils';
 
 export type Props = {
   whitelisted: boolean;
-  balance: number;
-  ethBalance: number;
-  totalDelegated: number;
-  totalWithdrawals: number;
+  balance: string;
+  ethBalance: string;
+  totalDelegated: string;
+  totalDelegatedPercent: string;
+  totalWithdrawals: string;
   operatorsCount: number;
   stakesCount: number;
   delegationsCount: number;
   underlyingToken: string | null;
   tokenSymbol: string;
   tokenDecimals: number;
-  totalDelegatedPercent: number;
 };
 
 export const StrategyDetails: React.FC<Props> = ({
@@ -56,14 +55,7 @@ export const StrategyDetails: React.FC<Props> = ({
                 </Tr>
                 <Tr>
                   <Th>Balance</Th>
-                  <Td>
-                    <span
-                      data-tooltip-id={GLOBAL_TOOLTIP_ID}
-                      data-tooltip-content={formatOptionalTooltipNumber(balance)}
-                    >
-                      {formatNumber(balance)}
-                    </span>
-                  </Td>
+                  <Td>{renderBNWithOptionalTooltip(balance)}</Td>
                 </Tr>
                 <Tr>
                   <Th>Underlying Token</Th>
@@ -97,36 +89,21 @@ export const StrategyDetails: React.FC<Props> = ({
                 <Tr>
                   <Th>TVL ETH</Th>
                   <Td>
-                    <span
-                      data-tooltip-id={GLOBAL_TOOLTIP_ID}
-                      data-tooltip-content={formatOptionalTooltipNumber(ethBalance)}
-                    >
-                      {formatNumber(ethBalance)}
-                    </span>
+                    {renderBNWithOptionalTooltip(ethBalance)}
                     <Postfix> ETH</Postfix>
                   </Td>
                 </Tr>
                 <Tr>
                   <Th>Total withdrawals</Th>
                   <Td>
-                    <span
-                      data-tooltip-id={GLOBAL_TOOLTIP_ID}
-                      data-tooltip-content={formatOptionalTooltipNumber(totalWithdrawals)}
-                    >
-                      {formatNumber(totalWithdrawals)}
-                    </span>
+                    {renderBNWithOptionalTooltip(totalWithdrawals)}
                     <Postfix> {tokenSymbol}</Postfix>
                   </Td>
                 </Tr>
                 <Tr>
                   <Th>Total delegated</Th>
                   <Td>
-                    <span
-                      data-tooltip-id={GLOBAL_TOOLTIP_ID}
-                      data-tooltip-content={formatOptionalTooltipNumber(totalDelegated)}
-                    >
-                      {formatNumber(totalDelegated)} ({totalDelegatedPercent.toFixed(1)}%)
-                    </span>
+                    {renderBNWithOptionalTooltip(totalDelegated)} ({totalDelegatedPercent}%)
                     <Postfix> {tokenSymbol}</Postfix>
                   </Td>
                 </Tr>
