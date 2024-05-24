@@ -1,5 +1,5 @@
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { request as _request, RequestDocument, Variables } from 'graphql-request';
+import { RequestDocument, Variables, GraphQLClient } from 'graphql-request';
 
 export const REQUEST_LIMIT = 1000;
 
@@ -42,7 +42,10 @@ export const request = <T = unknown, V extends Variables = Variables>(
       : [variables: V, requestHeaders?: GraphQLClientRequestHeaders]
 ) => {
   if (url) {
-    return _request<T, V>(url, document, ...variablesAndRequestHeaders);
+    const client = new GraphQLClient(url, {
+      fetch,
+    });
+    return client.request<T, V>(document, ...variablesAndRequestHeaders);
   }
 
   const subgraphUrl = process.env.NEXT_PUBLIC_SUBGRAPH_URL;
@@ -50,6 +53,8 @@ export const request = <T = unknown, V extends Variables = Variables>(
   if (!subgraphUrl) {
     throw 'NEXT_PUBLIC_SUBGRAPH_URL is not defined';
   }
-
-  return _request<T, V>(subgraphUrl, document, ...variablesAndRequestHeaders);
+  const client = new GraphQLClient(subgraphUrl, {
+    fetch,
+  });
+  return client.request<T, V>(document, ...variablesAndRequestHeaders);
 };

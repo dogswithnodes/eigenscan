@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 
 import { AVS } from './_components/avs/avs.component';
 
+export const runtime = 'edge';
+
 export default function Page({
   searchParams,
 }: {

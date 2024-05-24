@@ -15,7 +15,7 @@ export const Portal: React.FC<ChildrenProp> = ({ children }) => {
     if (!container) {
       container = document.createElement('div');
       container.setAttribute('id', PORTAL_CONTAINER_ID);
-      document.body.append(container);
+      document.body.appendChild(container);
       c = true;
     }
 

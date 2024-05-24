@@ -2,13 +2,14 @@
 
 import { DEFAULT_PROTOCOL_ENTITY_METADATA } from '../_constants/protocol-entity-metadata.constants';
 import { ProtocolEntityMetadata } from '../_models/protocol-entity-metadata.model';
+import { getCache } from '../_utils/cache';
 
-const cache = new Map();
+const cache = getCache(process.env.METADATA_CACHE as unknown as CloudflareEnv['METADATA_CACHE'], 'metadata');
 
-const fetchProtocolEntityMetadata = async (uri: string) => {
-  const data = cache.get(uri);
+const fetchProtocolEntityMetadata = async (uri: string): Promise<ProtocolEntityMetadata> => {
+  const data = await cache.get(uri);
 
-  if (data) return data;
+  if (data) return JSON.parse(data) as ProtocolEntityMetadata;
 
   const res = await fetch(uri);
 
@@ -17,9 +18,9 @@ const fetchProtocolEntityMetadata = async (uri: string) => {
   const metadata = await res.json();
 
   if (metadata && typeof metadata === 'object') {
-    cache.set(uri, metadata);
+    await cache.put(uri, JSON.stringify(metadata));
 
-    return metadata;
+    return metadata as ProtocolEntityMetadata;
   }
 
   return DEFAULT_PROTOCOL_ENTITY_METADATA;

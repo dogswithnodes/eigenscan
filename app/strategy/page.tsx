@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 
 import { Strategy } from './_components/strategy/strategy.component';
 
+export const runtime = 'edge';
+
 export default function Page({
   searchParams,
 }: {

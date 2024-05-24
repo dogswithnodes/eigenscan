@@ -42,6 +42,10 @@ type Props = {
   strategies: Array<StrategyEnriched>;
 };
 
+type QuorumOption = {
+  value: string;
+  label: string;
+};
 export const AVSTabs: React.FC<Props> = ({
   id,
   tab,
@@ -67,7 +71,7 @@ export const AVSTabs: React.FC<Props> = ({
   const isTokens = tab === AVS_TABS.tokens;
 
   const quorumsOptions = useMemo(
-    () => quorums.map(({ quorum }) => ({ value: String(quorum), label: `Quorum ${quorum}` })),
+    () => quorums.map(({ quorum }): QuorumOption => ({ value: String(quorum), label: `Quorum ${quorum}` })),
     [quorums],
   );
 
@@ -118,7 +122,7 @@ export const AVSTabs: React.FC<Props> = ({
               </Link>
             </TabButtons>
             {quorums.length > 0 && (
-              <Select
+              <Select<QuorumOption>
                 defaultValue={quorumsOptions[0]}
                 options={quorumsOptions}
                 onChange={(option) => {
