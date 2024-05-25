@@ -102,7 +102,7 @@ export const Operators: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) => 
       sortingOptions={{
         sortParams,
         setSortParams,
-        unsortableKeys: ['logo', 'name', 'tvl', 'avsLogos'],
+        unsortableKeys: ['logo', 'name', 'avsLogos'],
       }}
     />
   );

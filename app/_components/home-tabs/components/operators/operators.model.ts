@@ -45,8 +45,8 @@ export type OperatorsRow = {
   id: string;
   logo: string;
   name: string;
-  created: string;
-  tvl: BigNumber;
+  registered: string;
+  totalShares: BigNumber;
   delegatorsCount: number;
   avsLogos: Array<string>;
 };
@@ -55,8 +55,8 @@ const titles: Record<Exclude<keyof OperatorsRow, 'key'>, string> = {
   id: 'Operator',
   name: 'Name',
   logo: 'Img',
-  created: 'Created',
-  tvl: 'TVL',
+  registered: 'Created',
+  totalShares: 'TVL',
   delegatorsCount: 'Delegators count',
   avsLogos: 'AVSs',
 };
@@ -89,16 +89,16 @@ export const columns: Array<ColumnType<OperatorsRow>> = [
     render: renderAddressLink('profile', 'operator-details' /** TODO const */),
   },
   {
-    title: titles.created,
-    dataIndex: 'created',
-    key: 'created',
+    title: titles.registered,
+    dataIndex: 'registered',
+    key: 'registered',
     align: 'center',
     render: renderDate,
   },
   {
-    title: titles.tvl,
-    dataIndex: 'tvl',
-    key: 'tvl',
+    title: titles.totalShares,
+    dataIndex: 'totalShares',
+    key: 'totalShares',
     render: renderBigNumber,
   },
   {
@@ -127,8 +127,8 @@ export const transformToRow = (
     id,
     logo,
     name,
-    tvl,
-    created: registered,
+    totalShares: tvl,
+    registered,
     delegatorsCount,
     avsLogos,
   };
@@ -138,16 +138,16 @@ export const transformToCsvRow = ({
   id,
   logo,
   name,
-  created,
+  registered,
   delegatorsCount,
-  tvl,
+  totalShares,
   avsLogos,
 }: OperatorsRow) => ({
   [titles.id]: id,
   [titles.logo]: logo,
   [titles.name]: name,
-  [titles.created]: formatTableDate(created),
+  [titles.registered]: formatTableDate(registered),
   [titles.delegatorsCount]: delegatorsCount,
-  [titles.tvl]: tvl,
+  [titles.totalShares]: totalShares,
   [titles.avsLogos]: avsLogos.join(', '),
 });
