@@ -135,7 +135,7 @@ export const ProfileTabs: React.FC<Props> = ({
             delegatorsCount={operatorDetails.delegatorsCount}
           />
         )}
-        {isOperatorAVSs && <OperatorAVSs id={id} />}
+        {isOperatorAVSs && <OperatorAVSs id={id} strategies={strategies} />}
         {isOperatorActions && operatorActions && <OperatorActions actions={operatorActions} />}
         {isStakerDetails && <StakerDetails {...stakerDetails} />}
         {isStakerStakes && stakerStakes && (

@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { OperatorAVSs, OperatorAVSsEnriched, transformToRows } from './operator-avss.model';
 
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
+import { StrategyEnriched } from '@/app/_models/strategies.model';
 import { request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 
@@ -27,6 +28,13 @@ const fetchOperatorAVSs = async (id: string): Promise<OperatorAVSsEnriched> => {
               quorum
               avs {
                 id
+              }
+              multipliers(
+                first: ${REQUEST_LIMIT},
+              ) {
+                strategy {
+                  id
+                }
               }
             }
           }
@@ -65,11 +73,11 @@ const fetchOperatorAVSs = async (id: string): Promise<OperatorAVSsEnriched> => {
   };
 };
 
-export const useOperatorAVSs = (id: string) => {
+export const useOperatorAVSs = (id: string, strategies: Array<StrategyEnriched>) => {
   return useQuery({
     queryKey: ['operator-avss'],
     queryFn: async () => {
-      return transformToRows(await fetchOperatorAVSs(id));
+      return transformToRows(await fetchOperatorAVSs(id), strategies);
     },
   });
 };
