@@ -10,11 +10,12 @@ import {
   transformToRow,
 } from './strategy-operators.model';
 
+import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { SortParams } from '@/app/_models/sort.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
+import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 import { downloadCsv } from '@/app/_utils/csv.utils';
 import { sortTableRows } from '@/app/_utils/sort.utils';
-import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 
 type StrategyOperatorsResponse = {
   operatorStrategies: Array<StrategyOperator>;
@@ -42,8 +43,8 @@ const fetchStrategyOperators = async (requestOptions: string) => {
     operatorStrategies.map(({ operator: { metadataURI } }) => metadataURI),
   );
 
-  return operatorStrategies.map((operator, i) => {
-    const { logo, name } = metadata[i];
+  return operatorStrategies.map((operator) => {
+    const { logo, name } = metadata[operator.operator.metadataURI ?? DEFAULT_METADATA_MAP_KEY];
 
     return {
       ...operator,

@@ -70,16 +70,16 @@ export const HomeTabs: React.FC = () => {
     <>
       <StyledHomeTabs>
         <TabButtons>
-          <Link href={{ query: { tab: HOME_TABS.avss } }}>
+          <Link prefetch={false} href={{ query: { tab: HOME_TABS.avss } }}>
             <TabButton $active={isAVSs}>AVSs</TabButton>
           </Link>
-          <Link href={{ query: { tab: HOME_TABS.operators } }}>
+          <Link prefetch={false} href={{ query: { tab: HOME_TABS.operators } }}>
             <TabButton $active={isOperators}>Operators</TabButton>
           </Link>
-          <Link href={{ query: { tab: HOME_TABS.stakers } }}>
+          <Link prefetch={false} href={{ query: { tab: HOME_TABS.stakers } }}>
             <TabButton $active={isStakers}>Stackers</TabButton>
           </Link>
-          <Link href={{ query: { tab: HOME_TABS.strategies } }}>
+          <Link prefetch={false} href={{ query: { tab: HOME_TABS.strategies } }}>
             <TabButton $active={isStrategies}>Strategies</TabButton>
           </Link>
         </TabButtons>

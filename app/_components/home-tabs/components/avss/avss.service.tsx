@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { AVS, AVSEnriched, transformToRow } from './avss.model';
 
+import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { useProtocolData } from '@/app/_services/protocol-data.service';
 import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
@@ -78,8 +79,8 @@ const fetchAVSs = async (requestOptions: string): Promise<Array<AVSEnriched>> =>
 
   const metadata = await fetchProtocolEntitiesMetadata(avss.map(({ metadataURI }) => metadataURI));
 
-  return avss.map((avs, i) => {
-    const { logo, name } = metadata[i];
+  return avss.map((avs) => {
+    const { logo, name } = metadata[avs.metadataURI ?? DEFAULT_METADATA_MAP_KEY];
 
     return {
       ...avs,

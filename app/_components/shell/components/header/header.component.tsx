@@ -14,6 +14,7 @@ export const Header: React.FC = () => {
     <StyledHeader>
       <HeaderContent>
         <Link
+          prefetch={false}
           href={titleHref}
           className="header-title"
           aria-disabled={pathname === titleHref}

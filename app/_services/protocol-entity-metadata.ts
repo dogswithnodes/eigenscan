@@ -1,10 +1,18 @@
 'use server';
 
-import { DEFAULT_PROTOCOL_ENTITY_METADATA } from '../_constants/protocol-entity-metadata.constants';
+import { DEFAULT_METADATA_MAP_KEY } from '../_constants/protocol-entity-metadata.constants';
 import { ProtocolEntityMetadata } from '../_models/protocol-entity-metadata.model';
 import { getCache } from '../_utils/cache';
 
 const cache = getCache(process.env.METADATA_CACHE as unknown as CloudflareEnv['METADATA_CACHE'], 'metadata');
+
+const DEFAULT_PROTOCOL_ENTITY_METADATA: ProtocolEntityMetadata = {
+  name: '',
+  logo: '',
+  website: '',
+  description: '',
+  twitter: '',
+};
 
 const fetchProtocolEntityMetadata = async (uri: string): Promise<ProtocolEntityMetadata> => {
   const data = await cache.get(uri);
@@ -26,9 +34,9 @@ const fetchProtocolEntityMetadata = async (uri: string): Promise<ProtocolEntityM
   return DEFAULT_PROTOCOL_ENTITY_METADATA;
 };
 
-export const fetchProtocolEntitiesMetadata = async (
-  uris: Array<string | null>,
-): Promise<Array<ProtocolEntityMetadata>> => {
+type MetadataMap = Record<string, ProtocolEntityMetadata>;
+
+export const fetchProtocolEntitiesMetadata = async (uris: Array<string | null>): Promise<MetadataMap> => {
   const metadataList = await Promise.all(
     uris.map(async (uri) => {
       if (!uri) return DEFAULT_PROTOCOL_ENTITY_METADATA;
@@ -37,5 +45,8 @@ export const fetchProtocolEntitiesMetadata = async (
     }),
   );
 
-  return metadataList;
+  return uris.reduce<MetadataMap>((acc, uri, i) => {
+    acc[uri ?? DEFAULT_METADATA_MAP_KEY] = metadataList[i];
+    return acc;
+  }, {});
 };

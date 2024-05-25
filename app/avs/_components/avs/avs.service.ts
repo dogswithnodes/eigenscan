@@ -3,6 +3,7 @@ import { gql } from 'graphql-request';
 
 import { AVSAction, AVSOperator, Quorum } from './avs.model';
 
+import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { REQUEST_LIMIT, request } from '@/app/_services/graphql.service';
 import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 
@@ -111,7 +112,7 @@ export const useAVS = (id: string) => {
 
       return {
         ...avs,
-        ...metadata[0],
+        ...metadata[avs.metadataURI ?? DEFAULT_METADATA_MAP_KEY],
       };
     },
   });

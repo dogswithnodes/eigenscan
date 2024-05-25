@@ -5,6 +5,7 @@ import { compose, map } from 'ramda';
 
 import { Registration, RegistrationsRow, transformToCsvRow, transformToRow } from './registrations.model';
 
+import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { FetchParams } from '@/app/_models/table.model';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { request, REQUEST_LIMIT, fetchAllParallel } from '@/app/_services/graphql.service';
@@ -68,8 +69,12 @@ export const useRegistrations = (
         registrations.map(({ operator }) => operator.metadataURI),
       );
 
-      return registrations.map((registration, i) =>
-        transformToRow(registration, metadata[i], strategyToEthBalance),
+      return registrations.map((registration) =>
+        transformToRow(
+          registration,
+          metadata[registration.operator.metadataURI ?? DEFAULT_METADATA_MAP_KEY],
+          strategyToEthBalance,
+        ),
       );
     },
     placeholderData: (prev) => prev,
@@ -93,8 +98,12 @@ const fetchAllRegistrations = async (
     registrations.map(({ operator }) => operator.metadataURI),
   );
 
-  return registrations.map((registration, i) =>
-    transformToRow(registration, metadata[i], strategyToEthBalance),
+  return registrations.map((registration) =>
+    transformToRow(
+      registration,
+      metadata[registration.operator.metadataURI ?? DEFAULT_METADATA_MAP_KEY],
+      strategyToEthBalance,
+    ),
   );
 };
 

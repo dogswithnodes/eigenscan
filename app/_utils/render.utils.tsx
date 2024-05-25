@@ -71,6 +71,7 @@ export const renderAddressLink = (type: 'avs' | 'profile' | 'strategy', tab?: st
   function AddressLink(address: string | null) {
     return address ? (
       <Link
+        prefetch={false}
         href={`/${type}?id=${address}${tab ? `&tab=${tab}` : ''}`}
         className="ant-table-cell-monospaced-value"
         data-tooltip-id={GLOBAL_TOOLTIP_ID}

@@ -94,16 +94,16 @@ export const ProfileTabs: React.FC<Props> = ({
             <Legend>Operator:</Legend>
             <TabButtons>
               {/* TODO loop render */}
-              <Link href={{ query: { id, tab: PROFILE_TABS.operatorDetails } }}>
+              <Link prefetch={false} href={{ query: { id, tab: PROFILE_TABS.operatorDetails } }}>
                 <TabButton $active={isOperatorDetals}>Details</TabButton>
               </Link>
-              <Link href={{ query: { id, tab: PROFILE_TABS.operatorStakers } }}>
+              <Link prefetch={false} href={{ query: { id, tab: PROFILE_TABS.operatorStakers } }}>
                 <TabButton $active={isOperatorStakers}>Stakers</TabButton>
               </Link>
-              <Link href={{ query: { id, tab: PROFILE_TABS.operatorActions } }}>
+              <Link prefetch={false} href={{ query: { id, tab: PROFILE_TABS.operatorActions } }}>
                 <TabButton $active={isOperatorActions}>Actions</TabButton>
               </Link>
-              <Link href={{ query: { id, tab: PROFILE_TABS.operatorAVSs } }}>
+              <Link prefetch={false} href={{ query: { id, tab: PROFILE_TABS.operatorAVSs } }}>
                 <TabButton $active={isOperatorAVSs}>AVSs</TabButton>
               </Link>
             </TabButtons>
@@ -113,13 +113,13 @@ export const ProfileTabs: React.FC<Props> = ({
           <Fieldset role="presentation">
             <Legend>Staker:</Legend>
             <TabButtons>
-              <Link href={{ query: { id, tab: PROFILE_TABS.stakerDetails } }}>
+              <Link prefetch={false} href={{ query: { id, tab: PROFILE_TABS.stakerDetails } }}>
                 <TabButton $active={isStakerDetails}>Details</TabButton>
               </Link>
-              <Link href={{ query: { id, tab: PROFILE_TABS.stakerStakes } }}>
+              <Link prefetch={false} href={{ query: { id, tab: PROFILE_TABS.stakerStakes } }}>
                 <TabButton $active={isStakerStakes}>Stakes</TabButton>
               </Link>
-              <Link href={{ query: { id, tab: PROFILE_TABS.stakerActions } }}>
+              <Link prefetch={false} href={{ query: { id, tab: PROFILE_TABS.stakerActions } }}>
                 <TabButton $active={isStakerActions}>Actions</TabButton>
               </Link>
             </TabButtons>

@@ -10,13 +10,14 @@ import {
   transformToRow,
 } from './quorum-operators.model';
 
+import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { FetchParams } from '@/app/_models/table.model';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { SortParams } from '@/app/_models/sort.model';
 import { request, REQUEST_LIMIT, fetchAllParallel } from '@/app/_services/graphql.service';
 import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 import { downloadCsv as _downloadCsv } from '@/app/_utils/csv.utils';
 import { sortTableRows } from '@/app/_utils/sort.utils';
-import { SortParams } from '@/app/_models/sort.model';
 
 type QuorumOperatorsFetchParams = FetchParams<QuorumOperatorsRow> & {
   avsId: string;
@@ -76,8 +77,13 @@ export const useQuorumOperators = (
         operators.map(({ operator: { metadataURI } }) => metadataURI),
       );
 
-      return operators.map((operator, i) =>
-        transformToRow(operator, metadata[i], strategyToEthBalance, quorumWeight),
+      return operators.map((operator) =>
+        transformToRow(
+          operator,
+          metadata[operator.operator.metadataURI ?? DEFAULT_METADATA_MAP_KEY],
+          strategyToEthBalance,
+          quorumWeight,
+        ),
       );
     },
     placeholderData: (prev) => prev,
@@ -103,8 +109,13 @@ const fetchAllQuorumOperators = async (
     operators.map(({ operator: { metadataURI } }) => metadataURI),
   );
 
-  return operators.map((operator, i) =>
-    transformToRow(operator, metadata[i], strategyToEthBalance, quorumWeight),
+  return operators.map((operator) =>
+    transformToRow(
+      operator,
+      metadata[operator.operator.metadataURI ?? DEFAULT_METADATA_MAP_KEY],
+      strategyToEthBalance,
+      quorumWeight,
+    ),
   );
 };
 

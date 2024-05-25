@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { OperatorAVSs, OperatorAVSsEnriched, transformToRows } from './operator-avss.model';
 
+import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 
@@ -53,8 +54,8 @@ const fetchOperatorAVSs = async (id: string): Promise<OperatorAVSsEnriched> => {
 
   return {
     ...operator,
-    avsStatuses: operator.avsStatuses.map((avsStatus, i) => {
-      const { logo, name } = avssMetadata[i];
+    avsStatuses: operator.avsStatuses.map((avsStatus) => {
+      const { logo, name } = avssMetadata[avsStatus.avs.metadataURI ?? DEFAULT_METADATA_MAP_KEY];
       return {
         ...avsStatus,
         logo,

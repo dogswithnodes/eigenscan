@@ -62,16 +62,16 @@ export const StrategyTabs: React.FC<Props> = ({
         <Fieldset role="presentation">
           <Legend>Strategy:</Legend>
           <TabButtons>
-            <Link href={{ query: { id, tab: STRATEGY_TABS.details } }}>
+            <Link prefetch={false} href={{ query: { id, tab: STRATEGY_TABS.details } }}>
               <TabButton $active={isDetails}>Details</TabButton>
             </Link>
-            <Link href={{ query: { id, tab: STRATEGY_TABS.operators } }}>
+            <Link prefetch={false} href={{ query: { id, tab: STRATEGY_TABS.operators } }}>
               <TabButton $active={isOperators}>Operators</TabButton>
             </Link>
-            <Link href={{ query: { id, tab: STRATEGY_TABS.stakes } }}>
+            <Link prefetch={false} href={{ query: { id, tab: STRATEGY_TABS.stakes } }}>
               <TabButton $active={isStakes}>Stakes</TabButton>
             </Link>
-            <Link href={{ query: { id, tab: STRATEGY_TABS.delegations } }}>
+            <Link prefetch={false} href={{ query: { id, tab: STRATEGY_TABS.delegations } }}>
               <TabButton $active={isDelegations}>Delegations</TabButton>
             </Link>
           </TabButtons>

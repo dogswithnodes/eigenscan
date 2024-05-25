@@ -13,6 +13,7 @@ import {
 
 import { HomeTabTableFetchParams } from '../../home-tabs.model';
 
+import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { SortParams } from '@/app/_models/sort.model';
 import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 import { useStrategies } from '@/app/_services/strategies.service';
@@ -61,21 +62,19 @@ const fetchOperators = async (requestOptions: string): Promise<Array<OperatorEnr
     `,
   );
 
-  const [operatorsMetadata, operatorsAvssMetadata] = await Promise.all([
-    fetchProtocolEntitiesMetadata(operators.map((operator) => operator.metadataURI)),
-    Promise.all(
-      operators.map((operator) =>
-        fetchProtocolEntitiesMetadata(operator.avsStatuses.flatMap(({ avs }) => avs.metadataURI ?? [])),
-      ),
-    ),
+  const metadata = await fetchProtocolEntitiesMetadata([
+    ...operators.map((operator) => operator.metadataURI),
+    ...operators.flatMap((operator) => operator.avsStatuses.flatMap(({ avs }) => avs.metadataURI ?? [])),
   ]);
 
-  return operators.map((operator, i) => {
-    const { logo, name } = operatorsMetadata[i];
+  return operators.map((operator) => {
+    const { logo, name } = metadata[operator.metadataURI ?? DEFAULT_METADATA_MAP_KEY];
 
     return {
       ...operator,
-      avsLogos: operatorsAvssMetadata[i].map(({ logo }) => logo),
+      avsLogos: operator.avsStatuses.flatMap(({ avs }) =>
+        avs.metadataURI ? metadata[avs.metadataURI].logo : [],
+      ),
       logo,
       name,
     };

@@ -39,8 +39,12 @@ const StyledDocsLinks = styled.section`
 export const DocsLinks: React.FC = () => {
   return (
     <StyledDocsLinks>
-      <Link href="/policy">Policy and Privacy</Link>
-      <Link href="/terms-of-use">Terms of use</Link>
+      <Link prefetch={false} href="/policy">
+        Policy and Privacy
+      </Link>
+      <Link prefetch={false} href="/terms-of-use">
+        Terms of use
+      </Link>
     </StyledDocsLinks>
   );
 };

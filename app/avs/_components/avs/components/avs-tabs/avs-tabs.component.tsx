@@ -108,16 +108,16 @@ export const AVSTabs: React.FC<Props> = ({
           <Legend>AVS:</Legend>
           <TabsHeaderContent>
             <TabButtons>
-              <Link href={{ query: { id, tab: AVS_TABS.details } }}>
+              <Link prefetch={false} href={{ query: { id, tab: AVS_TABS.details } }}>
                 <TabButton $active={isDetails}>Details</TabButton>
               </Link>
-              <Link href={{ query: { id, tab: AVS_TABS.operators } }}>
+              <Link prefetch={false} href={{ query: { id, tab: AVS_TABS.operators } }}>
                 <TabButton $active={isOperators}>Operators</TabButton>
               </Link>
-              <Link href={{ query: { id, tab: AVS_TABS.actions } }}>
+              <Link prefetch={false} href={{ query: { id, tab: AVS_TABS.actions } }}>
                 <TabButton $active={isActions}>Actions</TabButton>
               </Link>
-              <Link href={{ query: { id, tab: AVS_TABS.tokens } }}>
+              <Link prefetch={false} href={{ query: { id, tab: AVS_TABS.tokens } }}>
                 <TabButton $active={isTokens}>Allowed Tokens</TabButton>
               </Link>
             </TabButtons>
