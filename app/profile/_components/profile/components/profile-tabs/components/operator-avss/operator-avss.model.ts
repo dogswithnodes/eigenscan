@@ -131,7 +131,6 @@ export const transformToRows = (
     const avsQuorums = quorums.filter(({ quorum }) => quorum.avs.id === avs.id);
 
     const baseRow = {
-      key: id,
       logo,
       avsName: name,
       avsId: avs.id,
@@ -141,6 +140,7 @@ export const transformToRows = (
     if (avsQuorums.length === 0) {
       const row: OperatorAVSsRow = {
         ...baseRow,
+        key: id,
         totalWeight: '0',
         quorum: null,
         tokens: strategies.flatMap(({ id, tokenSymbol }) => (id !== EIGEN_STRATEGY ? tokenSymbol : [])),
@@ -157,6 +157,7 @@ export const transformToRows = (
     return avsQuorums.map(({ totalWeight, quorum }) => {
       return {
         ...baseRow,
+        key: `${id}+${quorum.quorum}`,
         totalWeight,
         quorum: quorum.quorum,
         tokens: quorum.multipliers.map(({ strategy }) => idToStrategy[strategy.id].tokenSymbol),

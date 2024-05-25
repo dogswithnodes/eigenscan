@@ -8,6 +8,7 @@ import {
 } from './components/operator-details/operator-details.component';
 import { OperatorStakers } from './components/operator-stakers/operator-stakers.component';
 import { OperatorAVSs } from './components/operator-avss/operator-avss.component';
+import { OperatorStrategies } from './components/operator-strategies/operator-strategies.component';
 import { OperatorActions } from './components/operator-actions/operator-actions.component';
 import {
   StakerDetails,
@@ -32,8 +33,9 @@ import { StrategyEnriched, StrategyToEthBalance } from '@/app/_models/strategies
 const PROFILE_TABS = {
   operatorDetails: 'operator-details',
   operatorStakers: 'operator-stakers',
-  operatorActions: 'operator-actions',
   operatorAVSs: 'operator-avss',
+  operatorStrategies: 'operator-strategies',
+  operatorActions: 'operator-actions',
   stakerDetails: 'staker-details',
   stakerStakes: 'staker-stakes',
   stakerActions: 'staker-actions',
@@ -80,8 +82,9 @@ export const ProfileTabs: React.FC<Props> = ({
 
   const isOperatorDetals = tab === PROFILE_TABS.operatorDetails;
   const isOperatorStakers = tab === PROFILE_TABS.operatorStakers;
-  const isOperatorActions = tab === PROFILE_TABS.operatorActions;
   const isOperatorAVSs = tab === PROFILE_TABS.operatorAVSs;
+  const isOperatorStrategies = tab === PROFILE_TABS.operatorStrategies;
+  const isOperatorActions = tab === PROFILE_TABS.operatorActions;
   const isStakerDetails = tab === PROFILE_TABS.stakerDetails;
   const isStakerStakes = tab === PROFILE_TABS.stakerStakes;
   const isStakerActions = tab === PROFILE_TABS.stakerActions;
@@ -100,11 +103,14 @@ export const ProfileTabs: React.FC<Props> = ({
               <Link prefetch={false} href={{ query: { id, tab: PROFILE_TABS.operatorStakers } }}>
                 <TabButton $active={isOperatorStakers}>Stakers</TabButton>
               </Link>
-              <Link prefetch={false} href={{ query: { id, tab: PROFILE_TABS.operatorActions } }}>
-                <TabButton $active={isOperatorActions}>Actions</TabButton>
-              </Link>
               <Link prefetch={false} href={{ query: { id, tab: PROFILE_TABS.operatorAVSs } }}>
                 <TabButton $active={isOperatorAVSs}>AVSs</TabButton>
+              </Link>
+              <Link prefetch={false} href={{ query: { id, tab: PROFILE_TABS.operatorStrategies } }}>
+                <TabButton $active={isOperatorStrategies}>Strategies</TabButton>
+              </Link>
+              <Link prefetch={false} href={{ query: { id, tab: PROFILE_TABS.operatorActions } }}>
+                <TabButton $active={isOperatorActions}>Actions</TabButton>
               </Link>
             </TabButtons>
           </Fieldset>
@@ -136,6 +142,7 @@ export const ProfileTabs: React.FC<Props> = ({
           />
         )}
         {isOperatorAVSs && <OperatorAVSs id={id} strategies={strategies} />}
+        {isOperatorStrategies && <OperatorStrategies id={id} strategies={strategies} />}
         {isOperatorActions && operatorActions && <OperatorActions actions={operatorActions} />}
         {isStakerDetails && <StakerDetails {...stakerDetails} />}
         {isStakerStakes && stakerStakes && (
