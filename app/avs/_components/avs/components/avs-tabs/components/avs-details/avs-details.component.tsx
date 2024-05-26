@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import ColorHash from 'color-hash';
 
-import { Container, ChartContainer, ChartDot } from './avs-details.styled';
+import { Container, ChartContainer, ChartDot, TooltipContent } from './avs-details.styled';
 import { useTopWeightOperatorsNames } from './avs-details.service';
 import { transformWeightsToChartData } from './avs-details.utils';
 
@@ -48,7 +48,9 @@ export const AVSDetails: React.FC<Props> = ({
     operatorsWeights ? 'operators' : null,
   );
 
-  const totalWeight = chart === 'operators' ? operatorsWeights?.totalWeight : strategiesWeights?.totalWeight;
+  const totalWeight = divBy1e18(
+    (chart === 'operators' ? operatorsWeights?.totalWeight : strategiesWeights?.totalWeight) ?? '0',
+  );
 
   const chartSegments = chart === 'operators' ? 10 : Infinity;
 
@@ -207,28 +209,41 @@ export const AVSDetails: React.FC<Props> = ({
                   })}
                 </Pie>
                 <Tooltip
-                  formatter={(value, name) => {
-                    if (!Array.isArray(value) && totalWeight) {
-                      const total = divBy1e18(totalWeight);
-                      const tooltipName =
-                        chart === 'operators' && operatorsNames && name !== OTHERS_NAME
-                          ? operatorsNames[name]
-                          : name;
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const { name, value } = payload[0];
 
-                      return [
-                        `${Number(value).toFixed(2)} (${mulDiv(value, 100, total).toFixed(1)})%`,
-                        tooltipName,
-                      ];
+                      if (typeof name === 'string' && typeof value === 'number') {
+                        const tooltipName =
+                          chart === 'operators' && operatorsNames && name !== OTHERS_NAME
+                            ? operatorsNames[name]
+                            : name;
+
+                        return (
+                          <TooltipContent>
+                            <p>
+                              <span
+                                style={
+                                  typeof name === 'string'
+                                    ? {
+                                        color: colorHash.hex(name).toUpperCase(),
+                                      }
+                                    : undefined
+                                }
+                              >
+                                {tooltipName}
+                              </span>
+                              :{' '}
+                              <span>
+                                {`${value.toFixed(2)} (${mulDiv(value, 100, totalWeight).toFixed(1)})%`}
+                              </span>
+                            </p>
+                          </TooltipContent>
+                        );
+                      }
                     }
 
-                    return [value, name];
-                  }}
-                  itemStyle={{
-                    fontSize: '12px',
-                    fontWeight: 500,
-                  }}
-                  contentStyle={{
-                    borderRadius: '6px',
+                    return null;
                   }}
                 />
               </PieChart>

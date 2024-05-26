@@ -66,3 +66,13 @@ export const ChartDot = styled.button<{ $active: boolean }>`
           background: #525252;
         `}
 `;
+
+export const TooltipContent = styled.div`
+  padding: 10px;
+  color: #000;
+  font-size: 12px;
+  font-weight: 500;
+  background-color: #fff;
+  border: 1px solid #ececec;
+  border-radius: 6px;
+`;
