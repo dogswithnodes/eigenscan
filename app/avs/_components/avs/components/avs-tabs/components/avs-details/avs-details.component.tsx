@@ -1,16 +1,16 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import ColorHash from 'color-hash';
 
-import { Container, ChartContainer } from './avs-details.styled';
+import { Container, ChartContainer, ChartDot } from './avs-details.styled';
+import { transformWeightsToChartData } from './avs-details.utils';
 
-import { OperatorsQuorumWeights } from '../../avs-tabs.model';
+import { QuorumWeights } from '../../avs-tabs.model';
 
 import { Table, Tr, Th, Td, Postfix } from '@/app/_components/details/details.styled';
 import { Footer } from '@/app/_components/footer/footer.component';
 import { GLOBAL_TOOLTIP_ID } from '@/app/_constants/tooltip.constants';
 import { preventDefault } from '@/app/_utils/events.utils';
-import { divBy1e18 } from '@/app/_utils/big-number.utils';
 import { clampMiddle } from '@/app/_utils/text.utils';
 import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
 
@@ -20,7 +20,8 @@ export type Props = {
   eigenTvl: string;
   website: string | undefined;
   twitter: string | undefined;
-  weights: OperatorsQuorumWeights | null;
+  operatorsWeights: QuorumWeights | null;
+  strategiesWeights: QuorumWeights | null;
   blsApkRegistry: string | undefined;
   stakeRegistry: string | undefined;
   minimalStake: string | null;
@@ -35,19 +36,20 @@ export const AVSDetails: React.FC<Props> = ({
   minimalStake,
   blsApkRegistry,
   stakeRegistry,
-  weights,
+  operatorsWeights,
+  strategiesWeights,
 }) => {
+  const [chart, setChart] = useState<'operators' | 'strategies' | null>(
+    operatorsWeights ? 'operators' : null,
+  );
+
+  const chartSegments = chart === 'operators' ? 10 : Infinity;
+
   const colorHash = new ColorHash();
+
   const data = useMemo(
-    () =>
-      weights
-        ? Object.entries(weights)
-            .flatMap(([id, weight]) =>
-              id === 'totalWeight' ? [] : { name: id, value: Number(divBy1e18(weight).toFixed(2)) },
-            )
-            .sort((a, b) => b.value - a.value)
-        : null,
-    [weights],
+    () => transformWeightsToChartData(chart === 'operators' ? operatorsWeights : strategiesWeights),
+    [chart, operatorsWeights, strategiesWeights],
   );
 
   return (
@@ -148,8 +150,8 @@ export const AVSDetails: React.FC<Props> = ({
               <PieChart width={600} height={600}>
                 <Pie
                   data={[
-                    ...data.slice(0, 10),
-                    data.slice(10).reduce<{ name: string; value: number }>(
+                    ...data.slice(0, chartSegments),
+                    data.slice(chartSegments).reduce<{ name: string; value: number }>(
                       (others, { value }) => {
                         others.value += value;
                         return others;
@@ -177,6 +179,15 @@ export const AVSDetails: React.FC<Props> = ({
                 />
               </PieChart>
             </ResponsiveContainer>
+          )}
+          {chart && (
+            <>
+              <h3 className="chart-title">Quorum by {chart}</h3>
+              <div className="chart-dots">
+                <ChartDot $active={chart === 'operators'} onClick={() => setChart('operators')} />
+                <ChartDot $active={chart === 'strategies'} onClick={() => setChart('strategies')} />
+              </div>
+            </>
           )}
         </ChartContainer>
       </Container>
