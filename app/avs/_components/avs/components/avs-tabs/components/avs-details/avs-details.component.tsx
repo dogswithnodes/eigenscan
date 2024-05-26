@@ -15,6 +15,8 @@ import { clampMiddle } from '@/app/_utils/text.utils';
 import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
 import { divBy1e18, mulDiv } from '@/app/_utils/big-number.utils';
 
+const RADIAN = Math.PI / 180;
+
 export type Props = {
   operatorsCount: number;
   ethTvl: string;
@@ -165,6 +167,28 @@ export const AVSDetails: React.FC<Props> = ({
                   cx="50%"
                   cy="50%"
                   labelLine={false}
+                  label={({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+                    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+                    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+                    const value = (percent * 100).toFixed(0);
+
+                    return Number(value) < 4 ? null : (
+                      <text
+                        style={{
+                          fontSize: 12,
+                        }}
+                        x={x}
+                        y={y}
+                        fill="white"
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                      >
+                        {`${value}%`}
+                      </text>
+                    );
+                  }}
                   dataKey="value"
                 >
                   {data.map(({ name }, index) => {
