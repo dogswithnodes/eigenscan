@@ -10,10 +10,6 @@ function makeQueryClient() {
         gcTime: Infinity,
         retry: 0,
         staleTime: Infinity,
-        throwOnError: true,
-      },
-      mutations: {
-        throwOnError: true,
       },
     },
   });
