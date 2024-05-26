@@ -15,7 +15,7 @@ import { preventDefault } from '@/app/_utils/events.utils';
 import { clampMiddle } from '@/app/_utils/text.utils';
 import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
 import { divBy1e18, mulDiv } from '@/app/_utils/big-number.utils';
-
+// TODO single component
 const RADIAN = Math.PI / 180;
 const OTHERS_NAME = 'others';
 
