@@ -19,6 +19,7 @@ export type StrategyServer = {
 export type Strategy = StrategyServer & {
   ethBalance: string;
   balance: string;
+  totalSharesAndWithdrawing: string;
 };
 
 export type StrategyEnriched = Strategy & {

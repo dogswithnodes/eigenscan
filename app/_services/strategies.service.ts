@@ -15,6 +15,7 @@ import {
   StrategyEnriched,
   StrategyToEthBalance,
 } from '../_models/strategies.model';
+import { add } from '../_utils/big-number.utils';
 
 type StrategiesResponse = {
   strategies: Array<StrategyServer>;
@@ -103,6 +104,7 @@ export const useStrategies = (
           ...strategy,
           balance,
           ethBalance: new BigNumber(balance).times(prices[i]).div(1e18).decimalPlaces(0, 1).toFixed(),
+          totalSharesAndWithdrawing: add(strategy.totalShares, strategy.totalWithdrawing).toFixed(),
         };
       });
 

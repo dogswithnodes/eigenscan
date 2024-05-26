@@ -5,7 +5,7 @@ import { StrategyTabs } from './components/strategy-tabs/strategy-tabs.component
 import { AccountPreloader } from '@/app/_components/account-preloader/account-preloader.component';
 import { Empty } from '@/app/_components/empty/empty.component';
 import { useEnrichedStrategies } from '@/app/_services/strategies.service';
-import { add, mulDiv } from '@/app/_utils/big-number.utils';
+import { mulDiv } from '@/app/_utils/big-number.utils';
 
 type Props = {
   id: string;
@@ -46,9 +46,8 @@ export const Strategy: React.FC<Props> = ({ id, tab }) => {
     totalWithdrawing,
     totalShares,
     ethBalance,
+    totalSharesAndWithdrawing,
   } = strategy;
-
-  const denominator = add(totalShares, totalWithdrawing);
 
   return (
     <>
@@ -67,10 +66,10 @@ export const Strategy: React.FC<Props> = ({ id, tab }) => {
           tokenSymbol,
           tokenDecimals,
           balance,
-          totalDelegated: mulDiv(totalDelegated, balance, denominator).toFixed(),
+          totalDelegated: mulDiv(totalDelegated, balance, totalSharesAndWithdrawing).toFixed(),
           ethBalance,
-          totalWithdrawals: mulDiv(totalWithdrawing, balance, denominator).toFixed(),
-          totalDelegatedPercent: mulDiv(totalDelegated, 100, denominator).toFixed(1),
+          totalWithdrawals: mulDiv(totalWithdrawing, balance, totalSharesAndWithdrawing).toFixed(),
+          totalDelegatedPercent: mulDiv(totalDelegated, 100, totalSharesAndWithdrawing).toFixed(1),
         }}
       />
     </>

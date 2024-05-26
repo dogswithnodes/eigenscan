@@ -7,7 +7,7 @@ import { StakerStake } from '../../../../profile.model';
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { StrategyEnriched, StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { renderBigNumber, renderDate, renderImage } from '@/app/_utils/render.utils';
-import { add, mulDiv } from '@/app/_utils/big-number.utils';
+import { mulDiv } from '@/app/_utils/big-number.utils';
 
 export type StakerStakesRow = {
   key: string;
@@ -97,9 +97,8 @@ export const transformToRow =
     const strategy = strategies.find(({ id }) => id === stakeStrategy.id);
     if (!strategy) throw `Invalid stake strategy id: ${stakeStrategy.id}`;
 
-    const { logo, tokenSymbol, totalShares, balance } = strategy;
+    const { logo, tokenSymbol, totalShares, balance, totalSharesAndWithdrawing } = strategy;
     const strategyEthBalance = strategyToEthBalance[strategy.id];
-    const strategyTotalShares = strategy.totalShares;
 
     return {
       key,
@@ -107,14 +106,10 @@ export const transformToRow =
       tokenSymbol,
       created: createdTimestamp,
       updated: lastUpdatedTimestamp,
-      lstBalance: mulDiv(shares, balance, totalShares),
-      ethBalance: mulDiv(shares, strategyEthBalance, strategyTotalShares),
+      lstBalance: mulDiv(shares, balance, totalSharesAndWithdrawing),
+      ethBalance: mulDiv(shares, strategyEthBalance, totalShares),
       withdrawingAmount: withdrawal
-        ? mulDiv(
-            withdrawal.share,
-            strategyEthBalance,
-            add(strategyTotalShares, strategy.totalWithdrawing).toFixed(),
-          )
+        ? mulDiv(withdrawal.share, strategyEthBalance, totalSharesAndWithdrawing)
         : BN_ZERO,
     };
   };
