@@ -6,7 +6,7 @@ export const transformWeightsToChartData = (weights: QuorumWeights | null) =>
   weights
     ? Object.entries(weights)
         .flatMap(([id, weight]) =>
-          id === 'totalWeight' ? [] : { name: id, value: Number(divBy1e18(weight).toFixed(2)) },
+          id === 'totalWeight' ? [] : { name: id, value: Number(divBy1e18(weight)) },
         )
         .sort((a, b) => b.value - a.value)
     : null;

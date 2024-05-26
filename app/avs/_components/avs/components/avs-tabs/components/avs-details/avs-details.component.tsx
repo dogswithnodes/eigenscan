@@ -13,6 +13,7 @@ import { GLOBAL_TOOLTIP_ID } from '@/app/_constants/tooltip.constants';
 import { preventDefault } from '@/app/_utils/events.utils';
 import { clampMiddle } from '@/app/_utils/text.utils';
 import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
+import { divBy1e18, mulDiv } from '@/app/_utils/big-number.utils';
 
 export type Props = {
   operatorsCount: number;
@@ -42,6 +43,8 @@ export const AVSDetails: React.FC<Props> = ({
   const [chart, setChart] = useState<'operators' | 'strategies' | null>(
     operatorsWeights ? 'operators' : null,
   );
+
+  const totalWeight = chart === 'operators' ? operatorsWeights?.totalWeight : strategiesWeights?.totalWeight;
 
   const chartSegments = chart === 'operators' ? 10 : Infinity;
 
@@ -169,6 +172,14 @@ export const AVSDetails: React.FC<Props> = ({
                   })}
                 </Pie>
                 <Tooltip
+                  formatter={(value, name) => {
+                    if (!Array.isArray(value) && totalWeight) {
+                      const total = divBy1e18(totalWeight);
+                      return [`${Number(value).toFixed(2)} (${mulDiv(value, 100, total).toFixed(1)})%`, name];
+                    }
+
+                    return [value, name];
+                  }}
                   itemStyle={{
                     fontSize: '12px',
                     fontWeight: 500,
