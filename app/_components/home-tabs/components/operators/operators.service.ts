@@ -91,7 +91,7 @@ export const useOperators = ({ currentPage, perPage, sortParams, idFilters }: Fe
     queryKey: ['operators', currentPage, perPage, sortParams, idFilters],
     queryFn: async () => {
       if (!data) {
-        return Promise.reject(new Error('Operators request cannot be sent without strategies data.'));
+        return Promise.reject(new Error('operators: Insufficient data'));
       }
 
       const operators = await fetchOperators(`
@@ -152,9 +152,7 @@ export const useOperatorsCsv = (sortParams: SortParams<OperatorsRow>) => {
     queryKey: ['operators-csv', sortParams],
     queryFn: async () => {
       if (!protocolData.data || !strategies.data) {
-        return Promise.reject(
-          new Error('Operators csv request cannot be sent without strategies data and operators count.'),
-        );
+        return Promise.reject(new Error('operators-csv: Insufficient data'));
       }
 
       const operators = await fetchAllParallel(protocolData.data.operatorsCount, (skip) =>

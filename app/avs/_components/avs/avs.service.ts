@@ -69,6 +69,7 @@ export const useAVS = (id: string) => {
                     totalShares
                     strategy {
                       id
+                      tokenSymbol
                       totalShares
                     }
                   }
@@ -91,6 +92,7 @@ export const useAVS = (id: string) => {
                 totalShares
                 strategy {
                   id
+                  tokenSymbol
                   totalShares
                 }
               }

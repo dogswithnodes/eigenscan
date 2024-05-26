@@ -117,9 +117,9 @@ export const AVSTabs: React.FC<Props> = ({
 
       return operators.reduce<QuorumWeights>(
         (acc, { operator: { strategies } }) => {
-          strategies.forEach(({ strategy: { id, totalShares } }) => {
+          strategies.forEach(({ strategy: { id, totalShares, tokenSymbol } }) => {
             const weight = mul(totalShares, strategyToMultiply[id] ?? '0');
-            acc[id] = add((acc[id] ??= '0'), weight).toFixed();
+            acc[tokenSymbol] = add((acc[tokenSymbol] ??= '0'), weight).toFixed();
             acc.totalWeight = add(acc.totalWeight, weight).toFixed();
           });
 

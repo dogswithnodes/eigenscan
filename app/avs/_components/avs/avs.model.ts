@@ -8,6 +8,7 @@ export type AVSOperator = {
       totalShares: string;
       strategy: {
         id: string;
+        tokenSymbol: string;
         totalShares: string;
       };
     }>;

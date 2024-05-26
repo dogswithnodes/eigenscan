@@ -99,7 +99,7 @@ export const useAVSs = () => {
     queryKey: ['avss'],
     queryFn: async () => {
       if (!strategies.data || !protocolData.data) {
-        return Promise.reject(new Error('AVSs request cannot be sent without strategies and protocol data.'));
+        return Promise.reject(new Error('avss: Insufficient data'));
       }
 
       const avss = await fetchAllParallel(protocolData.data.avsCount, (skip) =>

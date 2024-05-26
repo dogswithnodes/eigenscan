@@ -83,7 +83,7 @@ export const useStakers = ({ currentPage, perPage, sortParams, idFilters }: Fetc
     queryKey: ['stakers', currentPage, perPage, sortParams, idFilters],
     queryFn: async () => {
       if (!data) {
-        return Promise.reject(new Error('Stakers request cannot be sent without strategies data.'));
+        return Promise.reject(new Error('stakers: Insufficient data'));
       }
 
       const stakers = await fetchStakers(`
@@ -144,9 +144,7 @@ export const useStakersCsv = (sortParams: SortParams<StakersRow>) => {
     queryKey: ['stakers-csv', sortParams],
     queryFn: async () => {
       if (!protocolData.data || !strategies.data) {
-        return Promise.reject(
-          new Error('Stakers csv request cannot be sent without strategies data and stakers count.'),
-        );
+        return Promise.reject(new Error('stakers-csv: Insufficient data'));
       }
 
       const stakers = await fetchAllParallel(protocolData.data.stakersCount, (skip) =>

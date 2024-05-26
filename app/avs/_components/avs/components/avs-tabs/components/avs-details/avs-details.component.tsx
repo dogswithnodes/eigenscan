@@ -3,6 +3,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import ColorHash from 'color-hash';
 
 import { Container, ChartContainer, ChartDot } from './avs-details.styled';
+import { useTopWeightOperatorsNames } from './avs-details.service';
 import { transformWeightsToChartData } from './avs-details.utils';
 
 import { QuorumWeights } from '../../avs-tabs.model';
@@ -16,6 +17,7 @@ import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
 import { divBy1e18, mulDiv } from '@/app/_utils/big-number.utils';
 
 const RADIAN = Math.PI / 180;
+const OTHERS_NAME = 'others';
 
 export type Props = {
   operatorsCount: number;
@@ -52,9 +54,27 @@ export const AVSDetails: React.FC<Props> = ({
 
   const colorHash = new ColorHash();
 
-  const data = useMemo(
-    () => transformWeightsToChartData(chart === 'operators' ? operatorsWeights : strategiesWeights),
-    [chart, operatorsWeights, strategiesWeights],
+  const data = useMemo(() => {
+    const fullData = transformWeightsToChartData(
+      chart === 'operators' ? operatorsWeights : strategiesWeights,
+    );
+
+    return fullData
+      ? [
+          ...fullData.slice(0, chartSegments),
+          fullData.slice(chartSegments).reduce<{ name: string; value: number }>(
+            (acc, { value }) => {
+              acc.value += value;
+              return acc;
+            },
+            { name: OTHERS_NAME, value: 0 },
+          ),
+        ]
+      : null;
+  }, [chart, chartSegments, operatorsWeights, strategiesWeights]);
+
+  const { data: operatorsNames } = useTopWeightOperatorsNames(
+    chart === 'operators' ? data?.flatMap(({ name }) => (name === OTHERS_NAME ? [] : name)) : undefined,
   );
 
   return (
@@ -154,16 +174,7 @@ export const AVSDetails: React.FC<Props> = ({
             <ResponsiveContainer width="100%" height="100%" minWidth={400} minHeight={400}>
               <PieChart width={600} height={600}>
                 <Pie
-                  data={[
-                    ...data.slice(0, chartSegments),
-                    data.slice(chartSegments).reduce<{ name: string; value: number }>(
-                      (others, { value }) => {
-                        others.value += value;
-                        return others;
-                      },
-                      { name: 'others', value: 0 },
-                    ),
-                  ]}
+                  data={data}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
@@ -199,7 +210,15 @@ export const AVSDetails: React.FC<Props> = ({
                   formatter={(value, name) => {
                     if (!Array.isArray(value) && totalWeight) {
                       const total = divBy1e18(totalWeight);
-                      return [`${Number(value).toFixed(2)} (${mulDiv(value, 100, total).toFixed(1)})%`, name];
+                      const tooltipName =
+                        chart === 'operators' && operatorsNames && name !== OTHERS_NAME
+                          ? operatorsNames[name]
+                          : name;
+
+                      return [
+                        `${Number(value).toFixed(2)} (${mulDiv(value, 100, total).toFixed(1)})%`,
+                        tooltipName,
+                      ];
                     }
 
                     return [value, name];

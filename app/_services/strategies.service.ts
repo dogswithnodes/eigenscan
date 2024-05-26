@@ -139,7 +139,7 @@ export const useEnrichedStrategies = (
     queryFn: async () => {
       if (!data) {
         if (!data) {
-          return Promise.reject(new Error('Enriched strategies request cannot be sent without strategies.'));
+          return Promise.reject(new Error('enriched-strategies: Insufficient data'));
         }
       }
 
