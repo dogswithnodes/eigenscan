@@ -3,7 +3,7 @@ import { titles } from '@/app/_components/actions-table/actions-table.model';
 import { BaseAction, BaseActionsRow } from '@/app/_models/actions.model';
 import { NullableFieldsRecord, RecordEntries } from '@/app/_utils/actions.utils';
 
-type AVSActionData = {
+type AVSActionData = NullableFieldsRecord<{
   metadataURI: string;
   minimumStake: string;
   minimalStake: string;
@@ -18,9 +18,9 @@ type AVSActionData = {
     id: string;
     name: string;
   };
-};
+}>;
 
-export type AVSAction = BaseAction & NullableFieldsRecord<AVSActionData>;
+export type AVSAction = BaseAction & AVSActionData;
 
 type AVSActionDataEntries = RecordEntries<AVSActionData>;
 
@@ -28,8 +28,8 @@ export type AVSActionsRow = BaseActionsRow & {
   actionDataEntries: AVSActionDataEntries;
 };
 
-const transformToEntries = (data: NullableFieldsRecord<AVSActionData>) =>
-  Object.entries(data).filter((entry): entry is AVSActionDataEntries[number] => entry.at(1) !== null);
+const transformToEntries = (data: AVSActionData): AVSActionDataEntries =>
+  Object.entries(data).filter((entry): entry is AVSActionDataEntries[number] => entry[0] in data);
 
 export const transformToRow = ({
   id: key,
@@ -37,35 +37,28 @@ export const transformToRow = ({
   blockTimestamp,
   transactionHash,
   type,
-  metadataURI,
-  minimalStake,
-  minimumStake,
-  quorumNumber,
-  operator,
-  multiplier,
-  strategy,
+  ...rest
 }: AVSAction): AVSActionsRow => {
   return {
     key,
     blockNumber,
     blockTimestamp,
     transactionHash,
-    type,
+    typeId: type,
     actionDataEntries: transformToEntries({
-      metadataURI,
-      minimalStake,
-      minimumStake,
-      quorumNumber,
-      operator,
-      multiplier,
-      strategy,
+      ...rest,
     }),
   };
 };
 
-export const transformToCsvRow = ({ blockNumber, blockTimestamp, transactionHash, type }: AVSActionsRow) => ({
+export const transformToCsvRow = ({
+  blockNumber,
+  blockTimestamp,
+  transactionHash,
+  typeId,
+}: AVSActionsRow) => ({
   [titles.blockNumber]: blockNumber,
   [titles.blockTimestamp]: blockTimestamp,
   [titles.transactionHash]: transactionHash,
-  [titles.type]: type,
+  [titles.typeId]: typeId,
 });

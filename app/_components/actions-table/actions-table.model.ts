@@ -7,7 +7,7 @@ import { renderDate, renderTransactionHash } from '@/app/_utils/render.utils';
 export const titles: Record<Exclude<keyof BaseActionsRow, 'key'>, string> = {
   blockNumber: 'Block Number',
   blockTimestamp: 'Date time',
-  type: 'Type',
+  typeId: 'Type',
   transactionHash: 'Transaction hash',
 };
 
@@ -33,9 +33,9 @@ export const getColumns = <T extends BaseActionsRow>(): Array<ColumnType<T>> => 
     align: 'center',
   },
   {
-    title: titles.type,
-    dataIndex: 'type',
-    key: 'type',
+    title: titles.typeId,
+    dataIndex: 'typeId',
+    key: 'typeId',
     align: 'center',
   },
   {

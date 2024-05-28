@@ -2,20 +2,21 @@ import { useQuery } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 import { useCallback } from 'react';
 
-import { AVSAction, AVSActionsRow, transformToRow, transformToCsvRow } from './avs-actions.model';
+import { StakerAction, StakerActionsRow, transformToRow, transformToCsvRow } from './staker-actions.model';
 
-import { FetchParams } from '@/app/_models/table.model';
+import { ProfileTabTableFetchParams } from '../../../../profile.model';
+
 import { REQUEST_LIMIT, fetchAllParallel, request } from '@/app/_services/graphql.service';
 import { downloadTableData } from '@/app/_utils/table-data.utils';
 
-type AVSActionsResponse = {
-  avsactions: Array<AVSAction>;
+type StakerActionsResponse = {
+  stakerActions: Array<StakerAction>;
 };
 
-const fetchAVSActions = async (requestOptions: string): Promise<Array<AVSAction>> => {
-  const { avsactions } = await request<AVSActionsResponse>(gql`
+const fetchStakerActions = async (requestOptions: string): Promise<Array<StakerAction>> => {
+  const { stakerActions } = await request<StakerActionsResponse>(gql`
     query {
-      avsactions(
+      stakerActions(
         ${requestOptions}
       ) {
         id
@@ -23,43 +24,38 @@ const fetchAVSActions = async (requestOptions: string): Promise<Array<AVSAction>
         blockTimestamp
         transactionHash
         type
-        minimalStake
-        minimumStake
-        quorumNumber
-        metadataURI
-        operator {
+        delegatedTo {
           id
         }
-        multiplier {
-          multiply
-        }
+        eigonPod
+        nonce
+        share
         strategy {
           id
           name
         }
+        startBlock
+        token
+        withdrawer
       }
     }
   `);
 
-  return avsactions;
+  return stakerActions;
 };
 
-type AVSActionsFetchParams = {
-  avsId: string;
-};
+type UseStakerActionsParams = ProfileTabTableFetchParams<StakerActionsRow>;
 
-type UseAVSActionsParams = AVSActionsFetchParams & FetchParams<AVSActionsRow>;
-
-export const useAVSActions = ({ avsId, currentPage, perPage, sortParams }: UseAVSActionsParams) => {
+export const useStakerActions = ({ id, currentPage, perPage, sortParams }: UseStakerActionsParams) => {
   return useQuery({
-    queryKey: ['avs-actions', avsId, currentPage, perPage, sortParams],
+    queryKey: ['staker-actions', id, currentPage, perPage, sortParams],
     queryFn: async () => {
-      const actions = await fetchAVSActions(`
+      const actions = await fetchStakerActions(`
         first: ${perPage}
         skip: ${perPage * (currentPage - 1)}
         orderBy: ${sortParams.orderBy}
         orderDirection: ${sortParams.orderDirection}
-        where: {avs: ${JSON.stringify(avsId)}}
+        where: {staker: ${JSON.stringify(id)}}
       `);
 
       return actions.map(transformToRow);
@@ -68,19 +64,19 @@ export const useAVSActions = ({ avsId, currentPage, perPage, sortParams }: UseAV
   });
 };
 
-type UseAVSActionsCsvParams = AVSActionsFetchParams & {
+type UseStakerActionsCsvParams = {
   actionsCount: number;
-} & Pick<FetchParams<AVSActionsRow>, 'sortParams'>;
+} & Pick<UseStakerActionsParams, 'sortParams' | 'id'>;
 
-export const useAVSActionsCsv = ({ avsId, actionsCount, sortParams }: UseAVSActionsCsvParams) => {
+export const useStakerActionsCsv = ({ id, actionsCount, sortParams }: UseStakerActionsCsvParams) => {
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ['avs-actions-csv', avsId, sortParams],
+    queryKey: ['staker-actions-csv', id, sortParams],
     queryFn: async () => {
       const actions = await fetchAllParallel(actionsCount, async (skip) =>
-        fetchAVSActions(`
+        fetchStakerActions(`
           first: ${REQUEST_LIMIT}
           skip: ${skip}
-          where: {avs: ${JSON.stringify(avsId)}}
+          where: {staker: ${JSON.stringify(id)}}
         `),
       );
 
@@ -92,7 +88,7 @@ export const useAVSActionsCsv = ({ avsId, actionsCount, sortParams }: UseAVSActi
   const handleCsvDownload = useCallback(async () => {
     downloadTableData({
       data: (data ?? (await refetch()).data) || [],
-      fileName: 'avs-actions',
+      fileName: 'staker-actions',
       sortParams,
       transformToCsvRow,
     });

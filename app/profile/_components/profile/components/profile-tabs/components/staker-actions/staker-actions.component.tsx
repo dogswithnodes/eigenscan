@@ -1,32 +1,28 @@
 'use client';
-import { compose, prop, tap, map } from 'ramda';
-import { useCallback, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
-import {
-  StakerActionsRow,
-  columns,
-  columnsWidth,
-  transformToCsvRow,
-  transformToRow,
-} from './staker-actions.model';
+import { StakerActionsRow } from './staker-actions.model';
+import { useStakerActions, useStakerActionsCsv } from './staker-actions.service';
+import { expandedRowRender } from './staker-actions.utils';
 
-import { StakerAction } from '../../../../profile.model';
-
-import { Table } from '@/app/_components/table/table.component';
-import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
+import { ActionsTable } from '@/app/_components/actions-table/actions-table.component';
+import { Empty } from '@/app/_components/empty/empty.component';
+import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
-  actions: Array<StakerAction>;
+  id: string;
+  actionsCount: number;
 };
 
-export const StakerActions: React.FC<Props> = ({ actions }) => {
+export const StakerActions: React.FC<Props> = ({ id, actionsCount }) => {
   const {
     currentPage,
     perPage,
     perPageOptions,
     sortParams,
     total,
+    storageManager,
     setCurrentPage,
     setPerPage,
     setSortParams,
@@ -39,33 +35,42 @@ export const StakerActions: React.FC<Props> = ({ actions }) => {
     },
   });
 
-  const rows = useMemo(
-    () =>
-      compose(
-        (actions: Array<StakerActionsRow>) =>
-          actions.slice(perPage * (currentPage - 1), perPage * currentPage),
-        sortTableRows(sortParams),
-        tap(compose(setTotal, prop('length'))),
-        map(transformToRow),
-      )(actions),
-    [sortParams, setTotal, actions, perPage, currentPage],
-  );
+  useEffect(() => {
+    setTotal(actionsCount);
+  }, [actionsCount, setTotal]);
 
-  const handleCsvDownload = useCallback(() => {
-    downloadTableData({
-      data: actions.map(transformToRow),
-      fileName: 'staker-actions',
-      sortParams,
-      transformToCsvRow,
-    });
-  }, [sortParams, actions]);
+  const { data, isPending, isFetching, error } = useStakerActions({
+    id,
+    currentPage,
+    perPage,
+    sortParams,
+  });
+
+  const rows = useMemo(() => data ?? [], [data]);
+
+  const { isCsvLoading, handleCsvDownload } = useStakerActionsCsv({
+    id,
+    actionsCount,
+    sortParams,
+  });
+
+  if (isPending) {
+    return <TablePreloader />;
+  }
+
+  if (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+    storageManager.setStoragePerPage(null);
+    storageManager.setStorageSortParams(null);
+    return <Empty />;
+  }
 
   return (
-    <Table<StakerActionsRow>
-      columns={columns}
+    <ActionsTable<StakerActionsRow>
       rows={rows}
-      columnsWidth={columnsWidth}
-      isUpdating={false}
+      isUpdating={isFetching}
+      expandedRowRender={expandedRowRender}
       paginationOptions={{
         currentPage,
         perPage,
@@ -80,7 +85,7 @@ export const StakerActions: React.FC<Props> = ({ actions }) => {
       }}
       downloadCsvOptions={{
         onDownload: handleCsvDownload,
-        isLoading: false,
+        isLoading: isCsvLoading,
       }}
     />
   );

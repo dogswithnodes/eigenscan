@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 import expand from './images/expand.svg';
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
-  isExpanded: boolean;
+  $isExpanded: boolean;
 };
 
 const StyledExpandButton = styled.div<Props>`
@@ -20,14 +20,14 @@ const StyledExpandButton = styled.div<Props>`
 
   img {
     user-select: none;
-    transform: rotate(${(p) => (p.isExpanded ? '-180deg' : '0')});
+    transform: rotate(${(p) => (p.$isExpanded ? '-180deg' : '0')});
     transition: 0.2s ease-out;
   }
 `;
 
-export const ExpandButton: React.FC<Props> = ({ isExpanded, ...rest }) => {
+export const ExpandButton: React.FC<Props> = ({ $isExpanded, ...rest }) => {
   return (
-    <StyledExpandButton isExpanded={isExpanded} {...rest}>
+    <StyledExpandButton $isExpanded={$isExpanded} {...rest}>
       <img src={expand.src} width="10" height="6" alt="Expandable" />
     </StyledExpandButton>
   );

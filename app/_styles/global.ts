@@ -45,7 +45,7 @@ export const GlobalStyles = createGlobalStyle`
     text-rendering: optimizeSpeed;
     ${fontFamily.montserrat}
     font-weight: normal;
-    line-height: 1.2;
+    line-height: normal;
     color: ##525252;
     background-color: #fff;
 

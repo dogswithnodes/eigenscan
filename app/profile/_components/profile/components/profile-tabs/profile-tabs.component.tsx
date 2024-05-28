@@ -17,7 +17,7 @@ import {
 } from './components/staker-details/staker-details.component';
 import { StakerStakes } from './components/staker-stakes/staker-stakes.component';
 
-import { OperatorAction, StakerStake, StakerAction } from '../../profile.model';
+import { StakerStake } from '../../profile.model';
 
 import { Footer } from '@/app/_components/footer/footer.component';
 import {
@@ -47,10 +47,10 @@ type Props = {
   isOperator: boolean;
   isStaker: boolean;
   operatorDetails: OperatorDetailsProps;
-  operatorActions: Array<OperatorAction> | undefined;
+  operatorActionsCount: number | undefined;
   stakerDetails: StakerDetailsProps;
   stakerStakes: Array<StakerStake> | undefined;
-  stakerActions: Array<StakerAction> | undefined;
+  stakerActionsCount: number | undefined;
   strategiesData: {
     strategies: Array<StrategyEnriched>;
     strategyToEthBalance: StrategyToEthBalance;
@@ -64,10 +64,10 @@ export const ProfileTabs: React.FC<Props> = ({
   isStaker,
   strategiesData: { strategies, strategyToEthBalance },
   operatorDetails,
-  operatorActions,
+  operatorActionsCount,
   stakerDetails,
   stakerStakes,
-  stakerActions,
+  stakerActionsCount,
 }) => {
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -143,7 +143,9 @@ export const ProfileTabs: React.FC<Props> = ({
         )}
         {isOperatorAVSs && <OperatorAVSs id={id} strategies={strategies} />}
         {isOperatorStrategies && <OperatorStrategies id={id} strategies={strategies} />}
-        {isOperatorActions && operatorActions && <OperatorActions actions={operatorActions} />}
+        {isOperatorActions && typeof operatorActionsCount === 'number' && (
+          <OperatorActions id={id} actionsCount={operatorActionsCount} />
+        )}
         {isStakerDetails && <StakerDetails {...stakerDetails} />}
         {isStakerStakes && stakerStakes && (
           <StakerStakes
@@ -152,7 +154,9 @@ export const ProfileTabs: React.FC<Props> = ({
             strategyToEthBalance={strategyToEthBalance}
           />
         )}
-        {isStakerActions && stakerActions && <StakerActions actions={stakerActions} />}
+        {isStakerActions && typeof stakerActionsCount === 'number' && (
+          <StakerActions id={id} actionsCount={stakerActionsCount} />
+        )}
       </TabContent>
     </>
   ) : (

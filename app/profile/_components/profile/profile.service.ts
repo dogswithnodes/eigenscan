@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 
-import { OperatorAction, StakerStake, StakerAction } from './profile.model';
+import { StakerStake } from './profile.model';
 
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { REQUEST_LIMIT, request } from '@/app/_services/graphql.service';
@@ -12,10 +12,10 @@ type AccountResponse = {
     id: string;
     operator: {
       id: string;
+      actionsCount: number;
       registered: string;
       metadataURI: string | null;
       delegatorsCount: number;
-      actions: Array<OperatorAction>;
       strategies: Array<{
         totalShares: string;
         strategy: {
@@ -26,11 +26,12 @@ type AccountResponse = {
     } | null;
     staker: {
       id: string;
+      actionsCount: number;
       stakesCount: number;
       withdrawalsCount: number;
       totalEigenShares: string;
       totalEigenWithdrawalsShares: string;
-      actions: Array<StakerAction>;
+      // TODO server
       stakes: Array<StakerStake>;
       withdrawals: Array<{
         strategies: Array<{
@@ -60,18 +61,10 @@ export const useAccount = (id: string) => {
             id
             operator {
               id
+              actionsCount
               registered
               metadataURI
               delegatorsCount
-              actions(
-                first: ${REQUEST_LIMIT}
-              ) {
-                id
-                type
-                blockNumber
-                blockTimestamp
-                transactionHash
-              }
               strategies(
                   first: ${REQUEST_LIMIT}
                   where: {strategy_not: null, totalShares_gt: "0"}
@@ -85,17 +78,9 @@ export const useAccount = (id: string) => {
             }
             staker {
               id
+              actionsCount
               totalEigenWithdrawalsShares
               totalEigenShares
-              actions(
-                first: ${REQUEST_LIMIT}
-              ) {
-                id
-                type
-                blockNumber
-                blockTimestamp
-                transactionHash
-              }
               delegator {
                 operator {
                   id

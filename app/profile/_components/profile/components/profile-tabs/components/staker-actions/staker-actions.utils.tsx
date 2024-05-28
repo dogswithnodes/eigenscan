@@ -1,10 +1,11 @@
-import { AVSActionsRow } from './avs-actions.model';
+import { StakerActionsRow } from './staker-actions.model';
 
 import ActionData from '@/app/_components/action-data/action-data.component';
 import { ExternalLink } from '@/app/_components/external-link/external-link.component';
 import { renderAddressLink, renderBigNumber } from '@/app/_utils/render.utils';
+import { clampMiddle } from '@/app/_utils/text.utils';
 
-export const expandedRowRender = (row: AVSActionsRow) => {
+export const expandedRowRender = (row: StakerActionsRow) => {
   return (
     <ActionData.Container>
       {row.actionDataEntries.flatMap(([key, value]) => {
@@ -13,24 +14,25 @@ export const expandedRowRender = (row: AVSActionsRow) => {
         let renderedValue;
 
         switch (key) {
-          case 'metadataURI':
-            renderedValue = <ExternalLink href={value}>{key}</ExternalLink>;
-            break;
-          case 'minimumStake':
-          case 'minimalStake':
-            renderedValue = renderBigNumber(value);
-            break;
-          case 'multiplier':
-            renderedValue = renderBigNumber(value.multiply);
-            break;
-          case 'quorumNumber':
-            renderedValue = value;
-            break;
-          case 'operator':
+          case 'delegatedTo':
             renderedValue = renderAddressLink('profile', 'operator-details')(value.id);
+            break;
+          case 'share':
+            renderedValue = renderBigNumber(value);
             break;
           case 'strategy':
             renderedValue = renderAddressLink('strategy', 'strategy-details', value.name)(value.id);
+            break;
+          case 'withdrawer':
+            renderedValue = (
+              <ExternalLink href={`https://etherscan.io/address/${value}`}>{clampMiddle(value)}</ExternalLink>
+            );
+            break;
+          case 'eigonPod':
+          case 'nonce':
+          case 'startBlock':
+          case 'token':
+            renderedValue = value;
             break;
           default: {
             const exhaustiveCheck: never = key;

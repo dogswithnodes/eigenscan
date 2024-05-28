@@ -1,60 +1,34 @@
 'use client';
-import { ColumnType } from 'antd/es/table';
+import { titles } from '@/app/_components/actions-table/actions-table.model';
+import { BaseAction, BaseActionsRow } from '@/app/_models/actions.model';
+import { NullableFieldsRecord, RecordEntries } from '@/app/_utils/actions.utils';
 
-import { StakerAction } from '../../../../profile.model';
+type StakerActionData = NullableFieldsRecord<{
+  delegatedTo: {
+    id: string;
+  };
+  eigonPod: string;
+  nonce: string;
+  share: string;
+  strategy: {
+    id: string;
+    name: string;
+  };
+  startBlock: string;
+  token: string;
+  withdrawer: string;
+}>;
 
-import { BaseActionsRow } from '@/app/_models/actions.model';
-import { renderDate, renderTransactionHash } from '@/app/_utils/render.utils';
+export type StakerAction = BaseAction & StakerActionData;
 
-export type StakerActionsRow = BaseActionsRow;
+type StakerActionDataEntries = RecordEntries<StakerActionData>;
 
-const titles: Record<Exclude<keyof BaseActionsRow, 'key'>, string> = {
-  blockNumber: 'Block Number',
-  blockTimestamp: 'Date time',
-  type: 'Type',
-  transactionHash: 'Transaction hash',
+export type StakerActionsRow = BaseActionsRow & {
+  actionDataEntries: StakerActionDataEntries;
 };
 
-export const columnsWidth = {
-  '2560': [516, 515, 515, 515],
-  '1920': [359, 359, 359, 359],
-  '1440': [319, 319, 319, 319],
-  '1280': [296, 296, 295, 295],
-};
-
-export const columns: Array<ColumnType<BaseActionsRow>> = [
-  {
-    title: titles.blockTimestamp,
-    dataIndex: 'blockTimestamp',
-    key: 'blockTimestamp',
-    align: 'center',
-    render: renderDate,
-    width: '25%',
-  },
-  {
-    title: titles.blockNumber,
-    dataIndex: 'blockNumber',
-    key: 'blockNumber',
-    align: 'center',
-    width: '25%',
-  },
-  {
-    title: titles.type,
-    dataIndex: 'type',
-    key: 'type',
-    align: 'center',
-    width: '25%',
-  },
-  {
-    title: titles.transactionHash,
-    dataIndex: 'transactionHash',
-    key: 'transactionHash',
-    align: 'center',
-    onCell: () => ({ className: 'ant-table-cell_with-link' }),
-    render: renderTransactionHash,
-    width: '25%',
-  },
-];
+const transformToEntries = (data: StakerActionData): StakerActionDataEntries =>
+  Object.entries(data).filter((entry): entry is StakerActionDataEntries[number] => entry[0] in data);
 
 export const transformToRow = ({
   id: key,
@@ -62,13 +36,17 @@ export const transformToRow = ({
   blockTimestamp,
   transactionHash,
   type,
+  ...rest
 }: StakerAction): StakerActionsRow => {
   return {
     key,
     blockNumber,
     blockTimestamp,
     transactionHash,
-    type,
+    typeId: type,
+    actionDataEntries: transformToEntries({
+      ...rest,
+    }),
   };
 };
 
@@ -76,10 +54,10 @@ export const transformToCsvRow = ({
   blockNumber,
   blockTimestamp,
   transactionHash,
-  type,
+  typeId,
 }: StakerActionsRow) => ({
   [titles.blockNumber]: blockNumber,
   [titles.blockTimestamp]: blockTimestamp,
   [titles.transactionHash]: transactionHash,
-  [titles.type]: type,
+  [titles.typeId]: typeId,
 });

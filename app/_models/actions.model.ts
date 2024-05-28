@@ -6,6 +6,7 @@ export type BaseAction = {
   transactionHash: string;
 };
 
-export type BaseActionsRow = Omit<BaseAction, 'id'> & {
+export type BaseActionsRow = Omit<BaseAction, 'id' | 'type'> & {
   key: string;
+  typeId: string;
 };

@@ -22,6 +22,11 @@ const StyledEntry = styled.section`
   width: fit-content;
   flex-shrink: 0;
 
+  .action-data-entry-title,
+  .action-data-entry-value {
+    display: flex;
+  }
+
   .action-data-entry-title {
     font-weight: bold;
   }

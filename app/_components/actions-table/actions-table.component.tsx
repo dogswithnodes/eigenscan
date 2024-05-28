@@ -26,10 +26,12 @@ export const ActionsTable = <
         columnWidth: 44,
         expandRowByClick: true,
         rowExpandable(row) {
-          return row.actionDataEntries.length > 0;
+          return row.actionDataEntries.some((entry) => entry[1]);
         },
-        expandIcon({ expanded, onExpand, record }) {
-          return <ExpandButton isExpanded={expanded} onClick={(e) => onExpand(record, e)} />;
+        expandIcon({ expanded, onExpand, record, expandable }) {
+          return expandable ? (
+            <ExpandButton $isExpanded={expanded} onClick={(e) => onExpand(record, e)} />
+          ) : null;
         },
         expandedRowRender,
       }}
