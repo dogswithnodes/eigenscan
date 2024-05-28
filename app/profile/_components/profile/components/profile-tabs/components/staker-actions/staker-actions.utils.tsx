@@ -11,6 +11,12 @@ export const expandedRowRender = (row: StakerActionsRow) => {
       {row.actionDataEntries.flatMap(([key, value]) => {
         if (value === null) return [];
 
+        if (key === 'strategies') {
+          return value.map(({ share, strategy: { tokenSymbol } }) => (
+            <ActionData.Entry key={tokenSymbol} title={tokenSymbol} value={renderBigNumber(share)} />
+          ));
+        }
+
         let renderedValue;
 
         switch (key) {
@@ -23,12 +29,20 @@ export const expandedRowRender = (row: StakerActionsRow) => {
           case 'strategy':
             renderedValue = renderAddressLink('strategy', 'strategy-details', value.name)(value.id);
             break;
+          case 'eigonPod':
           case 'withdrawer':
             renderedValue = (
               <ExternalLink href={`https://etherscan.io/address/${value}`}>{clampMiddle(value)}</ExternalLink>
             );
             break;
-          case 'eigonPod':
+          case 'queuedTransactionHash':
+          case 'completedTransactionHash':
+            renderedValue = (
+              <ExternalLink href={`https://etherscan.io/tx/${value}`}>{clampMiddle(value)}</ExternalLink>
+            );
+            break;
+          case 'queuedBlockNumber':
+          case 'completedBlockNumber':
           case 'nonce':
           case 'startBlock':
           case 'token':

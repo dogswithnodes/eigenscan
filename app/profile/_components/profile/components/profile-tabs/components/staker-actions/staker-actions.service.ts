@@ -37,6 +37,21 @@ const fetchStakerActions = async (requestOptions: string): Promise<Array<StakerA
         startBlock
         token
         withdrawer
+        withdrawal {
+          queuedBlockNumber
+          queuedTransactionHash
+          completedBlockNumber
+          completedTransactionHash
+          strategies(
+            first: ${REQUEST_LIMIT}
+            where: {share_gt: "0", strategy_not: null}
+          ) {
+            share
+            strategy {
+              tokenSymbol
+            }
+          }
+        }
       }
     }
   `);

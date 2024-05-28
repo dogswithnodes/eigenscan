@@ -1,4 +1,4 @@
-export type NullableFieldsRecord<T extends Record<PropertyKey, unknown>> = {
+export type NullableFieldsRecord<T extends Record<PropertyKey, unknown> | null> = {
   [Key in keyof T]: T[Key] | null;
 };
 

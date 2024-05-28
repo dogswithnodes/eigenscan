@@ -3,7 +3,7 @@ import { titles } from '@/app/_components/actions-table/actions-table.model';
 import { BaseAction, BaseActionsRow } from '@/app/_models/actions.model';
 import { NullableFieldsRecord, RecordEntries } from '@/app/_utils/actions.utils';
 
-type StakerActionData = NullableFieldsRecord<{
+type StakerActionDataServer = NullableFieldsRecord<{
   delegatedTo: {
     id: string;
   };
@@ -17,9 +17,24 @@ type StakerActionData = NullableFieldsRecord<{
   startBlock: string;
   token: string;
   withdrawer: string;
+  withdrawal: {
+    queuedBlockNumber: string;
+    queuedTransactionHash: string;
+    completedBlockNumber: string | null;
+    completedTransactionHash: string | null;
+    strategies: Array<{
+      share: string;
+      strategy: {
+        tokenSymbol: string;
+      };
+    }>;
+  } | null;
 }>;
 
-export type StakerAction = BaseAction & StakerActionData;
+export type StakerAction = BaseAction & StakerActionDataServer;
+
+type StakerActionData = Omit<StakerActionDataServer, 'withdrawal'> &
+  NullableFieldsRecord<StakerActionDataServer['withdrawal']>;
 
 type StakerActionDataEntries = RecordEntries<StakerActionData>;
 
@@ -36,6 +51,7 @@ export const transformToRow = ({
   blockTimestamp,
   transactionHash,
   type,
+  withdrawal,
   ...rest
 }: StakerAction): StakerActionsRow => {
   return {
@@ -46,6 +62,12 @@ export const transformToRow = ({
     typeId: type,
     actionDataEntries: transformToEntries({
       ...rest,
+      // TODO fix
+      queuedBlockNumber: withdrawal?.queuedBlockNumber ?? null,
+      queuedTransactionHash: withdrawal?.queuedTransactionHash ?? null,
+      completedBlockNumber: withdrawal?.completedBlockNumber ?? null,
+      completedTransactionHash: withdrawal?.completedTransactionHash ?? null,
+      strategies: withdrawal?.strategies ?? null,
     }),
   };
 };

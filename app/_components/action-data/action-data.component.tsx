@@ -7,7 +7,7 @@ const StyledContainer = styled.section`
   padding-left: 44px;
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 12px 32px;
   flex-wrap: wrap;
 `;
 
