@@ -2,8 +2,8 @@ import { ChangeEvent, useCallback } from 'react';
 
 import { Container, Description } from './radio-group.styled';
 
-import { Radio } from '../radio/radio.component';
 import { usePaginationContext } from '../../table-footer.component';
+import { Radio } from '../radio/radio.component';
 
 export const RadioGroup: React.FC = () => {
   const { perPageOptions, setPerPage } = usePaginationContext();

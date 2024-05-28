@@ -5,7 +5,7 @@ import { SortParams } from '@/app/_models/sort.model';
 type Props<Row> = {
   className: string;
   dataIndex: ColumnType<Row>['dataIndex'];
-  sortParams: SortParams<Row>;
+  sortParams?: SortParams<Row>;
   onClick: () => void;
 };
 
@@ -21,8 +21,8 @@ export const HeaderCell = <Row extends Record<string, unknown>>({
       onClick={onClick}
       data-id={dataIndex}
       className={`${className}${
-        dataIndex === sortParams.orderBy
-          ? sortParams.orderDirection === 'asc'
+        dataIndex === sortParams?.orderBy
+          ? sortParams?.orderDirection === 'asc'
             ? ' ant-table-cell_sorted ant-table-cell_sorted_asc'
             : ' ant-table-cell_sorted ant-table-cell_sorted_desc'
           : ''

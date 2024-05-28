@@ -1,14 +1,14 @@
 'use client';
 import { useMemo } from 'react';
 
-import { useAccount } from './profile.service';
 import { ProfileCards } from './components/profile-cards/profile-cards.component';
 import { ProfileTabs } from './components/profile-tabs/profile-tabs.component';
+import { useAccount } from './profile.service';
 
-import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
-import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { AccountPreloader } from '@/app/_components/account-preloader/account-preloader.component';
 import { Empty } from '@/app/_components/empty/empty.component';
+import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
+import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { useEnrichedStrategies } from '@/app/_services/strategies.service';
 import { mulDiv } from '@/app/_utils/big-number.utils';
 

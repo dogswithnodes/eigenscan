@@ -1,6 +1,6 @@
 'use client';
+import { compose, prop, tap } from 'ramda';
 import { useCallback, useMemo } from 'react';
-import { compose, prop, tap, map } from 'ramda';
 
 import { AVSTokensRow, columns, columnsWidth, transformToCsvRow, transformToRows } from './avs-tokens.model';
 
@@ -8,8 +8,7 @@ import { Multiplier } from '../../../../avs.model';
 
 import { Table } from '@/app/_components/table/table.component';
 import { StrategyEnriched } from '@/app/_models/strategies.model';
-import { downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
+import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
@@ -47,10 +46,12 @@ export const AVSTokens: React.FC<Props> = ({ multipliers, strategies }) => {
   );
 
   const handleCsvDownload = useCallback(() => {
-    downloadCsv(
-      compose(map(transformToCsvRow), sortTableRows(sortParams))(transformToRows(strategies, multipliers)),
-      'avs-tokens',
-    );
+    downloadTableData({
+      data: transformToRows(strategies, multipliers),
+      fileName: 'avs-tokens',
+      sortParams,
+      transformToCsvRow,
+    });
   }, [sortParams, strategies, multipliers]);
 
   return (

@@ -1,7 +1,6 @@
-import { useCallback } from 'react';
-import { gql } from 'graphql-request';
 import { useQuery } from '@tanstack/react-query';
-import { compose, map } from 'ramda';
+import { gql } from 'graphql-request';
+import { useCallback } from 'react';
 
 import { Staker, StakersRow, transformToCsvRow, transformToRow } from './stakers.model';
 
@@ -10,10 +9,9 @@ import { HomeTabTableFetchParams } from '../../home-tabs.model';
 import { SortParams } from '@/app/_models/sort.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { useProtocolData } from '@/app/_services/protocol-data.service';
-import { downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
-import { isTermLongEnough } from '@/app/_utils/account-search.utils';
 import { useStrategies } from '@/app/_services/strategies.service';
+import { isTermLongEnough } from '@/app/_utils/account-search.utils';
+import { downloadTableData } from '@/app/_utils/table-data.utils';
 
 type StakersResponse = {
   stakers: Array<Staker>;
@@ -133,9 +131,6 @@ export const useStakersSearch = (searchTerm: string) => {
   });
 };
 
-const downloadStakersCsv = (data: Array<StakersRow>, sortParams: SortParams<StakersRow>) =>
-  downloadCsv(compose(map(transformToCsvRow), sortTableRows(sortParams))(data), 'operators');
-
 export const useStakersCsv = (sortParams: SortParams<StakersRow>) => {
   const protocolData = useProtocolData();
   const strategies = useStrategies();
@@ -159,10 +154,13 @@ export const useStakersCsv = (sortParams: SortParams<StakersRow>) => {
     enabled: false,
   });
 
-  const handleCsvDownload = useCallback(() => {
-    data
-      ? downloadStakersCsv(data, sortParams)
-      : refetch().then((res) => (res.data ? downloadStakersCsv(res.data, sortParams) : res));
+  const handleCsvDownload = useCallback(async () => {
+    downloadTableData({
+      data: (data ?? (await refetch()).data) || [],
+      fileName: 'stakers',
+      sortParams,
+      transformToCsvRow,
+    });
   }, [data, refetch, sortParams]);
 
   return {

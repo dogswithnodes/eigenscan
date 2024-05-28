@@ -1,5 +1,5 @@
-import { gql } from 'graphql-request';
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { gql } from 'graphql-request';
 
 import { request } from './graphql.service';
 

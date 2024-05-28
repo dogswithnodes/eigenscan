@@ -1,7 +1,6 @@
-import { useCallback } from 'react';
-import { gql } from 'graphql-request';
 import { useQuery } from '@tanstack/react-query';
-import { compose, map } from 'ramda';
+import { gql } from 'graphql-request';
+import { useCallback } from 'react';
 
 import {
   Operator,
@@ -15,13 +14,12 @@ import { HomeTabTableFetchParams } from '../../home-tabs.model';
 
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { SortParams } from '@/app/_models/sort.model';
-import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
-import { useStrategies } from '@/app/_services/strategies.service';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { useProtocolData } from '@/app/_services/protocol-data.service';
+import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
+import { useStrategies } from '@/app/_services/strategies.service';
 import { isTermLongEnough } from '@/app/_utils/account-search.utils';
-import { downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
+import { downloadTableData } from '@/app/_utils/table-data.utils';
 
 type OperatorsResponse = {
   operators: Array<Operator>;
@@ -141,9 +139,6 @@ export const useOperatorsSearch = (searchTerm: string) => {
   });
 };
 
-const downloadOperatorsCsv = (data: Array<OperatorsRow>, sortParams: SortParams<OperatorsRow>) =>
-  downloadCsv(compose(map(transformToCsvRow), sortTableRows(sortParams))(data), 'operators');
-
 export const useOperatorsCsv = (sortParams: SortParams<OperatorsRow>) => {
   const strategies = useStrategies();
   const protocolData = useProtocolData();
@@ -167,10 +162,13 @@ export const useOperatorsCsv = (sortParams: SortParams<OperatorsRow>) => {
     enabled: false,
   });
 
-  const handleCsvDownload = useCallback(() => {
-    data
-      ? downloadOperatorsCsv(data, sortParams)
-      : refetch().then((res) => (res.data ? downloadOperatorsCsv(res.data, sortParams) : res));
+  const handleCsvDownload = useCallback(async () => {
+    downloadTableData({
+      data: (data ?? (await refetch()).data) || [],
+      fileName: 'operators',
+      sortParams,
+      transformToCsvRow,
+    });
   }, [data, refetch, sortParams]);
 
   return {

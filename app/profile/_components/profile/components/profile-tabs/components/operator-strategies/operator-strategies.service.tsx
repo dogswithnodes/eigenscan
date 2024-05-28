@@ -1,5 +1,5 @@
-import { gql } from 'graphql-request';
 import { useQuery } from '@tanstack/react-query';
+import { gql } from 'graphql-request';
 
 import { OperatorStrategy, transformToRow } from './operator-strategies.model';
 
@@ -21,6 +21,7 @@ const fetchOperatorStrategies = async (id: string): Promise<Array<OperatorStrate
         ) {
           strategies(
             first: ${REQUEST_LIMIT}
+            where: {strategy_not: null, totalShares_gt: "0"}
           ) {
             id
             totalShares

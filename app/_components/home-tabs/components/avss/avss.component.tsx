@@ -1,6 +1,6 @@
 'use client';
+import { compose, prop, tap } from 'ramda';
 import { useCallback, useMemo } from 'react';
-import { compose, prop, tap, map } from 'ramda';
 
 import { AVSsRow, columns, columnsWidth, transformToCsvRow } from './avss.model';
 import { useAVSs } from './avss.service';
@@ -8,10 +8,9 @@ import { useAVSs } from './avss.service';
 import { HomeTabTableCommonProps } from '../../home-tabs.model';
 
 import { Empty } from '@/app/_components/empty/empty.component';
-import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
 import { Table } from '@/app/_components/table/table.component';
-import { downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
+import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
+import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 export const AVSs: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) => {
@@ -61,7 +60,12 @@ export const AVSs: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) => {
   );
 
   const handleCsvDownload = useCallback(() => {
-    downloadCsv(compose(map(transformToCsvRow), sortTableRows(sortParams))(avss || []), 'avss');
+    downloadTableData({
+      data: avss || [],
+      sortParams,
+      fileName: 'avss',
+      transformToCsvRow,
+    });
   }, [avss, sortParams]);
 
   if (isPending) {

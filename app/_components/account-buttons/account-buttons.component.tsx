@@ -4,8 +4,10 @@ import { StyledAccountButtons, AccountButton } from './account-buttons.styled';
 import copy from './images/copy.svg';
 import external from './images/external.svg';
 
-import { preventDefault } from '@/app/_utils/events.utils';
+import { ExternalLink } from '../external-link/external-link.component';
+
 import { GLOBAL_TOOLTIP_ID } from '@/app/_constants/tooltip.constants';
+import { preventDefault } from '@/app/_utils/events.utils';
 
 type Props = {
   id: string;
@@ -24,11 +26,11 @@ export const AccountButtons: React.FC<Props> = ({ id, url = 'https://etherscan.i
           <img src={copy.src} alt="" width={12} height={13} />
         </AccountButton>
       </CopyToClipboard>
-      <a href={`${url}/${id}`} target="_blank" rel="noreferrer" style={{ outline: 'none' }} tabIndex={-1}>
+      <ExternalLink href={`${url}/${id}`} tabIndex={-1}>
         <AccountButton onMouseDown={preventDefault}>
           <img src={external.src} alt="" width={9} height={10} />
         </AccountButton>
-      </a>
+      </ExternalLink>
     </StyledAccountButtons>
   );
 };

@@ -1,7 +1,6 @@
-import { useCallback } from 'react';
-import { gql } from 'graphql-request';
 import { useQuery } from '@tanstack/react-query';
-import { compose, map } from 'ramda';
+import { gql } from 'graphql-request';
+import { useCallback } from 'react';
 
 import {
   OperatorStaker,
@@ -15,8 +14,7 @@ import { ProfileTabTableFetchParams } from '../../../../profile.model';
 import { SortParams } from '@/app/_models/sort.model';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
-import { downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
+import { downloadTableData } from '@/app/_utils/table-data.utils';
 
 type StakersResponse = {
   delegators: Array<OperatorStaker>;
@@ -91,11 +89,6 @@ const fetchAllStakers = async (
 
   return stakers.map((staker) => transformToRow(staker, strategyToEthBalance));
 };
-// TODO generic name
-const downloadOperatorStakersCsv = (
-  data: Array<OperatorStakersRow>,
-  sortParams: SortParams<OperatorStakersRow>,
-) => downloadCsv(compose(map(transformToCsvRow), sortTableRows(sortParams))(data), 'operator-stakers');
 
 export const useOperatorStakersCsv = (
   id: string,
@@ -111,10 +104,13 @@ export const useOperatorStakersCsv = (
     enabled: false,
   });
 
-  const handleCsvDownload = useCallback(() => {
-    data
-      ? downloadOperatorStakersCsv(data, sortParams)
-      : refetch().then((res) => (res.data ? downloadOperatorStakersCsv(res.data, sortParams) : res));
+  const handleCsvDownload = useCallback(async () => {
+    downloadTableData({
+      data: (data ?? (await refetch()).data) || [],
+      fileName: 'operator-stakers',
+      sortParams,
+      transformToCsvRow,
+    });
   }, [data, refetch, sortParams]);
 
   return {

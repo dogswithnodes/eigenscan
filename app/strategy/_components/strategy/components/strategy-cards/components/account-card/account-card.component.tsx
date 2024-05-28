@@ -1,3 +1,4 @@
+import { AccountButtons } from '@/app/_components/account-buttons/account-buttons.component';
 import {
   Container,
   Left,
@@ -7,10 +8,9 @@ import {
   Heading,
   ImageBox,
 } from '@/app/_components/cards/left-card/left-card.styled';
-import { AccountButtons } from '@/app/_components/account-buttons/account-buttons.component';
-import { clampMiddle } from '@/app/_utils/text.utils';
-import { renderImage } from '@/app/_utils/render.utils';
 import { GLOBAL_TOOLTIP_ID } from '@/app/_constants/tooltip.constants';
+import { renderImage } from '@/app/_utils/render.utils';
+import { clampMiddle } from '@/app/_utils/text.utils';
 
 export type Props = {
   id: string;

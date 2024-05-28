@@ -1,18 +1,18 @@
 'use client';
-import { useCallback, useState } from 'react';
 import BigNumber from 'bignumber.js';
+import { useCallback, useState } from 'react';
 
-import { StyledProtocolData, Contracts, ContractsModal } from './protocol-data.styled';
 import { ProtocolContracts } from './components/protocol-contracts/protocol-contracts.component';
+import { StyledProtocolData, Contracts, ContractsModal } from './protocol-data.styled';
 
 import { Spinner } from '../spinner/spinner.component';
 
+import noData from '@/app/_assets/images/no-data.svg';
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { useProtocolData } from '@/app/_services/protocol-data.service';
 import { useStrategies } from '@/app/_services/strategies.service';
 import { preventDefault } from '@/app/_utils/events.utils';
 import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
-import noData from '@/app/_assets/images/no-data.svg';
 
 export const ProtocolData: React.FC = () => {
   const [showContracts, setShowContracts] = useState(false);

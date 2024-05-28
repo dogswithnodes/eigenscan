@@ -1,6 +1,6 @@
-import { Wrapper, NavContainer, Count } from './pagination.styled';
-import { NavButton } from './nav-button/nav-button.component';
 import { AutosizeInput } from './autosize-input/autosize-input.component';
+import { NavButton } from './nav-button/nav-button.component';
+import { Wrapper, NavContainer, Count } from './pagination.styled';
 import { RadioGroup } from './radio-group/radio-group.component';
 
 import { usePaginationContext } from '../table-footer.component';

@@ -1,18 +1,16 @@
-import { useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
-import { compose, map } from 'ramda';
+import { useCallback } from 'react';
 
 import { Registration, RegistrationsRow, transformToCsvRow, transformToRow } from './registrations.model';
 
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
-import { FetchParams } from '@/app/_models/table.model';
+import { SortParams } from '@/app/_models/sort.model';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { FetchParams } from '@/app/_models/table.model';
 import { request, REQUEST_LIMIT, fetchAllParallel } from '@/app/_services/graphql.service';
 import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
-import { downloadCsv as _downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
-import { SortParams } from '@/app/_models/sort.model';
+import { downloadTableData } from '@/app/_utils/table-data.utils';
 
 type RegistrationsFetchParams = FetchParams<RegistrationsRow> & {
   avsId: string;
@@ -107,9 +105,6 @@ const fetchAllRegistrations = async (
   );
 };
 
-const downloadCsv = (data: Array<RegistrationsRow>, sortParams: SortParams<RegistrationsRow>) =>
-  _downloadCsv(compose(map(transformToCsvRow), sortTableRows(sortParams))(data), 'registrations');
-
 export const useRegistrationsCsv = (
   avsId: string,
   operatorsCount: number,
@@ -124,10 +119,13 @@ export const useRegistrationsCsv = (
     enabled: false,
   });
 
-  const handleCsvDownload = useCallback(() => {
-    data
-      ? downloadCsv(data, sortParams)
-      : refetch().then((res) => (res.data ? downloadCsv(res.data, sortParams) : res));
+  const handleCsvDownload = useCallback(async () => {
+    downloadTableData({
+      data: (data ?? (await refetch()).data) || [],
+      fileName: 'registrations',
+      sortParams,
+      transformToCsvRow,
+    });
   }, [data, refetch, sortParams]);
 
   return {

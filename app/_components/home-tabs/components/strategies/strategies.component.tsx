@@ -1,17 +1,16 @@
 'use client';
-import { useCallback, useMemo } from 'react';
 import { compose, prop, tap, map } from 'ramda';
+import { useCallback, useMemo } from 'react';
 
 import { StrategiesRow, columns, columnsWidth, transformToCsvRow, transformToRow } from './strategies.model';
 
 import { HomeTabTableCommonProps } from '../../home-tabs.model';
 
+import { Empty } from '@/app/_components/empty/empty.component';
 import { Table } from '@/app/_components/table/table.component';
 import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
-import { Empty } from '@/app/_components/empty/empty.component';
 import { useEnrichedStrategies } from '@/app/_services/strategies.service';
-import { downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
+import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 export const Strategies: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) => {
@@ -62,10 +61,12 @@ export const Strategies: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) =>
   );
 
   const handleCsvDownload = useCallback(() => {
-    downloadCsv(
-      compose(map(transformToCsvRow), sortTableRows(sortParams), map(transformToRow))(data?.strategies || []),
-      'strategies',
-    );
+    downloadTableData({
+      data: data?.strategies.map(transformToRow) || [],
+      fileName: 'strategies',
+      sortParams,
+      transformToCsvRow,
+    });
   }, [data, sortParams]);
 
   if (isPending) {

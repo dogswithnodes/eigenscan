@@ -1,9 +1,11 @@
-import { sort } from 'ramda';
 import BigNumber from 'bignumber.js';
+import { compose, map, sort } from 'ramda';
+
+import { downloadCsv } from './csv.utils';
 
 import { SortParams } from '../_models/sort.model';
 
-export const rowsComparator =
+const rowsComparator =
   <T extends Record<string, unknown>>(sortParams: SortParams<T>) =>
   (a: T, b: T) => {
     const { orderBy, orderDirection } = sortParams;
@@ -35,3 +37,15 @@ export const rowsComparator =
 
 export const sortTableRows = <T extends Record<string, unknown>>(sortParams: SortParams<T>) =>
   sort(rowsComparator(sortParams));
+
+export const downloadTableData = <Row extends Record<string, unknown>>({
+  fileName,
+  sortParams,
+  data,
+  transformToCsvRow,
+}: {
+  sortParams: SortParams<Row>;
+  data: Array<Row>;
+  fileName: string;
+  transformToCsvRow: (row: Row) => Record<string, unknown>;
+}) => downloadCsv(compose(map(transformToCsvRow), sortTableRows(sortParams))(data), fileName);

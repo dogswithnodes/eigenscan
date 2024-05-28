@@ -408,4 +408,13 @@ export const StyledTable = styled.section`
       border: 5px solid #fff;
     }
   }
+
+  .ant-table-expanded-row .ant-table-cell {
+    border-top: 2px solid #ececec;
+    border-bottom: 2px solid #ececec;
+
+    @media ${mq[1280]} {
+      border-width: 1px;
+    }
+  }
 `;

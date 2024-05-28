@@ -1,16 +1,15 @@
 'use client';
+import { compose, prop, tap } from 'ramda';
 import { useCallback, useMemo } from 'react';
-import { compose, prop, tap, map } from 'ramda';
 
 import { OperatorAVSsRow, columnsWidth, columns, transformToCsvRow } from './operator-avss.model';
 import { useOperatorAVSs } from './operator-avss.service';
 
 import { Empty } from '@/app/_components/empty/empty.component';
-import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
 import { Table } from '@/app/_components/table/table.component';
+import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
 import { StrategyEnriched } from '@/app/_models/strategies.model';
-import { downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
+import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
@@ -53,9 +52,12 @@ export const OperatorAVSs: React.FC<Props> = ({ id, strategies }) => {
   );
 
   const handleCsvDownload = useCallback(() => {
-    if (data) {
-      downloadCsv(compose(map(transformToCsvRow), sortTableRows(sortParams))(data), 'operator-avss');
-    }
+    downloadTableData({
+      data: data || [],
+      fileName: 'operator-avss',
+      sortParams,
+      transformToCsvRow,
+    });
   }, [data, sortParams]);
 
   if (isPending) {

@@ -1,16 +1,17 @@
 'use client';
-import { useMemo, useCallback, useState, useLayoutEffect, useEffect, useRef } from 'react';
-import { useMediaQuery } from 'react-responsive';
-import ResizeObserver from 'rc-resize-observer';
 import { Table as TableComponent } from 'antd';
 import { ColumnType } from 'antd/es/table';
+import { ExpandableConfig } from 'antd/es/table/interface';
+import ResizeObserver from 'rc-resize-observer';
+import { useMemo, useCallback, useState, useLayoutEffect, useEffect, useRef } from 'react';
+import { useMediaQuery } from 'react-responsive';
 
-import { DownloadButtonProps, PaginationProps } from './table.model';
-import { StyledTable, LoadScreen } from './table.styled';
 import { HeaderCell } from './components/header-cell/header-cell.component';
 import { NoData } from './components/no-data/no-data.component';
 import { TableFooter } from './components/table-footer/table-footer.component';
 import sort from './images/sort.svg';
+import { DownloadButtonProps, PaginationProps } from './table.model';
+import { StyledTable, LoadScreen } from './table.styled';
 
 import { Spinner } from '../spinner/spinner.component';
 
@@ -18,7 +19,7 @@ import { SortParams } from '@/app/_models/sort.model';
 
 type Resolution = '2560' | '1920' | '1440' | '1280';
 
-type Props<Row> = {
+export type Props<Row> = {
   columns: Array<ColumnType<Row>>;
   rows: Array<Row>;
   paginationOptions: PaginationProps;
@@ -29,6 +30,7 @@ type Props<Row> = {
     setSortParams: (orderBy: keyof Row) => void;
   };
   columnsWidth: Record<Resolution, Array<number>>;
+  expandable?: ExpandableConfig<Row>;
   isUpdating?: boolean;
 };
 
@@ -40,6 +42,7 @@ export const Table = <Row extends Record<string, unknown>>({
   isUpdating,
   paginationOptions,
   downloadCsvOptions,
+  expandable,
 }: Props<Row>) => {
   const [resolution, setResolution] = useState<Resolution>('1920');
   const is1920 = useMediaQuery({ maxWidth: 1920 });
@@ -171,6 +174,7 @@ export const Table = <Row extends Record<string, unknown>>({
           tableLayout="fixed"
           dataSource={rows}
           columns={columns}
+          expandable={expandable}
           locale={{
             emptyText: <NoData />,
           }}

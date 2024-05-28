@@ -8,8 +8,8 @@ import {
   Td,
   Postfix,
 } from '@/app/_components/details/details.styled';
+import { ExternalLink } from '@/app/_components/external-link/external-link.component';
 import { Footer } from '@/app/_components/footer/footer.component';
-import { preventDefault } from '@/app/_utils/events.utils';
 import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
 import { clampMiddle } from '@/app/_utils/text.utils';
 
@@ -61,14 +61,9 @@ export const StrategyDetails: React.FC<Props> = ({
                   <Th>Underlying Token</Th>
                   <Td>
                     {underlyingToken && (
-                      <a
-                        onMouseDown={preventDefault}
-                        href={`https://etherscan.io/address/${underlyingToken}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
+                      <ExternalLink href={`https://etherscan.io/address/${underlyingToken}`}>
                         {clampMiddle(underlyingToken)}
-                      </a>
+                      </ExternalLink>
                     )}
                   </Td>
                 </Tr>

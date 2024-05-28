@@ -5,7 +5,6 @@ import type BigNumber from 'bignumber.js';
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { mulDiv } from '@/app/_utils/big-number.utils';
-import { formatTableDate } from '@/app/_utils/table.utils';
 import {
   renderAddressLink,
   renderBigNumber,
@@ -13,6 +12,7 @@ import {
   renderImage,
   renderImageGroup,
 } from '@/app/_utils/render.utils';
+import { formatTableDate } from '@/app/_utils/table.utils';
 
 export type Operator = {
   id: string;

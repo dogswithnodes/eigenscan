@@ -1,7 +1,7 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 
-import { StyledSearchInput } from './search-input.styled';
 import enter from './images/enter.svg';
+import { StyledSearchInput } from './search-input.styled';
 
 import close from '@/app/_assets/images/close.svg';
 

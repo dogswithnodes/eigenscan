@@ -5,8 +5,8 @@ import { RegistrationsRow, columns, columnsWidth } from './registrations.model';
 import { useRegistrations, useRegistrationsCsv } from './registrations.service';
 
 import { Empty } from '@/app/_components/empty/empty.component';
-import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
 import { Table } from '@/app/_components/table/table.component';
+import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { useTable } from '@/app/_utils/table.utils';
 

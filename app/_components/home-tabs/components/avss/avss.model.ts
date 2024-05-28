@@ -4,9 +4,9 @@ import type BigNumber from 'bignumber.js';
 
 import { AVSOperatorBase } from '@/app/_models/avs.model';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { calculateAVSTVLs } from '@/app/_utils/avs.utils';
 import { renderAddressLink, renderBigNumber, renderDate, renderImage } from '@/app/_utils/render.utils';
 import { formatTableDate } from '@/app/_utils/table.utils';
-import { calculateAVSTVLs } from '@/app/_utils/avs.utils';
 
 export type AVS = {
   id: string;

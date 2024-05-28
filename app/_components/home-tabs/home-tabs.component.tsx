@@ -1,14 +1,14 @@
 'use client';
-import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 
-import { StyledHomeTabs } from './home-tabs.styled';
 import { AVSs } from './components/avss/avss.component';
 import { Operators } from './components/operators/operators.component';
+import { SearchInput } from './components/search-input/search-input.component';
 import { Stakers } from './components/stakers/stakers.component';
 import { Strategies } from './components/strategies/strategies.component';
-import { SearchInput } from './components/search-input/search-input.component';
+import { StyledHomeTabs } from './home-tabs.styled';
 
 import { TabButtons, TabButton, TabContent } from '../tabs/tabs.styled';
 

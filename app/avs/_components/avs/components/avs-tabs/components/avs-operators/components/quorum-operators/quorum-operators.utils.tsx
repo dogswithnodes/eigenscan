@@ -1,7 +1,7 @@
 import { QuorumOperatorsRow } from './quorum-operators.model';
 
-import { renderBigNumber } from '@/app/_utils/render.utils';
 import { mulDiv } from '@/app/_utils/big-number.utils';
+import { renderBigNumber } from '@/app/_utils/render.utils';
 
 export const renderTotalWeight = (value: string, row: QuorumOperatorsRow) => (
   <>

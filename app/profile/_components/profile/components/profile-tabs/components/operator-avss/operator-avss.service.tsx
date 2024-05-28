@@ -1,5 +1,5 @@
-import { gql } from 'graphql-request';
 import { useQuery } from '@tanstack/react-query';
+import { gql } from 'graphql-request';
 
 import { OperatorAVSs, OperatorAVSsEnriched, transformToRows } from './operator-avss.model';
 

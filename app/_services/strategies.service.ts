@@ -1,11 +1,11 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { gql } from 'graphql-request';
-import { ethers } from 'ethers';
 import BigNumber from 'bignumber.js';
+import { ethers } from 'ethers';
+import { gql } from 'graphql-request';
 
 import { request, REQUEST_LIMIT } from './graphql.service';
-import { fetchTokensMetadata } from './tokens-metadata.service';
 import { fetchTokenPrice } from './token-price.service';
+import { fetchTokensMetadata } from './tokens-metadata.service';
 
 import erc20Abi from '../_models/erc20.model.json';
 import offchainOracleAbi from '../_models/offchain-oracle.model.json';

@@ -6,8 +6,8 @@ import { StakerStake } from '../../../../profile.model';
 
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { StrategyEnriched, StrategyToEthBalance } from '@/app/_models/strategies.model';
-import { renderBigNumber, renderDate, renderImage } from '@/app/_utils/render.utils';
 import { mulDiv } from '@/app/_utils/big-number.utils';
+import { renderBigNumber, renderDate, renderImage } from '@/app/_utils/render.utils';
 
 export type StakerStakesRow = {
   key: string;

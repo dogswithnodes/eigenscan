@@ -1,16 +1,15 @@
 'use client';
+import { compose, prop, tap } from 'ramda';
 import { useCallback, useMemo } from 'react';
-import { compose, prop, tap, map } from 'ramda';
 
 import { OperatorStrategiesRow, columns, columnsWidth, transformToCsvRow } from './operator-strategies.model';
 import { useOperatorStrategies } from './operator-strategies.service';
 
-import { StrategyEnriched } from '@/app/_models/strategies.model';
+import { Empty } from '@/app/_components/empty/empty.component';
 import { Table } from '@/app/_components/table/table.component';
 import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
-import { Empty } from '@/app/_components/empty/empty.component';
-import { downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
+import { StrategyEnriched } from '@/app/_models/strategies.model';
+import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
@@ -52,7 +51,12 @@ export const OperatorStrategies: React.FC<Props> = ({ id, strategies }) => {
   );
 
   const handleCsvDownload = useCallback(() => {
-    downloadCsv(compose(map(transformToCsvRow), sortTableRows(sortParams))(data || []), 'strategies');
+    downloadTableData({
+      data: data || [],
+      fileName: 'operator-strategies',
+      sortParams,
+      transformToCsvRow,
+    });
   }, [data, sortParams]);
 
   if (isPending) {

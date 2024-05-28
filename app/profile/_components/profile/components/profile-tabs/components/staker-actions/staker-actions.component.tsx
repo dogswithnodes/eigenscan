@@ -1,6 +1,6 @@
 'use client';
-import { useCallback, useMemo } from 'react';
 import { compose, prop, tap, map } from 'ramda';
+import { useCallback, useMemo } from 'react';
 
 import {
   StakerActionsRow,
@@ -13,8 +13,7 @@ import {
 import { StakerAction } from '../../../../profile.model';
 
 import { Table } from '@/app/_components/table/table.component';
-import { downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
+import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
@@ -53,10 +52,12 @@ export const StakerActions: React.FC<Props> = ({ actions }) => {
   );
 
   const handleCsvDownload = useCallback(() => {
-    downloadCsv(
-      compose(map(transformToCsvRow), sortTableRows(sortParams), map(transformToRow))(actions),
-      'staker-actions',
-    );
+    downloadTableData({
+      data: actions.map(transformToRow),
+      fileName: 'staker-actions',
+      sortParams,
+      transformToCsvRow,
+    });
   }, [sortParams, actions]);
 
   return (

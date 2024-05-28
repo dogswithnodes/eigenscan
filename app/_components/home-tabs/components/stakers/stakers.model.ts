@@ -5,9 +5,9 @@ import type BigNumber from 'bignumber.js';
 import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
-import { formatTableDate } from '@/app/_utils/table.utils';
-import { renderAddressLink, renderBigNumber, renderDate } from '@/app/_utils/render.utils';
 import { mulDiv } from '@/app/_utils/big-number.utils';
+import { renderAddressLink, renderBigNumber, renderDate } from '@/app/_utils/render.utils';
+import { formatTableDate } from '@/app/_utils/table.utils';
 
 export type Staker = {
   id: string;

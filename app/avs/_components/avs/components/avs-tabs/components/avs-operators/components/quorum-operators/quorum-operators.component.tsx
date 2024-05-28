@@ -5,8 +5,8 @@ import { QuorumOperatorsRow, columns, columnsWidth } from './quorum-operators.mo
 import { useQuorumOperators, useQuorumOperatorsCsv } from './quorum-operators.service';
 
 import { Empty } from '@/app/_components/empty/empty.component';
-import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
 import { Table } from '@/app/_components/table/table.component';
+import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { useTable } from '@/app/_utils/table.utils';
 

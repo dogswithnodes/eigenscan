@@ -1,15 +1,16 @@
 'use client';
-import { renderToStaticMarkup } from 'react-dom/server';
-import Link from 'next/link';
-import { styled } from 'styled-components';
 import type BigNumber from 'bignumber.js';
+import Link from 'next/link';
 import numbro from 'numbro';
+import { ReactNode } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { styled } from 'styled-components';
 
 import { divBy1e18 } from './big-number.utils';
-import { preventDefault } from './events.utils';
 import { formatTableDate } from './table.utils';
 import { clampMiddle } from './text.utils';
 
+import { ExternalLink } from '../_components/external-link/external-link.component';
 import { GLOBAL_TOOLTIP_ID } from '../_constants/tooltip.constants';
 
 import noData from '@/app/_assets/images/no-data.svg';
@@ -67,7 +68,7 @@ export const renderImageGroup = (srcs: Array<string>) => {
   );
 };
 
-export const renderAddressLink = (type: 'avs' | 'profile' | 'strategy', tab?: string) =>
+export const renderAddressLink = (type: 'avs' | 'profile' | 'strategy', tab?: string, children?: ReactNode) =>
   function AddressLink(address: string | null) {
     return address ? (
       <Link
@@ -77,7 +78,7 @@ export const renderAddressLink = (type: 'avs' | 'profile' | 'strategy', tab?: st
         data-tooltip-id={GLOBAL_TOOLTIP_ID}
         data-tooltip-content={address}
       >
-        {clampMiddle(address)}
+        {children || clampMiddle(address)}
       </Link>
     ) : null;
   };
@@ -123,14 +124,11 @@ export const renderBNWithOptionalTooltip = _renderBN(true);
 export const renderBigNumber = _renderBN();
 
 export const renderTransactionHash = (value: string) => (
-  <a
-    onMouseDown={preventDefault}
+  <ExternalLink
     href={`https://etherscan.io/tx/${value}`}
-    target="_blank"
-    rel="noreferrer"
     data-tooltip-id={GLOBAL_TOOLTIP_ID}
     data-tooltip-content={value}
   >
     {clampMiddle(value)}
-  </a>
+  </ExternalLink>
 );

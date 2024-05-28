@@ -1,14 +1,12 @@
-import { useCallback } from 'react';
-import { gql } from 'graphql-request';
 import { useQuery } from '@tanstack/react-query';
-import { compose, map } from 'ramda';
+import { gql } from 'graphql-request';
+import { useCallback } from 'react';
 
 import { StrategyStakesRow, StrategyStake, transformToCsvRow, transformToRow } from './strategy-stakes.model';
 
 import { SortParams } from '@/app/_models/sort.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
-import { downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
+import { downloadTableData } from '@/app/_utils/table-data.utils';
 
 type StrategyStakesResponse = {
   strategyDeposits: Array<StrategyStake>;
@@ -73,7 +71,7 @@ const fetchAllStrategyStakers = async (
   balance: string,
   strategyTotalShares: string,
 ): Promise<Array<StrategyStakesRow>> => {
-  const stakes = await fetchAllParallel(stakesCount, async (skip: number) =>
+  const stakes = await fetchAllParallel(stakesCount, async (skip) =>
     fetchStrategyStakes(`
       first: ${REQUEST_LIMIT}
       skip: ${skip}
@@ -83,11 +81,6 @@ const fetchAllStrategyStakers = async (
 
   return stakes.map((stake) => transformToRow({ ...stake, balance, strategyTotalShares }));
 };
-// TODO generic name
-const downloadStrategyStakesCsv = (
-  data: Array<StrategyStakesRow>,
-  sortParams: SortParams<StrategyStakesRow>,
-) => downloadCsv(compose(map(transformToCsvRow), sortTableRows(sortParams))(data), 'strategy-stakes');
 
 export const useStrategyStakesCsv = (
   id: string,
@@ -104,10 +97,13 @@ export const useStrategyStakesCsv = (
     enabled: false,
   });
 
-  const handleCsvDownload = useCallback(() => {
-    data
-      ? downloadStrategyStakesCsv(data, sortParams)
-      : refetch().then((res) => (res.data ? downloadStrategyStakesCsv(res.data, sortParams) : res));
+  const handleCsvDownload = useCallback(async () => {
+    downloadTableData({
+      data: (data ?? (await refetch()).data) || [],
+      fileName: 'strategy-stakes',
+      sortParams,
+      transformToCsvRow,
+    });
   }, [data, refetch, sortParams]);
 
   return {

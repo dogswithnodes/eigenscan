@@ -2,11 +2,11 @@
 import { ColumnType } from 'antd/es/table';
 
 import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
+import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { mulDiv } from '@/app/_utils/big-number.utils';
 import { renderAddressLink, renderBigNumber, renderDate } from '@/app/_utils/render.utils';
 import { formatTableDate } from '@/app/_utils/table.utils';
-import { mulDiv } from '@/app/_utils/big-number.utils';
-import { BN_ZERO } from '@/app/_constants/big-number.constants';
 
 export type OperatorStaker = {
   id: string;

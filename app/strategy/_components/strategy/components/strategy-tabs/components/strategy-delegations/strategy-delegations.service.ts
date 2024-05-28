@@ -1,7 +1,6 @@
-import { useCallback } from 'react';
-import { gql } from 'graphql-request';
 import { useQuery } from '@tanstack/react-query';
-import { compose, map } from 'ramda';
+import { gql } from 'graphql-request';
+import { useCallback } from 'react';
 
 import {
   StrategyDelegationsRow,
@@ -12,8 +11,7 @@ import {
 
 import { SortParams } from '@/app/_models/sort.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
-import { downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
+import { downloadTableData } from '@/app/_utils/table-data.utils';
 
 type StrategyDelegationsResponse = {
   delegations: Array<StrategyDelegation>;
@@ -90,11 +88,6 @@ const fetchAllStrategyDelegations = async (
 
   return delegations.map((stake) => transformToRow({ ...stake, balance, strategyTotalShares }));
 };
-// TODO generic name
-const downloadStrategyDelegationsCsv = (
-  data: Array<StrategyDelegationsRow>,
-  sortParams: SortParams<StrategyDelegationsRow>,
-) => downloadCsv(compose(map(transformToCsvRow), sortTableRows(sortParams))(data), 'strategy-delegations');
 
 export const useStrategyDelegationsCsv = (
   id: string,
@@ -111,10 +104,13 @@ export const useStrategyDelegationsCsv = (
     enabled: false,
   });
 
-  const handleCsvDownload = useCallback(() => {
-    data
-      ? downloadStrategyDelegationsCsv(data, sortParams)
-      : refetch().then((res) => (res.data ? downloadStrategyDelegationsCsv(res.data, sortParams) : res));
+  const handleCsvDownload = useCallback(async () => {
+    downloadTableData({
+      data: (data ?? (await refetch()).data) || [],
+      fileName: 'strategy-delegations',
+      sortParams,
+      transformToCsvRow,
+    });
   }, [data, refetch, sortParams]);
 
   return {

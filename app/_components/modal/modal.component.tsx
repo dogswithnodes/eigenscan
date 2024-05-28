@@ -1,11 +1,11 @@
 import { useEffect, useState, MouseEvent, ReactNode } from 'react';
 
-import { StyledModal, CloseButton } from './modal.styled';
 import { Portal } from './components/portal/portal.component';
+import { StyledModal, CloseButton } from './modal.styled';
 
-import { useBodyScrollLock } from '@/app/_utils/body-scroll-lock.utils';
-import { ChildrenProp } from '@/app/_models/children-prop.model';
 import close from '@/app/_assets/images/close.svg';
+import { ChildrenProp } from '@/app/_models/children-prop.model';
+import { useBodyScrollLock } from '@/app/_utils/body-scroll-lock.utils';
 
 const ANIMATION_DURATION = 250;
 

@@ -1,17 +1,17 @@
-import { useEffect, useMemo, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 
-import { TabsHeaderContent } from './avs-tabs.styled';
 import { QuorumWeights } from './avs-tabs.model';
-import { Select } from './components/select/select.component';
+import { TabsHeaderContent } from './avs-tabs.styled';
+import { AVSActions } from './components/avs-actions/avs-actions.component';
 import { AVSDetails, Props as AVSDetailsProps } from './components/avs-details/avs-details.component';
 import { AVSOperators } from './components/avs-operators/avs-operators.component';
-import { AVSActions } from './components/avs-actions/avs-actions.component';
 import { AVSTokens } from './components/avs-tokens/avs-tokens.component';
+import { Select } from './components/select/select.component';
 
-import { AVSAction, AVSOperator, Quorum } from '../../avs.model';
 import { calculateAVSTVLs } from '../../../../../_utils/avs.utils';
+import { AVSOperator, Quorum } from '../../avs.model';
 
 import {
   Tabs,
@@ -41,7 +41,7 @@ type Props = {
   quorums: Array<Quorum>;
   registrations: Array<AVSOperator>;
   strategyToEthBalance: StrategyToEthBalance;
-  actions: Array<AVSAction>;
+  actionsCount: number;
   strategies: Array<StrategyEnriched>;
 };
 
@@ -55,7 +55,7 @@ export const AVSTabs: React.FC<Props> = ({
   avsDetails,
   quorums,
   registrations,
-  actions,
+  actionsCount,
   strategyToEthBalance,
   strategies,
 }) => {
@@ -194,7 +194,7 @@ export const AVSTabs: React.FC<Props> = ({
         {selectedQuorums.at(0)?.multipliers.length && isTokens && (
           <AVSTokens multipliers={selectedQuorums[0].multipliers} strategies={strategies} />
         )}
-        {isActions && <AVSActions actions={actions} />}
+        {isActions && <AVSActions avsId={id} actionsCount={actionsCount} />}
       </TabContent>
     </>
   );

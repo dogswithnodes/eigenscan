@@ -8,8 +8,8 @@ import {
   Td,
   Postfix,
 } from '@/app/_components/details/details.styled';
+import { ExternalLink } from '@/app/_components/external-link/external-link.component';
 import { Footer } from '@/app/_components/footer/footer.component';
-import { preventDefault } from '@/app/_utils/events.utils';
 import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
 
 export type Props = {
@@ -31,9 +31,9 @@ export const OperatorDetails: React.FC<Props> = ({ delegatorsCount = 0, tvl = '0
                   <Th>Website</Th>
                   <Td>
                     {website ? (
-                      <a onMouseDown={preventDefault} href={website} target="_blank" rel="noreferrer">
+                      <ExternalLink href={website}>
                         {website.replace(/(^\w+:|^)\/\//, '').replace(/\/+$/, '')}
-                      </a>
+                      </ExternalLink>
                     ) : (
                       'no data'
                     )}
@@ -43,9 +43,9 @@ export const OperatorDetails: React.FC<Props> = ({ delegatorsCount = 0, tvl = '0
                   <Th>Twitter</Th>
                   <Td>
                     {twitter ? (
-                      <a onMouseDown={preventDefault} href={twitter} target="_blank" rel="noreferrer">
+                      <ExternalLink href={twitter}>
                         {twitter.replace(/(^\w+:|^)\/\//, '').replace(/\/+$/, '')}
-                      </a>
+                      </ExternalLink>
                     ) : (
                       'no data'
                     )}

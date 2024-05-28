@@ -1,7 +1,6 @@
-import { useCallback } from 'react';
-import { gql } from 'graphql-request';
 import { useQuery } from '@tanstack/react-query';
-import { compose, map } from 'ramda';
+import { gql } from 'graphql-request';
+import { useCallback } from 'react';
 
 import {
   StrategyOperatorsRow,
@@ -14,8 +13,7 @@ import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metad
 import { SortParams } from '@/app/_models/sort.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
-import { downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
+import { downloadTableData } from '@/app/_utils/table-data.utils';
 
 type StrategyOperatorsResponse = {
   operatorStrategies: Array<StrategyOperator>;
@@ -99,11 +97,6 @@ const fetchAllStrategyOperators = async (
 
   return operators.map((operator) => transformToRow({ ...operator, balance, strategyTotalShares }));
 };
-// TODO generic name
-const downloadStrategyOperatorsCsv = (
-  data: Array<StrategyOperatorsRow>,
-  sortParams: SortParams<StrategyOperatorsRow>,
-) => downloadCsv(compose(map(transformToCsvRow), sortTableRows(sortParams))(data), 'strategy-operators');
 
 export const useStrategyOperatorsCsv = (
   id: string,
@@ -120,10 +113,13 @@ export const useStrategyOperatorsCsv = (
     enabled: false,
   });
 
-  const handleCsvDownload = useCallback(() => {
-    data
-      ? downloadStrategyOperatorsCsv(data, sortParams)
-      : refetch().then((res) => (res.data ? downloadStrategyOperatorsCsv(res.data, sortParams) : res));
+  const handleCsvDownload = useCallback(async () => {
+    downloadTableData({
+      data: (data ?? (await refetch()).data) || [],
+      fileName: 'strategy-operators',
+      sortParams,
+      transformToCsvRow,
+    });
   }, [data, refetch, sortParams]);
 
   return {

@@ -1,6 +1,6 @@
 'use client';
-import { useCallback, useMemo } from 'react';
 import { compose, prop, tap, map } from 'ramda';
+import { useCallback, useMemo } from 'react';
 
 import {
   StakerStakesRow,
@@ -14,8 +14,7 @@ import { StakerStake } from '../../../../profile.model';
 
 import { Table } from '@/app/_components/table/table.component';
 import { StrategyEnriched, StrategyToEthBalance } from '@/app/_models/strategies.model';
-import { downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
+import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
@@ -56,14 +55,12 @@ export const StakerStakes: React.FC<Props> = ({ stakes, strategies, strategyToEt
   );
 
   const handleCsvDownload = useCallback(() => {
-    downloadCsv(
-      compose(
-        map(transformToCsvRow),
-        sortTableRows(sortParams),
-        map(transformToRow(strategies, strategyToEthBalance)),
-      )(stakes),
-      'staker-stakes',
-    );
+    downloadTableData({
+      data: stakes.map(transformToRow(strategies, strategyToEthBalance)),
+      fileName: 'staker-stakes',
+      sortParams,
+      transformToCsvRow,
+    });
   }, [sortParams, strategies, strategyToEthBalance, stakes]);
 
   return (

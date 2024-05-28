@@ -72,11 +72,11 @@ export const useAccount = (id: string) => {
                 blockTimestamp
                 transactionHash
               }
-              strategies {
-                strategy(
+              strategies(
                   first: ${REQUEST_LIMIT}
                   where: {strategy_not: null, totalShares_gt: "0"}
                 ) {
+                strategy {
                   id
                   totalShares
                 }

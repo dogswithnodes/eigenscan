@@ -1,20 +1,20 @@
+import ColorHash from 'color-hash';
 import { useMemo, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import ColorHash from 'color-hash';
 
-import { Container, ChartContainer, ChartDot, TooltipContent } from './avs-details.styled';
 import { useTopWeightOperatorsNames } from './avs-details.service';
+import { Container, ChartContainer, ChartDot, TooltipContent } from './avs-details.styled';
 import { transformWeightsToChartData } from './avs-details.utils';
 
 import { QuorumWeights } from '../../avs-tabs.model';
 
 import { Table, Tr, Th, Td, Postfix } from '@/app/_components/details/details.styled';
+import { ExternalLink } from '@/app/_components/external-link/external-link.component';
 import { Footer } from '@/app/_components/footer/footer.component';
 import { GLOBAL_TOOLTIP_ID } from '@/app/_constants/tooltip.constants';
-import { preventDefault } from '@/app/_utils/events.utils';
-import { clampMiddle } from '@/app/_utils/text.utils';
-import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
 import { divBy1e18, mulDiv } from '@/app/_utils/big-number.utils';
+import { renderBNWithOptionalTooltip } from '@/app/_utils/render.utils';
+import { clampMiddle } from '@/app/_utils/text.utils';
 // TODO single component
 const RADIAN = Math.PI / 180;
 const OTHERS_NAME = 'others';
@@ -89,9 +89,9 @@ export const AVSDetails: React.FC<Props> = ({
               <Td>
                 {/* TODO render generic link */}
                 {website ? (
-                  <a onMouseDown={preventDefault} href={website} target="_blank" rel="noreferrer">
+                  <ExternalLink href={website}>
                     {website.replace(/(^\w+:|^)\/\//, '').replace(/\/+$/, '')}
-                  </a>
+                  </ExternalLink>
                 ) : (
                   'no data'
                 )}
@@ -101,9 +101,9 @@ export const AVSDetails: React.FC<Props> = ({
               <Th>Twitter</Th>
               <Td>
                 {twitter ? (
-                  <a onMouseDown={preventDefault} href={twitter} target="_blank" rel="noreferrer">
+                  <ExternalLink href={twitter}>
                     {twitter.replace(/(^\w+:|^)\/\//, '').replace(/\/+$/, '')}
-                  </a>
+                  </ExternalLink>
                 ) : (
                   'no data'
                 )}
@@ -114,15 +114,12 @@ export const AVSDetails: React.FC<Props> = ({
                 <Th>BlsApkRegistry</Th>
                 <Td>
                   <span data-tooltip-id={GLOBAL_TOOLTIP_ID} data-tooltip-content={blsApkRegistry}>
-                    <a
-                      onMouseDown={preventDefault}
+                    <ExternalLink
                       href={`https://etherscan.io/address/${blsApkRegistry}`}
-                      target="_blank"
-                      rel="noreferrer"
                       className="monospaced"
                     >
                       {clampMiddle(blsApkRegistry)}
-                    </a>
+                    </ExternalLink>
                   </span>
                 </Td>
               </Tr>
@@ -132,15 +129,12 @@ export const AVSDetails: React.FC<Props> = ({
                 <Th>StakeRegistry</Th>
                 <Td>
                   <span data-tooltip-id={GLOBAL_TOOLTIP_ID} data-tooltip-content={stakeRegistry}>
-                    <a
-                      onMouseDown={preventDefault}
+                    <ExternalLink
                       href={`https://etherscan.io/address/${stakeRegistry}`}
-                      target="_blank"
-                      rel="noreferrer"
                       className="monospaced"
                     >
                       {clampMiddle(stakeRegistry)}
-                    </a>
+                    </ExternalLink>
                   </span>
                 </Td>
               </Tr>

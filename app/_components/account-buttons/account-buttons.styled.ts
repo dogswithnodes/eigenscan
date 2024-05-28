@@ -41,4 +41,8 @@ export const AccountButton = styled.button`
   &:active {
     box-shadow: 0px 1px 0px rgba(0, 0, 0, 1);
   }
+
+  a {
+    outline: none;
+  }
 `;

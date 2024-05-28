@@ -1,14 +1,14 @@
-import { useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
+import { StrategyDelegations } from './components/strategy-delegations/strategy-delegations.component';
 import {
   StrategyDetails,
   Props as StrategyDetailsProps,
 } from './components/strategy-details/strategy-details.component';
 import { StrategyOperators } from './components/strategy-operators/strategy-operators.component';
 import { StrategyStakes } from './components/strategy-stakes/strategy-stakes.component';
-import { StrategyDelegations } from './components/strategy-delegations/strategy-delegations.component';
 
 import {
   Tabs,

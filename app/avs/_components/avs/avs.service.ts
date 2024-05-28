@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 
-import { AVSAction, AVSOperator, Quorum } from './avs.model';
+import { AVSOperator, Quorum } from './avs.model';
 
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { REQUEST_LIMIT, request } from '@/app/_services/graphql.service';
@@ -13,7 +13,7 @@ type AVSResponse = {
     metadataURI: string | null;
     created: string;
     registrationsCount: number;
-    actions: Array<AVSAction>;
+    actionsCount: number;
     quorums: Array<Quorum>;
     registrations: Array<AVSOperator>;
     stakeRegistry: { id: string } | null;
@@ -32,15 +32,7 @@ export const useAVS = (id: string) => {
             metadataURI
             created
             registrationsCount
-            actions(
-              first: ${REQUEST_LIMIT}
-            ) {
-              blockNumber
-              blockTimestamp
-              transactionHash
-              type
-              quorumNumber
-            }
+            actionsCount
             quorums(
               first: ${REQUEST_LIMIT}
               where: {multipliersCount_gt: 0}

@@ -3,8 +3,8 @@ import { ColumnType } from 'antd/es/table';
 import BigNumber from 'bignumber.js';
 
 import { StrategyEnriched } from '@/app/_models/strategies.model';
-import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
 import { mulDiv } from '@/app/_utils/big-number.utils';
+import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
 
 export type OperatorStrategy = {
   totalShares: string;

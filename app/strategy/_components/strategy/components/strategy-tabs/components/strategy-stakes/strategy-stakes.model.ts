@@ -1,13 +1,13 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
 
+import { mulDiv } from '@/app/_utils/big-number.utils';
 import {
   renderAddressLink,
   renderBigNumber,
   renderDate,
   renderTransactionHash,
 } from '@/app/_utils/render.utils';
-import { mulDiv } from '@/app/_utils/big-number.utils';
 
 export type StrategyStake = {
   id: string;

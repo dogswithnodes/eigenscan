@@ -1,24 +1,25 @@
-import { useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
+import { OperatorActions } from './components/operator-actions/operator-actions.component';
+import { OperatorAVSs } from './components/operator-avss/operator-avss.component';
 import {
   OperatorDetails,
   Props as OperatorDetailsProps,
 } from './components/operator-details/operator-details.component';
 import { OperatorStakers } from './components/operator-stakers/operator-stakers.component';
-import { OperatorAVSs } from './components/operator-avss/operator-avss.component';
 import { OperatorStrategies } from './components/operator-strategies/operator-strategies.component';
-import { OperatorActions } from './components/operator-actions/operator-actions.component';
+import { StakerActions } from './components/staker-actions/staker-actions.component';
 import {
   StakerDetails,
   Props as StakerDetailsProps,
 } from './components/staker-details/staker-details.component';
 import { StakerStakes } from './components/staker-stakes/staker-stakes.component';
-import { StakerActions } from './components/staker-actions/staker-actions.component';
 
 import { OperatorAction, StakerStake, StakerAction } from '../../profile.model';
 
+import { Footer } from '@/app/_components/footer/footer.component';
 import {
   Tabs,
   TabButton,
@@ -27,7 +28,6 @@ import {
   Fieldset,
   Legend,
 } from '@/app/_components/tabs/tabs.styled';
-import { Footer } from '@/app/_components/footer/footer.component';
 import { StrategyEnriched, StrategyToEthBalance } from '@/app/_models/strategies.model';
 
 const PROFILE_TABS = {

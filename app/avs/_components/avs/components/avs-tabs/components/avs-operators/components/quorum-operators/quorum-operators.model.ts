@@ -6,10 +6,10 @@ import { renderTotalWeight } from './quorum-operators.utils';
 import { AVSOperator } from '../../../../../../avs.model';
 
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
+import { ProtocolEntityMetadata } from '@/app/_models/protocol-entity-metadata.model';
 import { StrategyToEthBalance } from '@/app/_models/strategies.model';
 import { mulDiv } from '@/app/_utils/big-number.utils';
 import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
-import { ProtocolEntityMetadata } from '@/app/_models/protocol-entity-metadata.model';
 
 export type QuorumOperator = {
   operator: AVSOperator['operator'] & {

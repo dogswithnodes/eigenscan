@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 
+import { DownloadButton } from './download-button/download-button.component';
+import { Pagination } from './pagination/pagination.component';
 import {
   Wrapper,
   Container,
@@ -8,8 +10,6 @@ import {
   PaginationContainer,
   DownloadButtonContainer,
 } from './table-footer.styled';
-import { DownloadButton } from './download-button/download-button.component';
-import { Pagination } from './pagination/pagination.component';
 
 import { DownloadButtonProps, PaginationProps } from '../../table.model';
 

@@ -1,8 +1,8 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
 
-import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
 import { mulDiv } from '@/app/_utils/big-number.utils';
+import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
 
 export type StrategyOperator = {
   operator: {

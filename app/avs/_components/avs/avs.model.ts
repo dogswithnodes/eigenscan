@@ -1,5 +1,3 @@
-import { BaseAction } from '@/app/_models/actions.model';
-
 export type AVSOperator = {
   operator: {
     id: string;
@@ -33,8 +31,4 @@ export type Quorum = {
     }
   >;
   operatorsCount: number;
-};
-
-export type AVSAction = BaseAction & {
-  quorumNumber: string | null;
 };

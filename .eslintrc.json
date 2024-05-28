@@ -25,7 +25,11 @@
     ],
     "import/order": [
       "error",
-      { "groups": ["builtin", "external", "index", "sibling", "parent"], "newlines-between": "always" }
+      {
+        "groups": ["builtin", "external", "index", "sibling", "parent"],
+        "newlines-between": "always",
+        "alphabetize": { "order": "asc", "caseInsensitive": true }
+      }
     ],
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/explicit-function-return-type": "off",

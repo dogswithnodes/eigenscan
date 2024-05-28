@@ -2,8 +2,8 @@ import { styled } from 'styled-components';
 
 import { Container } from '../container/container.styled';
 
-import { mq } from '@/app/_utils/media-query.utils';
 import { fontFamily } from '@/app/_styles/font-family';
+import { mq } from '@/app/_utils/media-query.utils';
 
 export const StyledHeader = styled.header`
   padding: 26px 0;

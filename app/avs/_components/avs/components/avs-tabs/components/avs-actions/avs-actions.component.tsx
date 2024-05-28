@@ -1,27 +1,28 @@
 'use client';
-import { useCallback, useMemo } from 'react';
-import { compose, prop, tap, map } from 'ramda';
+import { useEffect, useMemo } from 'react';
 
-import { AVSActionsRow, columns, columnsWidth, transformToCsvRow, transformToRow } from './avs-actions.model';
+import { AVSActionsRow } from './avs-actions.model';
+import { useAVSActions, useAVSActionsCsv } from './avs-actions.service';
+import { expandedRowRender } from './avs-actions.utils';
 
-import { AVSAction } from '../../../../avs.model';
-
-import { Table } from '@/app/_components/table/table.component';
-import { downloadCsv } from '@/app/_utils/csv.utils';
-import { sortTableRows } from '@/app/_utils/sort.utils';
+import { ActionsTable } from '@/app/_components/actions-table/actions-table.component';
+import { Empty } from '@/app/_components/empty/empty.component';
+import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
-  actions: Array<AVSAction>;
+  avsId: string;
+  actionsCount: number;
 };
 
-export const AVSActions: React.FC<Props> = ({ actions }) => {
+export const AVSActions: React.FC<Props> = ({ avsId, actionsCount }) => {
   const {
     currentPage,
     perPage,
     perPageOptions,
     sortParams,
     total,
+    storageManager,
     setCurrentPage,
     setPerPage,
     setSortParams,
@@ -34,30 +35,42 @@ export const AVSActions: React.FC<Props> = ({ actions }) => {
     },
   });
 
-  const rows = useMemo(
-    () =>
-      compose(
-        (actions: Array<AVSActionsRow>) => actions.slice(perPage * (currentPage - 1), perPage * currentPage),
-        sortTableRows(sortParams),
-        tap(compose(setTotal, prop('length'))),
-        map(transformToRow),
-      )(actions),
-    [sortParams, setTotal, actions, perPage, currentPage],
-  );
+  useEffect(() => {
+    setTotal(actionsCount);
+  }, [actionsCount, setTotal]);
 
-  const handleCsvDownload = useCallback(() => {
-    downloadCsv(
-      compose(map(transformToCsvRow), sortTableRows(sortParams), map(transformToRow))(actions),
-      'avs-actions',
-    );
-  }, [sortParams, actions]);
+  const { data, isPending, isFetching, error } = useAVSActions({
+    avsId,
+    currentPage,
+    perPage,
+    sortParams,
+  });
+
+  const rows = useMemo(() => data ?? [], [data]);
+
+  const { isCsvLoading, handleCsvDownload } = useAVSActionsCsv({
+    avsId,
+    actionsCount,
+    sortParams,
+  });
+
+  if (isPending) {
+    return <TablePreloader />;
+  }
+
+  if (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+    storageManager.setStoragePerPage(null);
+    storageManager.setStorageSortParams(null);
+    return <Empty />;
+  }
 
   return (
-    <Table<AVSActionsRow>
-      columns={columns}
+    <ActionsTable<AVSActionsRow>
       rows={rows}
-      columnsWidth={columnsWidth}
-      isUpdating={false}
+      isUpdating={isFetching}
+      expandedRowRender={expandedRowRender}
       paginationOptions={{
         currentPage,
         perPage,
@@ -72,7 +85,7 @@ export const AVSActions: React.FC<Props> = ({ actions }) => {
       }}
       downloadCsvOptions={{
         onDownload: handleCsvDownload,
-        isLoading: false,
+        isLoading: isCsvLoading,
       }}
     />
   );
