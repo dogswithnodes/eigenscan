@@ -26,7 +26,7 @@ export const ActionsTable = <
         columnWidth: 44,
         expandRowByClick: true,
         rowExpandable(row) {
-          return row.actionDataEntries.some((entry) => entry[1]);
+          return row.actionDataEntries.some(([, value]) => value !== null);
         },
         expandIcon({ expanded, onExpand, record, expandable }) {
           return expandable ? (

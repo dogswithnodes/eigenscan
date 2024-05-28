@@ -9,7 +9,7 @@ export const expandedRowRender = (row: StakerActionsRow) => {
   return (
     <ActionData.Container>
       {row.actionDataEntries.flatMap(([key, value]) => {
-        if (!value) return [];
+        if (value === null) return [];
 
         let renderedValue;
 

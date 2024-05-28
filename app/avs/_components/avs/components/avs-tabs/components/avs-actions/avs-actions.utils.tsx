@@ -8,7 +8,7 @@ export const expandedRowRender = (row: AVSActionsRow) => {
   return (
     <ActionData.Container>
       {row.actionDataEntries.flatMap(([key, value]) => {
-        if (!value) return [];
+        if (value === null) return [];
 
         let renderedValue;
 

@@ -9,7 +9,7 @@ export const expandedRowRender = (row: OperatorActionsRow) => {
   return (
     <ActionData.Container>
       {row.actionDataEntries.flatMap(([key, value]) => {
-        if (!value || (key === 'quorum' && !value.quorum)) return [];
+        if (value === null || (key === 'quorum' && value.quorum === null)) return [];
 
         let renderedValue;
 
