@@ -13,14 +13,14 @@ type Props = {
   id: string;
   delegationsCount: number;
   balance: string;
-  strategyTotalShares: string;
+  totalSharesAndWithdrawing: string;
 };
 
 export const StrategyDelegations: React.FC<Props> = ({
   id,
   delegationsCount,
   balance,
-  strategyTotalShares,
+  totalSharesAndWithdrawing,
 }) => {
   const {
     currentPage,
@@ -58,7 +58,7 @@ export const StrategyDelegations: React.FC<Props> = ({
       sortParams,
     },
     balance,
-    strategyTotalShares,
+    totalSharesAndWithdrawing,
   );
 
   const { isCsvLoading, handleCsvDownload } = useStrategyDelegationsCsv(
@@ -66,7 +66,7 @@ export const StrategyDelegations: React.FC<Props> = ({
     delegationsCount,
     sortParams,
     balance,
-    strategyTotalShares,
+    totalSharesAndWithdrawing,
   );
 
   const rows = useMemo(() => stakers ?? [], [stakers]);

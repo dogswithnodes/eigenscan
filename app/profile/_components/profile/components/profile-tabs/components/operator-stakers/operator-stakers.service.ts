@@ -12,7 +12,7 @@ import {
 import { ProfileTabTableFetchParams } from '../../../../profile.model';
 
 import { SortParams } from '@/app/_models/sort.model';
-import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategiesMap } from '@/app/_models/strategies.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { downloadTableData } from '@/app/_utils/table-data.utils';
 
@@ -38,7 +38,6 @@ const fetchOperatorStakers = async (requestOptions: string) => {
             shares
             strategy {
               id
-              totalShares
             }
           }
           delegatedAt
@@ -55,7 +54,7 @@ type FetchOperatorStakersParams = ProfileTabTableFetchParams<OperatorStakersRow>
 
 export const useOperatorStakers = (
   { id, currentPage, perPage, sortParams }: FetchOperatorStakersParams,
-  strategyToEthBalance: StrategyToEthBalance,
+  strategiesMap: StrategiesMap,
 ) =>
   useQuery({
     // TODO const key
@@ -69,7 +68,7 @@ export const useOperatorStakers = (
         where: { operator: ${JSON.stringify(id)} }
       `);
 
-      return stakers.map((staker) => transformToRow(staker, strategyToEthBalance));
+      return stakers.map((staker) => transformToRow(staker, strategiesMap));
     },
     placeholderData: (prev) => prev,
   });
@@ -77,7 +76,7 @@ export const useOperatorStakers = (
 const fetchAllStakers = async (
   id: string,
   stakersCount: number,
-  strategyToEthBalance: StrategyToEthBalance,
+  strategiesMap: StrategiesMap,
 ): Promise<Array<OperatorStakersRow>> => {
   const stakers = await fetchAllParallel(stakersCount, async (skip: number) =>
     fetchOperatorStakers(`
@@ -87,19 +86,19 @@ const fetchAllStakers = async (
     `),
   );
 
-  return stakers.map((staker) => transformToRow(staker, strategyToEthBalance));
+  return stakers.map((staker) => transformToRow(staker, strategiesMap));
 };
 
 export const useOperatorStakersCsv = (
   id: string,
   stakersCount: number,
   sortParams: SortParams<OperatorStakersRow>,
-  strategyToEthBalance: StrategyToEthBalance,
+  strategiesMap: StrategiesMap,
 ) => {
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['operator-stakers-csv', id, sortParams],
     queryFn: async () => {
-      return fetchAllStakers(id, stakersCount, strategyToEthBalance);
+      return fetchAllStakers(id, stakersCount, strategiesMap);
     },
     enabled: false,
   });

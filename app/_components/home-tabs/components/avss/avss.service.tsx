@@ -47,7 +47,6 @@ const fetchAVSs = async (requestOptions: string): Promise<Array<AVSEnriched>> =>
                   totalShares
                   strategy {
                     id
-                    totalShares
                   }
                 }
               }
@@ -67,7 +66,6 @@ const fetchAVSs = async (requestOptions: string): Promise<Array<AVSEnriched>> =>
               totalShares
               strategy {
                 id
-                totalShares
               }
             }
             }
@@ -110,7 +108,7 @@ export const useAVSs = () => {
         `),
       );
 
-      return avss.map((avs) => transformToRow(avs, strategies.data.strategyToEthBalance));
+      return avss.map((avs) => transformToRow(avs, strategies.data.strategiesMap));
     },
   });
 };

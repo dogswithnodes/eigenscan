@@ -31,7 +31,7 @@ type Props = {
   tab: string | undefined;
   strategyDetails: StrategyDetailsProps;
   balance: string;
-  totalShares: string;
+  totalSharesAndWithdrawing: string;
 };
 
 export const StrategyTabs: React.FC<Props> = ({
@@ -40,7 +40,7 @@ export const StrategyTabs: React.FC<Props> = ({
   strategyDetails,
   strategyDetails: { operatorsCount, stakesCount, delegationsCount },
   balance,
-  totalShares,
+  totalSharesAndWithdrawing,
 }) => {
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -84,7 +84,7 @@ export const StrategyTabs: React.FC<Props> = ({
             id={id}
             operatorsCount={operatorsCount}
             balance={balance}
-            strategyTotalShares={totalShares}
+            totalSharesAndWithdrawing={totalSharesAndWithdrawing}
           />
         )}
         {isStakes && (
@@ -92,7 +92,7 @@ export const StrategyTabs: React.FC<Props> = ({
             id={id}
             stakesCount={stakesCount}
             balance={balance}
-            strategyTotalShares={totalShares}
+            totalSharesAndWithdrawing={totalSharesAndWithdrawing}
           />
         )}
         {isDelegations && (
@@ -100,7 +100,7 @@ export const StrategyTabs: React.FC<Props> = ({
             id={id}
             delegationsCount={delegationsCount}
             balance={balance}
-            strategyTotalShares={totalShares}
+            totalSharesAndWithdrawing={totalSharesAndWithdrawing}
           />
         )}
       </TabContent>

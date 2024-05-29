@@ -7,7 +7,7 @@ import { useQuorumOperators, useQuorumOperatorsCsv } from './quorum-operators.se
 import { Empty } from '@/app/_components/empty/empty.component';
 import { Table } from '@/app/_components/table/table.component';
 import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
-import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategiesMap } from '@/app/_models/strategies.model';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
@@ -15,14 +15,14 @@ type Props = {
   operatorsCount: number;
   quorum: number;
   quorumWeight: string;
-  strategyToEthBalance: StrategyToEthBalance;
+  strategiesMap: StrategiesMap;
 };
 
 export const QuorumOperators: React.FC<Props> = ({
   avsId,
   quorum,
   quorumWeight,
-  strategyToEthBalance,
+  strategiesMap,
   operatorsCount,
 }) => {
   const {
@@ -60,7 +60,7 @@ export const QuorumOperators: React.FC<Props> = ({
       perPage,
       sortParams,
     },
-    strategyToEthBalance,
+    strategiesMap,
     quorumWeight,
   );
 
@@ -72,7 +72,7 @@ export const QuorumOperators: React.FC<Props> = ({
     quorum,
     quorumWeight,
     sortParams,
-    strategyToEthBalance,
+    strategiesMap,
   );
 
   if (isPending) {

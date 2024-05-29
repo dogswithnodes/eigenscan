@@ -13,17 +13,16 @@ import {
 import { StakerStake } from '../../../../profile.model';
 
 import { Table } from '@/app/_components/table/table.component';
-import { StrategyEnriched, StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategiesMapEnriched } from '@/app/_models/strategies.model';
 import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
   stakes: Array<StakerStake>;
-  strategies: Array<StrategyEnriched>;
-  strategyToEthBalance: StrategyToEthBalance;
+  strategiesMap: StrategiesMapEnriched;
 };
 
-export const StakerStakes: React.FC<Props> = ({ stakes, strategies, strategyToEthBalance }) => {
+export const StakerStakes: React.FC<Props> = ({ stakes, strategiesMap }) => {
   const {
     currentPage,
     perPage,
@@ -49,19 +48,19 @@ export const StakerStakes: React.FC<Props> = ({ stakes, strategies, strategyToEt
           stakerStakes.slice(perPage * (currentPage - 1), perPage * currentPage),
         sortTableRows(sortParams),
         tap(compose(setTotal, prop('length'))),
-        map(transformToRow(strategies, strategyToEthBalance)),
+        map(transformToRow(strategiesMap)),
       )(stakes),
-    [sortParams, setTotal, strategies, strategyToEthBalance, stakes, perPage, currentPage],
+    [sortParams, setTotal, strategiesMap, stakes, perPage, currentPage],
   );
 
   const handleCsvDownload = useCallback(() => {
     downloadTableData({
-      data: stakes.map(transformToRow(strategies, strategyToEthBalance)),
+      data: stakes.map(transformToRow(strategiesMap)),
       fileName: 'staker-stakes',
       sortParams,
       transformToCsvRow,
     });
-  }, [sortParams, strategies, strategyToEthBalance, stakes]);
+  }, [sortParams, strategiesMap, stakes]);
 
   return (
     <Table<StakerStakesRow>

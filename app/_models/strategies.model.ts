@@ -26,4 +26,6 @@ export type StrategyEnriched = Strategy & {
   logo: string | null;
 };
 
-export type StrategyToEthBalance = Record<string, string>;
+export type StrategiesMap = Record<string, Strategy>;
+
+export type StrategiesMapEnriched = Record<string, StrategyEnriched>;

@@ -21,7 +21,7 @@ import {
   Fieldset,
   Legend,
 } from '@/app/_components/tabs/tabs.styled';
-import { StrategyEnriched, StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategiesMapEnriched } from '@/app/_models/strategies.model';
 import { add, mul } from '@/app/_utils/big-number.utils';
 
 const AVS_TABS = {
@@ -40,9 +40,8 @@ type Props = {
   >;
   quorums: Array<Quorum>;
   registrations: Array<AVSOperator>;
-  strategyToEthBalance: StrategyToEthBalance;
+  strategiesMap: StrategiesMapEnriched;
   actionsCount: number;
-  strategies: Array<StrategyEnriched>;
 };
 
 type QuorumOption = {
@@ -56,8 +55,7 @@ export const AVSTabs: React.FC<Props> = ({
   quorums,
   registrations,
   actionsCount,
-  strategyToEthBalance,
-  strategies,
+  strategiesMap,
 }) => {
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -86,8 +84,8 @@ export const AVSTabs: React.FC<Props> = ({
     selectedQuorums.length > 0 ? selectedQuorums[0].operatorsCount : avsDetails.operatorsCount;
 
   const { ethTvl, eigenTvl } = useMemo(
-    () => calculateAVSTVLs(selectedQuorums, registrations, strategyToEthBalance),
-    [registrations, selectedQuorums, strategyToEthBalance],
+    () => calculateAVSTVLs(selectedQuorums, registrations, strategiesMap),
+    [registrations, selectedQuorums, strategiesMap],
   );
 
   const operatorsQuorumWeights = useMemo(
@@ -117,8 +115,10 @@ export const AVSTabs: React.FC<Props> = ({
 
       return operators.reduce<QuorumWeights>(
         (acc, { operator: { strategies } }) => {
-          strategies.forEach(({ strategy: { id, totalShares, tokenSymbol } }) => {
-            const weight = mul(totalShares, strategyToMultiply[id] ?? '0');
+          strategies.forEach(({ strategy }) => {
+            const { totalShares, tokenSymbol } = strategiesMap[strategy.id];
+
+            const weight = mul(totalShares, strategyToMultiply[strategy.id] ?? '0');
             acc[tokenSymbol] = add((acc[tokenSymbol] ??= '0'), weight).toFixed();
             acc.totalWeight = add(acc.totalWeight, weight).toFixed();
           });
@@ -130,7 +130,7 @@ export const AVSTabs: React.FC<Props> = ({
     }
 
     return null;
-  }, [selectedQuorums]);
+  }, [selectedQuorums, strategiesMap]);
 
   return (
     <>
@@ -188,11 +188,11 @@ export const AVSTabs: React.FC<Props> = ({
             operatorsCount={operatorsCount}
             quorum={quorum}
             quorumWeight={operatorsQuorumWeights?.totalWeight ?? null}
-            strategyToEthBalance={strategyToEthBalance}
+            strategiesMap={strategiesMap}
           />
         )}
         {selectedQuorums.at(0)?.multipliers.length && isTokens && (
-          <AVSTokens multipliers={selectedQuorums[0].multipliers} strategies={strategies} />
+          <AVSTokens multipliers={selectedQuorums[0].multipliers} strategiesMap={strategiesMap} />
         )}
         {isActions && <AVSActions avsId={id} actionsCount={actionsCount} />}
       </TabContent>

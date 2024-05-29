@@ -3,7 +3,7 @@ import { ColumnType } from 'antd/es/table';
 
 import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
-import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategiesMap } from '@/app/_models/strategies.model';
 import { mulDiv } from '@/app/_utils/big-number.utils';
 import { renderAddressLink, renderBigNumber, renderDate } from '@/app/_utils/render.utils';
 import { formatTableDate } from '@/app/_utils/table.utils';
@@ -18,7 +18,6 @@ export type OperatorStaker = {
     shares: string;
     strategy: {
       id: string;
-      totalShares: string;
     };
   }>;
   delegatedAt: string;
@@ -87,11 +86,13 @@ export const columns: Array<ColumnType<OperatorStakersRow>> = [
 
 export const transformToRow = (
   { id, delegations, staker, delegatedAt, undelegatedAt }: OperatorStaker,
-  strategyToEthBalance: StrategyToEthBalance,
+  strategiesMap: StrategiesMap,
 ): OperatorStakersRow => {
   const stakedEth = delegations.reduce((acc, { shares, strategy }) => {
     if (strategy.id !== EIGEN_STRATEGY) {
-      acc = acc.plus(mulDiv(shares, strategyToEthBalance[strategy.id], strategy.totalShares));
+      const { ethBalance, totalSharesAndWithdrawing } = strategiesMap[strategy.id];
+
+      acc = acc.plus(mulDiv(shares, ethBalance, totalSharesAndWithdrawing));
     }
 
     return acc;

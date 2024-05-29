@@ -25,7 +25,7 @@ export const Strategy: React.FC<Props> = ({ id, tab }) => {
     return <Empty />;
   }
 
-  const strategy = data.strategies.find((s) => s.id === id);
+  const strategy = data.strategiesMap[id];
 
   if (!strategy) {
     return <Empty />;
@@ -44,7 +44,6 @@ export const Strategy: React.FC<Props> = ({ id, tab }) => {
     balance,
     totalDelegated,
     totalWithdrawing,
-    totalShares,
     ethBalance,
     totalSharesAndWithdrawing,
   } = strategy;
@@ -56,7 +55,7 @@ export const Strategy: React.FC<Props> = ({ id, tab }) => {
         id={id}
         tab={tab}
         balance={balance}
-        totalShares={totalShares}
+        totalSharesAndWithdrawing={totalSharesAndWithdrawing}
         strategyDetails={{
           whitelisted,
           stakesCount,

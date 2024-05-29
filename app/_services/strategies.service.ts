@@ -13,7 +13,8 @@ import {
   StrategyServer,
   Strategy,
   StrategyEnriched,
-  StrategyToEthBalance,
+  StrategiesMap,
+  StrategiesMapEnriched,
 } from '../_models/strategies.model';
 import { add } from '../_utils/big-number.utils';
 
@@ -27,7 +28,7 @@ export const useStrategies = (
   options?: Omit<
     UseQueryOptions<{
       strategies: Array<Strategy>;
-      strategyToEthBalance: StrategyToEthBalance;
+      strategiesMap: StrategiesMap;
     }>,
     'queryKey' | 'queryFn'
   >,
@@ -86,14 +87,14 @@ export const useStrategies = (
           }),
         ),
         Promise.all(
-          strategies.map(async ({ id, underlyingToken, totalShares }) => {
+          strategies.map(async ({ id, underlyingToken, totalShares, totalWithdrawing }) => {
             if (underlyingToken) {
               const token = new ethers.Contract(underlyingToken, erc20Abi, provider);
 
               return String(await token.balanceOf(id));
             }
 
-            return totalShares;
+            return add(totalShares, totalWithdrawing).toFixed();
           }),
         ),
       ]);
@@ -110,27 +111,23 @@ export const useStrategies = (
 
       return {
         strategies: strategiesWithBalances,
-        strategyToEthBalance: strategiesWithBalances.reduce<StrategyToEthBalance>(
-          (map, { id, ethBalance }) => {
-            map[id] = ethBalance;
-            return map;
-          },
-          {},
-        ),
+        strategiesMap: strategiesWithBalances.reduce<StrategiesMap>((acc, strategy) => {
+          acc[strategy.id] = strategy;
+          return acc;
+        }, {}),
       };
     },
     ...options,
   });
 };
 
+type UseEnrichedStrategiesData = {
+  strategies: Array<StrategyEnriched>;
+  strategiesMap: StrategiesMapEnriched;
+};
+
 export const useEnrichedStrategies = (
-  options?: Omit<
-    UseQueryOptions<{
-      strategies: Array<StrategyEnriched>;
-      strategyToEthBalance: StrategyToEthBalance;
-    }>,
-    'queryKey' | 'queryFn'
-  >,
+  options?: Omit<UseQueryOptions<UseEnrichedStrategiesData>, 'queryKey' | 'queryFn'>,
 ) => {
   const { data } = useStrategies();
 
@@ -143,19 +140,26 @@ export const useEnrichedStrategies = (
         }
       }
 
-      const { strategies, strategyToEthBalance } = data;
+      const { strategies } = data;
 
       const tokensMetadata = await fetchTokensMetadata(strategies);
 
-      return {
-        strategies: strategies.map((strategy) => {
-          return {
+      return strategies.reduce<UseEnrichedStrategiesData>(
+        (acc, strategy) => {
+          const enrichedStrategy = {
             ...strategy,
             logo: tokensMetadata[strategy.tokenSymbol.toUpperCase()].at(0)?.logo || null,
           };
-        }),
-        strategyToEthBalance,
-      };
+          acc.strategies.push(enrichedStrategy);
+          acc.strategiesMap[enrichedStrategy.id] = enrichedStrategy;
+
+          return acc;
+        },
+        {
+          strategies: [],
+          strategiesMap: {},
+        },
+      );
     },
     ...options,
     enabled: Boolean(data) && (options?.enabled ?? true),

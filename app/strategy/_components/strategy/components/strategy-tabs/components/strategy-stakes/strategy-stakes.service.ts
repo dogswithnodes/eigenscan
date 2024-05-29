@@ -47,7 +47,7 @@ type FetchStrategyStakesParams = {
 export const useStrategyStakes = (
   { id, currentPage, perPage, sortParams }: FetchStrategyStakesParams,
   balance: string,
-  strategyTotalShares: string,
+  totalSharesAndWithdrawing: string,
 ) =>
   useQuery({
     queryKey: ['strategy-stakes', currentPage, perPage, sortParams],
@@ -60,7 +60,7 @@ export const useStrategyStakes = (
         where: { strategy: ${JSON.stringify(id)} }
       `);
 
-      return stakes.map((stake) => transformToRow({ ...stake, balance, strategyTotalShares }));
+      return stakes.map((stake) => transformToRow({ ...stake, balance, totalSharesAndWithdrawing }));
     },
     placeholderData: (prev) => prev,
   });
@@ -69,7 +69,7 @@ const fetchAllStrategyStakers = async (
   id: string,
   stakesCount: number,
   balance: string,
-  strategyTotalShares: string,
+  totalSharesAndWithdrawing: string,
 ): Promise<Array<StrategyStakesRow>> => {
   const stakes = await fetchAllParallel(stakesCount, async (skip) =>
     fetchStrategyStakes(`
@@ -79,7 +79,7 @@ const fetchAllStrategyStakers = async (
     `),
   );
 
-  return stakes.map((stake) => transformToRow({ ...stake, balance, strategyTotalShares }));
+  return stakes.map((stake) => transformToRow({ ...stake, balance, totalSharesAndWithdrawing }));
 };
 
 export const useStrategyStakesCsv = (
@@ -87,12 +87,12 @@ export const useStrategyStakesCsv = (
   stakesCount: number,
   sortParams: SortParams<StrategyStakesRow>,
   balance: string,
-  strategyTotalShares: string,
+  totalSharesAndWithdrawing: string,
 ) => {
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['strategy-stakes-csv', id, sortParams],
     queryFn: async () => {
-      return fetchAllStrategyStakers(id, stakesCount, balance, strategyTotalShares);
+      return fetchAllStrategyStakers(id, stakesCount, balance, totalSharesAndWithdrawing);
     },
     enabled: false,
   });

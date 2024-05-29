@@ -12,11 +12,16 @@ import { useTable } from '@/app/_utils/table.utils';
 type Props = {
   id: string;
   balance: string;
-  strategyTotalShares: string;
+  totalSharesAndWithdrawing: string;
   operatorsCount: number;
 };
 
-export const StrategyOperators: React.FC<Props> = ({ id, balance, strategyTotalShares, operatorsCount }) => {
+export const StrategyOperators: React.FC<Props> = ({
+  id,
+  balance,
+  totalSharesAndWithdrawing,
+  operatorsCount,
+}) => {
   const {
     currentPage,
     perPage,
@@ -53,7 +58,7 @@ export const StrategyOperators: React.FC<Props> = ({ id, balance, strategyTotalS
       sortParams,
     },
     balance,
-    strategyTotalShares,
+    totalSharesAndWithdrawing,
   );
 
   const { isCsvLoading, handleCsvDownload } = useStrategyOperatorsCsv(
@@ -61,7 +66,7 @@ export const StrategyOperators: React.FC<Props> = ({ id, balance, strategyTotalS
     operatorsCount,
     sortParams,
     balance,
-    strategyTotalShares,
+    totalSharesAndWithdrawing,
   );
 
   const rows = useMemo(() => stakers ?? [], [stakers]);

@@ -11,7 +11,7 @@ import {
 
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { SortParams } from '@/app/_models/sort.model';
-import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategiesMap } from '@/app/_models/strategies.model';
 import { FetchParams } from '@/app/_models/table.model';
 import { request, REQUEST_LIMIT, fetchAllParallel } from '@/app/_services/graphql.service';
 import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
@@ -43,7 +43,6 @@ const fetchQuorumOperators = async (requestParams: string): Promise<Array<Quorum
           totalShares
           strategy {
             id
-            totalShares
           }
         }
       }
@@ -57,7 +56,7 @@ const fetchQuorumOperators = async (requestParams: string): Promise<Array<Quorum
 
 export const useQuorumOperators = (
   { avsId, quorum, currentPage, perPage, sortParams }: QuorumOperatorsFetchParams,
-  strategyToEthBalance: StrategyToEthBalance,
+  strategiesMap: StrategiesMap,
   quorumWeight: string,
 ) => {
   return useQuery({
@@ -79,7 +78,7 @@ export const useQuorumOperators = (
         transformToRow(
           operator,
           metadata[operator.operator.metadataURI ?? DEFAULT_METADATA_MAP_KEY],
-          strategyToEthBalance,
+          strategiesMap,
           quorumWeight,
         ),
       );
@@ -93,7 +92,7 @@ const fetchAllQuorumOperators = async (
   quorum: number,
   quorumWeight: string,
   operatorsCount: number,
-  strategyToEthBalance: StrategyToEthBalance,
+  strategiesMap: StrategiesMap,
 ): Promise<Array<QuorumOperatorsRow>> => {
   const operators = await fetchAllParallel(operatorsCount, async (skip: number) => {
     return fetchQuorumOperators(`
@@ -111,7 +110,7 @@ const fetchAllQuorumOperators = async (
     transformToRow(
       operator,
       metadata[operator.operator.metadataURI ?? DEFAULT_METADATA_MAP_KEY],
-      strategyToEthBalance,
+      strategiesMap,
       quorumWeight,
     ),
   );
@@ -123,12 +122,12 @@ export const useQuorumOperatorsCsv = (
   quorum: number,
   quorumWeight: string,
   sortParams: SortParams<QuorumOperatorsRow>,
-  strategyToEthBalance: StrategyToEthBalance,
+  strategiesMap: StrategiesMap,
 ) => {
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['quorum-operators-csv', avsId, quorum, sortParams],
     queryFn: async () => {
-      return fetchAllQuorumOperators(avsId, quorum, quorumWeight, operatorsCount, strategyToEthBalance);
+      return fetchAllQuorumOperators(avsId, quorum, quorumWeight, operatorsCount, strategiesMap);
     },
     enabled: false,
   });

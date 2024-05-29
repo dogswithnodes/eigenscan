@@ -20,7 +20,6 @@ type AccountResponse = {
         totalShares: string;
         strategy: {
           id: string;
-          totalShares: string;
         };
       }>;
     } | null;
@@ -38,7 +37,6 @@ type AccountResponse = {
           share: string;
           strategy: {
             id: string;
-            totalShares: string;
           };
         }>;
       }>;
@@ -71,7 +69,6 @@ export const useAccount = (id: string) => {
                 ) {
                 strategy {
                   id
-                  totalShares
                 }
                 totalShares
               }
@@ -95,7 +92,6 @@ export const useAccount = (id: string) => {
                 shares
                 strategy {
                   id
-                  totalShares
                 }
                 withdrawal {
                   share
@@ -111,7 +107,6 @@ export const useAccount = (id: string) => {
                   share
                   strategy {
                     id
-                    totalShares
                   }
                 }
               }

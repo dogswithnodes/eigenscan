@@ -6,7 +6,7 @@ import { Registration, RegistrationsRow, transformToCsvRow, transformToRow } fro
 
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { SortParams } from '@/app/_models/sort.model';
-import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategiesMap } from '@/app/_models/strategies.model';
 import { FetchParams } from '@/app/_models/table.model';
 import { request, REQUEST_LIMIT, fetchAllParallel } from '@/app/_services/graphql.service';
 import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
@@ -37,7 +37,6 @@ const fetchRegistrations = async (requestParams: string): Promise<Array<Registra
             totalShares
             strategy {
               id
-              totalShares
             }
           }
         }
@@ -50,7 +49,7 @@ const fetchRegistrations = async (requestParams: string): Promise<Array<Registra
 
 export const useRegistrations = (
   { avsId, currentPage, perPage, sortParams }: RegistrationsFetchParams,
-  strategyToEthBalance: StrategyToEthBalance,
+  strategiesMap: StrategiesMap,
 ) => {
   return useQuery({
     queryKey: ['registrations', avsId, currentPage, perPage, sortParams],
@@ -71,7 +70,7 @@ export const useRegistrations = (
         transformToRow(
           registration,
           metadata[registration.operator.metadataURI ?? DEFAULT_METADATA_MAP_KEY],
-          strategyToEthBalance,
+          strategiesMap,
         ),
       );
     },
@@ -82,7 +81,7 @@ export const useRegistrations = (
 const fetchAllRegistrations = async (
   avsId: string,
   operatorsCount: number,
-  strategyToEthBalance: StrategyToEthBalance,
+  strategiesMap: StrategiesMap,
 ): Promise<Array<RegistrationsRow>> => {
   const registrations = await fetchAllParallel(operatorsCount, async (skip: number) => {
     return fetchRegistrations(`
@@ -100,7 +99,7 @@ const fetchAllRegistrations = async (
     transformToRow(
       registration,
       metadata[registration.operator.metadataURI ?? DEFAULT_METADATA_MAP_KEY],
-      strategyToEthBalance,
+      strategiesMap,
     ),
   );
 };
@@ -109,12 +108,12 @@ export const useRegistrationsCsv = (
   avsId: string,
   operatorsCount: number,
   sortParams: SortParams<RegistrationsRow>,
-  strategyToEthBalance: StrategyToEthBalance,
+  strategiesMap: StrategiesMap,
 ) => {
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['registrations-csv', avsId, sortParams],
     queryFn: async () => {
-      return fetchAllRegistrations(avsId, operatorsCount, strategyToEthBalance);
+      return fetchAllRegistrations(avsId, operatorsCount, strategiesMap);
     },
     enabled: false,
   });

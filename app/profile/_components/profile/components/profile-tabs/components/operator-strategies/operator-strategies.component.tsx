@@ -8,16 +8,16 @@ import { useOperatorStrategies } from './operator-strategies.service';
 import { Empty } from '@/app/_components/empty/empty.component';
 import { Table } from '@/app/_components/table/table.component';
 import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
-import { StrategyEnriched } from '@/app/_models/strategies.model';
+import { StrategiesMapEnriched } from '@/app/_models/strategies.model';
 import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
   id: string;
-  strategies: Array<StrategyEnriched>;
+  strategiesMap: StrategiesMapEnriched;
 };
 
-export const OperatorStrategies: React.FC<Props> = ({ id, strategies }) => {
+export const OperatorStrategies: React.FC<Props> = ({ id, strategiesMap }) => {
   const {
     currentPage,
     perPage,
@@ -37,7 +37,7 @@ export const OperatorStrategies: React.FC<Props> = ({ id, strategies }) => {
     },
   });
 
-  const { data, isPending, error } = useOperatorStrategies(id, strategies);
+  const { data, isPending, error } = useOperatorStrategies(id, strategiesMap);
 
   const rows = useMemo(
     () =>

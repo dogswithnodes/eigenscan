@@ -5,7 +5,6 @@ export type AVSOperatorBase = {
       totalShares: string;
       strategy: {
         id: string;
-        totalShares: string;
       };
     }>;
   };

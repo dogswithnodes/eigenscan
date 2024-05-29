@@ -8,16 +8,17 @@ import { useOperatorAVSs } from './operator-avss.service';
 import { Empty } from '@/app/_components/empty/empty.component';
 import { Table } from '@/app/_components/table/table.component';
 import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
-import { StrategyEnriched } from '@/app/_models/strategies.model';
+import { StrategiesMapEnriched, StrategyEnriched } from '@/app/_models/strategies.model';
 import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
   id: string;
   strategies: Array<StrategyEnriched>;
+  strategiesMap: StrategiesMapEnriched;
 };
 
-export const OperatorAVSs: React.FC<Props> = ({ id, strategies }) => {
+export const OperatorAVSs: React.FC<Props> = ({ id, strategies, strategiesMap }) => {
   const {
     currentPage,
     perPage,
@@ -37,7 +38,7 @@ export const OperatorAVSs: React.FC<Props> = ({ id, strategies }) => {
     },
   });
 
-  const { data, isPending, error } = useOperatorAVSs(id, strategies);
+  const { data, isPending, error } = useOperatorAVSs(id, strategies, strategiesMap);
 
   const rows = useMemo(
     () =>

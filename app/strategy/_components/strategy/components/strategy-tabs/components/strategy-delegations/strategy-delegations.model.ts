@@ -101,15 +101,15 @@ export const transformToRow = ({
   lastUpdatedTransactionHash,
   operatorStrategy: { operator },
   balance,
-  strategyTotalShares,
+  totalSharesAndWithdrawing,
 }: StrategyDelegation & {
   balance: string;
-  strategyTotalShares: string;
+  totalSharesAndWithdrawing: string;
 }): StrategyDelegationsRow => {
   return {
     key: id,
     operator: operator.id,
-    shares: mulDiv(shares, balance, strategyTotalShares).toFixed(),
+    shares: mulDiv(shares, balance, totalSharesAndWithdrawing).toFixed(),
     createdTimestamp,
     createdTransactionHash,
     lastUpdatedTimestamp,

@@ -9,7 +9,6 @@ export type StakerStake = {
   lastUpdatedTimestamp: string;
   strategy: {
     id: string;
-    totalShares: string;
   };
   withdrawal: {
     share: string;

@@ -3,7 +3,7 @@ import { gql } from 'graphql-request';
 
 import { OperatorStrategy, transformToRow } from './operator-strategies.model';
 
-import { StrategyEnriched } from '@/app/_models/strategies.model';
+import { StrategiesMapEnriched } from '@/app/_models/strategies.model';
 import { request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 
 type OperatorAVSsResponse = {
@@ -37,7 +37,7 @@ const fetchOperatorStrategies = async (id: string): Promise<Array<OperatorStrate
   return operator.strategies;
 };
 
-export const useOperatorStrategies = (id: string, strategies: Array<StrategyEnriched>) => {
+export const useOperatorStrategies = (id: string, strategies: StrategiesMapEnriched) => {
   return useQuery({
     queryKey: ['operator-strategies'],
     queryFn: async () => {

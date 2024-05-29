@@ -28,7 +28,7 @@ import {
   Fieldset,
   Legend,
 } from '@/app/_components/tabs/tabs.styled';
-import { StrategyEnriched, StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategyEnriched, StrategiesMapEnriched } from '@/app/_models/strategies.model';
 
 const PROFILE_TABS = {
   operatorDetails: 'operator-details',
@@ -53,7 +53,7 @@ type Props = {
   stakerActionsCount: number | undefined;
   strategiesData: {
     strategies: Array<StrategyEnriched>;
-    strategyToEthBalance: StrategyToEthBalance;
+    strategiesMap: StrategiesMapEnriched;
   };
 };
 
@@ -62,7 +62,7 @@ export const ProfileTabs: React.FC<Props> = ({
   tab,
   isOperator,
   isStaker,
-  strategiesData: { strategies, strategyToEthBalance },
+  strategiesData: { strategies, strategiesMap },
   operatorDetails,
   operatorActionsCount,
   stakerDetails,
@@ -137,22 +137,18 @@ export const ProfileTabs: React.FC<Props> = ({
         {isOperatorStakers && (
           <OperatorStakers
             id={id}
-            strategyToEthBalance={strategyToEthBalance}
+            strategiesMap={strategiesMap}
             delegatorsCount={operatorDetails.delegatorsCount}
           />
         )}
-        {isOperatorAVSs && <OperatorAVSs id={id} strategies={strategies} />}
-        {isOperatorStrategies && <OperatorStrategies id={id} strategies={strategies} />}
+        {isOperatorAVSs && <OperatorAVSs id={id} strategies={strategies} strategiesMap={strategiesMap} />}
+        {isOperatorStrategies && <OperatorStrategies id={id} strategiesMap={strategiesMap} />}
         {isOperatorActions && typeof operatorActionsCount === 'number' && (
           <OperatorActions id={id} actionsCount={operatorActionsCount} />
         )}
         {isStakerDetails && <StakerDetails {...stakerDetails} />}
         {isStakerStakes && stakerStakes && (
-          <StakerStakes
-            stakes={stakerStakes}
-            strategies={strategies}
-            strategyToEthBalance={strategyToEthBalance}
-          />
+          <StakerStakes stakes={stakerStakes} strategiesMap={strategiesMap} />
         )}
         {isStakerActions && typeof stakerActionsCount === 'number' && (
           <StakerActions id={id} actionsCount={stakerActionsCount} />

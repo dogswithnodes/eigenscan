@@ -4,7 +4,7 @@ import { ColumnType } from 'antd/es/table';
 import { renderTokens } from './operator-avss.utils';
 
 import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
-import { StrategyEnriched } from '@/app/_models/strategies.model';
+import { StrategiesMapEnriched, StrategyEnriched } from '@/app/_models/strategies.model';
 import { renderAddressLink, renderBigNumber, renderDate, renderImage } from '@/app/_utils/render.utils';
 
 type OperatorAVSStatus = {
@@ -126,6 +126,7 @@ export type AVSStatusIdToQuorum = Record<string, number | null>;
 export const transformToRows = (
   { quorums, avsStatuses }: OperatorAVSsEnriched,
   strategies: Array<StrategyEnriched>,
+  strategiesMap: StrategiesMapEnriched,
 ): Array<OperatorAVSsRow> => {
   return avsStatuses.flatMap(({ id, avs, operator, logo, name }) => {
     const avsQuorums = quorums.filter(({ quorum }) => quorum.avs.id === avs.id);
@@ -149,18 +150,13 @@ export const transformToRows = (
       return row;
     }
 
-    const idToStrategy = strategies.reduce<Record<string, StrategyEnriched>>((acc, strategy) => {
-      acc[strategy.id] = strategy;
-      return acc;
-    }, {});
-
     return avsQuorums.map(({ totalWeight, quorum }) => {
       return {
         ...baseRow,
         key: `${id}+${quorum.quorum}`,
         totalWeight,
         quorum: quorum.quorum,
-        tokens: quorum.multipliers.map(({ strategy }) => idToStrategy[strategy.id].tokenSymbol),
+        tokens: quorum.multipliers.map(({ strategy }) => strategiesMap[strategy.id].tokenSymbol),
       };
     });
   });

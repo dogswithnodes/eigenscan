@@ -3,7 +3,7 @@ import { ColumnType } from 'antd/es/table';
 import type BigNumber from 'bignumber.js';
 
 import { AVSOperatorBase } from '@/app/_models/avs.model';
-import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategiesMap } from '@/app/_models/strategies.model';
 import { calculateAVSTVLs } from '@/app/_utils/avs.utils';
 import { renderAddressLink, renderBigNumber, renderDate, renderImage } from '@/app/_utils/render.utils';
 import { formatTableDate } from '@/app/_utils/table.utils';
@@ -103,9 +103,9 @@ export const columns: Array<ColumnType<AVSsRow>> = [
 
 export const transformToRow = (
   { id, registrationsCount, quorums, registrations, created, logo, name }: AVSEnriched,
-  strategyToEthBalance: StrategyToEthBalance,
+  strategiesMap: StrategiesMap,
 ): AVSsRow => {
-  const { ethTvl, eigenTvl } = calculateAVSTVLs(quorums, registrations, strategyToEthBalance);
+  const { ethTvl, eigenTvl } = calculateAVSTVLs(quorums, registrations, strategiesMap);
 
   return {
     key: id,

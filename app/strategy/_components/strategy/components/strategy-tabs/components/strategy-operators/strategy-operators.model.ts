@@ -77,19 +77,19 @@ export const transformToRow = ({
   totalShares,
   delegationsCount,
   balance,
-  strategyTotalShares,
+  totalSharesAndWithdrawing,
 }: StrategyOperator & {
   logo: string;
   name: string;
   balance: string;
-  strategyTotalShares: string;
+  totalSharesAndWithdrawing: string;
 }): StrategyOperatorsRow => {
   return {
     key: id,
     id,
     logo,
     name,
-    totalShares: mulDiv(totalShares, balance, strategyTotalShares).toFixed(),
+    totalShares: mulDiv(totalShares, balance, totalSharesAndWithdrawing).toFixed(),
     delegationsCount,
   };
 };

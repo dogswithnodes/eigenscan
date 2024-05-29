@@ -99,15 +99,15 @@ export const transformToRow = ({
   lastUpdatedTransactionHash,
   depositor: { id: staker },
   balance,
-  strategyTotalShares,
+  totalSharesAndWithdrawing,
 }: StrategyStake & {
   balance: string;
-  strategyTotalShares: string;
+  totalSharesAndWithdrawing: string;
 }): StrategyStakesRow => {
   return {
     key: id,
     staker,
-    shares: mulDiv(shares, balance, strategyTotalShares).toFixed(),
+    shares: mulDiv(shares, balance, totalSharesAndWithdrawing).toFixed(),
     createdTimestamp,
     createdTransactionHash,
     lastUpdatedTimestamp,

@@ -42,7 +42,6 @@ const fetchStakers = async (requestOptions: string) => {
             shares
             strategy {
               id
-              totalShares
             }
           }
           withdrawals(
@@ -59,7 +58,6 @@ const fetchStakers = async (requestOptions: string) => {
               share
               strategy {
                 id
-                totalShares
               }
             }
           }
@@ -92,7 +90,7 @@ export const useStakers = ({ currentPage, perPage, sortParams, idFilters }: Fetc
         where: ${idFilters ? `{ id_in: ${JSON.stringify(idFilters)} }` : null}
       `);
 
-      return stakers.map((staker) => transformToRow(staker, data.strategyToEthBalance));
+      return stakers.map((staker) => transformToRow(staker, data.strategiesMap));
     },
     placeholderData: (prev) => prev,
   });
@@ -149,7 +147,7 @@ export const useStakersCsv = (sortParams: SortParams<StakersRow>) => {
         `),
       );
 
-      return stakers.map((staker) => transformToRow(staker, strategies.data.strategyToEthBalance));
+      return stakers.map((staker) => transformToRow(staker, strategies.data.strategiesMap));
     },
     enabled: false,
   });

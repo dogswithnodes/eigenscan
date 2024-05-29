@@ -7,16 +7,16 @@ import { AVSTokensRow, columns, columnsWidth, transformToCsvRow, transformToRows
 import { Multiplier } from '../../../../avs.model';
 
 import { Table } from '@/app/_components/table/table.component';
-import { StrategyEnriched } from '@/app/_models/strategies.model';
+import { StrategiesMapEnriched } from '@/app/_models/strategies.model';
 import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
   multipliers: Array<Multiplier>;
-  strategies: Array<StrategyEnriched>;
+  strategiesMap: StrategiesMapEnriched;
 };
 
-export const AVSTokens: React.FC<Props> = ({ multipliers, strategies }) => {
+export const AVSTokens: React.FC<Props> = ({ multipliers, strategiesMap }) => {
   const {
     currentPage,
     perPage,
@@ -41,18 +41,18 @@ export const AVSTokens: React.FC<Props> = ({ multipliers, strategies }) => {
         (tokens: Array<AVSTokensRow>) => tokens.slice(perPage * (currentPage - 1), perPage * currentPage),
         sortTableRows(sortParams),
         tap(compose(setTotal, prop('length'))),
-      )(transformToRows(strategies, multipliers)),
-    [sortParams, setTotal, strategies, multipliers, perPage, currentPage],
+      )(transformToRows(strategiesMap, multipliers)),
+    [sortParams, setTotal, strategiesMap, multipliers, perPage, currentPage],
   );
 
   const handleCsvDownload = useCallback(() => {
     downloadTableData({
-      data: transformToRows(strategies, multipliers),
+      data: transformToRows(strategiesMap, multipliers),
       fileName: 'avs-tokens',
       sortParams,
       transformToCsvRow,
     });
-  }, [sortParams, strategies, multipliers]);
+  }, [sortParams, strategiesMap, multipliers]);
 
   return (
     <Table<AVSTokensRow>

@@ -7,16 +7,16 @@ import { useRegistrations, useRegistrationsCsv } from './registrations.service';
 import { Empty } from '@/app/_components/empty/empty.component';
 import { Table } from '@/app/_components/table/table.component';
 import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
-import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategiesMap } from '@/app/_models/strategies.model';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
   avsId: string;
   operatorsCount: number;
-  strategyToEthBalance: StrategyToEthBalance;
+  strategiesMap: StrategiesMap;
 };
 
-export const Registrations: React.FC<Props> = ({ avsId, strategyToEthBalance, operatorsCount }) => {
+export const Registrations: React.FC<Props> = ({ avsId, strategiesMap, operatorsCount }) => {
   const {
     currentPage,
     perPage,
@@ -47,7 +47,7 @@ export const Registrations: React.FC<Props> = ({ avsId, strategyToEthBalance, op
       perPage,
       sortParams,
     },
-    strategyToEthBalance,
+    strategiesMap,
   );
 
   const rows = useMemo(() => data ?? [], [data]);
@@ -56,7 +56,7 @@ export const Registrations: React.FC<Props> = ({ avsId, strategyToEthBalance, op
     avsId,
     operatorsCount,
     sortParams,
-    strategyToEthBalance,
+    strategiesMap,
   );
 
   if (isPending) {

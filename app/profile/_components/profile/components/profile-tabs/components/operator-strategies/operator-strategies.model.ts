@@ -2,7 +2,7 @@
 import { ColumnType } from 'antd/es/table';
 import BigNumber from 'bignumber.js';
 
-import { StrategyEnriched } from '@/app/_models/strategies.model';
+import { StrategiesMapEnriched } from '@/app/_models/strategies.model';
 import { mulDiv } from '@/app/_utils/big-number.utils';
 import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
 
@@ -72,21 +72,18 @@ export const columns: Array<ColumnType<OperatorStrategiesRow>> = [
 ];
 
 export const transformToRow = (
-  { totalShares: operatorTotalShares, strategy }: OperatorStrategy,
-  strategies: Array<StrategyEnriched>,
+  { totalShares, strategy }: OperatorStrategy,
+  strategiesMap: StrategiesMapEnriched,
 ): OperatorStrategiesRow => {
-  const operatorStrategy = strategies.find(({ id }) => id === strategy.id);
+  const { id, logo, name, tokenSymbol, balance, totalSharesAndWithdrawing } = strategiesMap[strategy.id];
 
-  if (!operatorStrategy) throw `Strategy with id=${strategy.id} does not exist`;
-
-  const { id, logo, name, tokenSymbol, balance, totalShares } = operatorStrategy;
   return {
     key: id,
     id,
     name,
     logo: logo || null,
     tokenSymbol,
-    totalDelegated: mulDiv(operatorTotalShares, balance, totalShares),
+    totalDelegated: mulDiv(totalShares, balance, totalSharesAndWithdrawing),
   };
 };
 

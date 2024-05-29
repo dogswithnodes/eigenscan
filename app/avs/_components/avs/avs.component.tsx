@@ -64,7 +64,7 @@ export const AVS: React.FC<Props> = ({ id, tab }) => {
         quorums={quorums}
         registrations={registrations}
         actionsCount={actionsCount}
-        {...strategies.data}
+        strategiesMap={strategies.data.strategiesMap}
       />
     </>
   );

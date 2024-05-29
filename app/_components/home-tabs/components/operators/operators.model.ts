@@ -3,7 +3,7 @@ import { ColumnType } from 'antd/es/table';
 import type BigNumber from 'bignumber.js';
 
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
-import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategiesMap } from '@/app/_models/strategies.model';
 import { mulDiv } from '@/app/_utils/big-number.utils';
 import {
   renderAddressLink,
@@ -23,7 +23,6 @@ export type Operator = {
     totalShares: string;
     strategy: {
       id: string;
-      totalShares: string;
     };
   }>;
   avsStatuses: Array<{
@@ -116,10 +115,12 @@ export const columns: Array<ColumnType<OperatorsRow>> = [
 
 export const transformToRow = (
   { id, registered, delegatorsCount, strategies, logo, name, avsLogos }: OperatorEnriched,
-  strategyToEthBalance: StrategyToEthBalance,
+  strategiesMap: StrategiesMap,
 ): OperatorsRow => {
   const tvl = strategies.reduce((acc, { totalShares, strategy }) => {
-    return acc.plus(mulDiv(totalShares, strategyToEthBalance[strategy.id], strategy.totalShares));
+    const { ethBalance, totalSharesAndWithdrawing } = strategiesMap[strategy.id];
+
+    return acc.plus(mulDiv(totalShares, ethBalance, totalSharesAndWithdrawing));
   }, BN_ZERO);
 
   return {

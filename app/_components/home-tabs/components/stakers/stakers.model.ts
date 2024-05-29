@@ -4,7 +4,7 @@ import type BigNumber from 'bignumber.js';
 
 import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
-import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategiesMap } from '@/app/_models/strategies.model';
 import { mulDiv } from '@/app/_utils/big-number.utils';
 import { renderAddressLink, renderBigNumber, renderDate } from '@/app/_utils/render.utils';
 import { formatTableDate } from '@/app/_utils/table.utils';
@@ -24,7 +24,6 @@ export type Staker = {
     shares: string;
     strategy: {
       id: string;
-      totalShares: string;
     };
   }>;
   withdrawals: Array<{
@@ -34,7 +33,6 @@ export type Staker = {
       share: string;
       strategy: {
         id: string;
-        totalShares: string;
       };
     }>;
   }>;
@@ -127,11 +125,13 @@ export const columns: Array<ColumnType<StakersRow>> = [
 
 export const transformToRow = (
   { id, delegator, stakes, withdrawals, totalEigenShares, totalEigenWithdrawalsShares }: Staker,
-  strategyToEthBalance: StrategyToEthBalance,
+  strategiesMap: StrategiesMap,
 ): StakersRow => {
   const stakedEth = stakes.reduce((acc, { shares, strategy }) => {
     if (strategy.id !== EIGEN_STRATEGY) {
-      acc = acc.plus(mulDiv(shares, strategyToEthBalance[strategy.id], strategy.totalShares));
+      const { ethBalance, totalSharesAndWithdrawing } = strategiesMap[strategy.id];
+
+      acc = acc.plus(mulDiv(shares, ethBalance, totalSharesAndWithdrawing));
     }
 
     return acc;
@@ -139,7 +139,9 @@ export const transformToRow = (
 
   const totalWithdrawalsEth = withdrawals.reduce((total, { strategies }) => {
     strategies.forEach(({ share, strategy }) => {
-      total = total.plus(mulDiv(share, strategyToEthBalance[strategy.id], strategy.totalShares));
+      const { ethBalance, totalSharesAndWithdrawing } = strategiesMap[strategy.id];
+
+      total = total.plus(mulDiv(share, ethBalance, totalSharesAndWithdrawing));
     });
 
     return total;

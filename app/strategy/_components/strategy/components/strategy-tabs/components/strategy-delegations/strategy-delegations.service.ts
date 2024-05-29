@@ -54,7 +54,7 @@ type FetchStrategyDelegationsParams = {
 export const useStrategyDelegations = (
   { id, currentPage, perPage, sortParams }: FetchStrategyDelegationsParams,
   balance: string,
-  strategyTotalShares: string,
+  totalSharesAndWithdrawing: string,
 ) =>
   useQuery({
     queryKey: ['strategy-delegations', currentPage, perPage, sortParams],
@@ -67,7 +67,7 @@ export const useStrategyDelegations = (
         where: { strategy: ${JSON.stringify(id)} }
       `);
 
-      return delegations.map((stake) => transformToRow({ ...stake, balance, strategyTotalShares }));
+      return delegations.map((stake) => transformToRow({ ...stake, balance, totalSharesAndWithdrawing }));
     },
     placeholderData: (prev) => prev,
   });
@@ -76,7 +76,7 @@ const fetchAllStrategyDelegations = async (
   id: string,
   delegationsCount: number,
   balance: string,
-  strategyTotalShares: string,
+  totalSharesAndWithdrawing: string,
 ): Promise<Array<StrategyDelegationsRow>> => {
   const delegations = await fetchAllParallel(delegationsCount, async (skip: number) =>
     fetchStrategyDelegations(`
@@ -86,7 +86,7 @@ const fetchAllStrategyDelegations = async (
     `),
   );
 
-  return delegations.map((stake) => transformToRow({ ...stake, balance, strategyTotalShares }));
+  return delegations.map((stake) => transformToRow({ ...stake, balance, totalSharesAndWithdrawing }));
 };
 
 export const useStrategyDelegationsCsv = (
@@ -94,12 +94,12 @@ export const useStrategyDelegationsCsv = (
   delegationsCount: number,
   sortParams: SortParams<StrategyDelegationsRow>,
   balance: string,
-  strategyTotalShares: string,
+  totalSharesAndWithdrawing: string,
 ) => {
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['strategy-delegations-csv', id, sortParams],
     queryFn: async () => {
-      return fetchAllStrategyDelegations(id, delegationsCount, balance, strategyTotalShares);
+      return fetchAllStrategyDelegations(id, delegationsCount, balance, totalSharesAndWithdrawing);
     },
     enabled: false,
   });

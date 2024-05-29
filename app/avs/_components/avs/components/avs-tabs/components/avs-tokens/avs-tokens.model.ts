@@ -3,7 +3,7 @@ import { ColumnType } from 'antd/es/table';
 
 import { Multiplier } from '../../../../avs.model';
 
-import { StrategyEnriched } from '@/app/_models/strategies.model';
+import { StrategiesMapEnriched } from '@/app/_models/strategies.model';
 import { renderAddressLink, renderImage } from '@/app/_utils/render.utils';
 
 export type AVSTokensRow = {
@@ -66,16 +66,11 @@ export const columns: Array<ColumnType<AVSTokensRow>> = [
 ];
 
 export const transformToRows = (
-  strategies: Array<StrategyEnriched>,
+  strategiesMap: StrategiesMapEnriched,
   multipliers: Array<Multiplier>,
 ): Array<AVSTokensRow> => {
-  const idToStrategy = strategies.reduce<Record<string, StrategyEnriched>>((acc, strategy) => {
-    acc[strategy.id] = strategy;
-    return acc;
-  }, {});
-
   return multipliers.map(({ id, multiply, strategy }) => {
-    const { logo, tokenSymbol, name } = idToStrategy[strategy.id];
+    const { logo, tokenSymbol, name } = strategiesMap[strategy.id];
 
     return {
       key: id,

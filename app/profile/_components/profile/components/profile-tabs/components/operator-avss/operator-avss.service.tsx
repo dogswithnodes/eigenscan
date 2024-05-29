@@ -4,7 +4,7 @@ import { gql } from 'graphql-request';
 import { OperatorAVSs, OperatorAVSsEnriched, transformToRows } from './operator-avss.model';
 
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
-import { StrategyEnriched } from '@/app/_models/strategies.model';
+import { StrategiesMapEnriched, StrategyEnriched } from '@/app/_models/strategies.model';
 import { request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 
@@ -73,11 +73,15 @@ const fetchOperatorAVSs = async (id: string): Promise<OperatorAVSsEnriched> => {
   };
 };
 
-export const useOperatorAVSs = (id: string, strategies: Array<StrategyEnriched>) => {
+export const useOperatorAVSs = (
+  id: string,
+  strategies: Array<StrategyEnriched>,
+  strategiesMap: StrategiesMapEnriched,
+) => {
   return useQuery({
     queryKey: ['operator-avss'],
     queryFn: async () => {
-      return transformToRows(await fetchOperatorAVSs(id), strategies);
+      return transformToRows(await fetchOperatorAVSs(id), strategies, strategiesMap);
     },
   });
 };

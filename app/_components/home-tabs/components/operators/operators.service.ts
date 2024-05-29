@@ -43,7 +43,6 @@ const fetchOperators = async (requestOptions: string): Promise<Array<OperatorEnr
             totalShares
             strategy {
               id
-              totalShares
             }
           }
           avsStatuses(
@@ -100,7 +99,7 @@ export const useOperators = ({ currentPage, perPage, sortParams, idFilters }: Fe
         where: ${idFilters ? `{ id_in: ${JSON.stringify(idFilters)} }` : null}
       `);
 
-      return operators.map((operator) => transformToRow(operator, data.strategyToEthBalance));
+      return operators.map((operator) => transformToRow(operator, data.strategiesMap));
     },
     placeholderData: (prev) => prev,
   });
@@ -157,7 +156,7 @@ export const useOperatorsCsv = (sortParams: SortParams<OperatorsRow>) => {
         `),
       );
 
-      return operators.map((operator) => transformToRow(operator, strategies.data.strategyToEthBalance));
+      return operators.map((operator) => transformToRow(operator, strategies.data.strategiesMap));
     },
     enabled: false,
   });

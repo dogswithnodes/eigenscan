@@ -22,11 +22,12 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
   const strategies = useEnrichedStrategies();
 
   const operatorTVL = useMemo(() => {
-    if (account.data?.operator && strategies.data?.strategyToEthBalance) {
+    if (account.data?.operator && strategies.data) {
+      // TODO genew
       return account.data.operator.strategies.reduce((acc, { totalShares, strategy }) => {
-        acc = acc.plus(
-          mulDiv(totalShares, strategies.data.strategyToEthBalance[strategy.id], strategy.totalShares),
-        );
+        const { ethBalance, totalSharesAndWithdrawing } = strategies.data.strategiesMap[strategy.id];
+
+        acc = acc.plus(mulDiv(totalShares, ethBalance, totalSharesAndWithdrawing));
 
         return acc;
       }, BN_ZERO);
@@ -34,13 +35,15 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
   }, [account, strategies]);
 
   const stakerStakesAndWithdrawals = useMemo(() => {
-    if (account.data?.staker && strategies.data?.strategyToEthBalance) {
+    if (account.data?.staker && strategies.data) {
       const { staker } = account.data;
-      const { strategyToEthBalance } = strategies.data;
+      const { strategiesMap } = strategies.data;
 
       const stakedEth = staker.stakes.reduce((acc, { shares, strategy }) => {
         if (strategy.id !== EIGEN_STRATEGY) {
-          acc = acc.plus(mulDiv(shares, strategyToEthBalance[strategy.id], strategy.totalShares));
+          const { ethBalance, totalSharesAndWithdrawing } = strategiesMap[strategy.id];
+
+          acc = acc.plus(mulDiv(shares, ethBalance, totalSharesAndWithdrawing));
         }
 
         return acc;
@@ -48,7 +51,9 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
 
       const withdrawnEth = staker.withdrawals.reduce((acc, { strategies }) => {
         strategies.forEach(({ share, strategy }) => {
-          acc = acc.plus(mulDiv(share, strategyToEthBalance[strategy.id], strategy.totalShares));
+          const { ethBalance, totalSharesAndWithdrawing } = strategiesMap[strategy.id];
+
+          acc = acc.plus(mulDiv(share, ethBalance, totalSharesAndWithdrawing));
         });
 
         return acc;

@@ -5,7 +5,7 @@ import { AVSOperator } from '../../../../../../avs.model';
 
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
 import { ProtocolEntityMetadata } from '@/app/_models/protocol-entity-metadata.model';
-import { StrategyToEthBalance } from '@/app/_models/strategies.model';
+import { StrategiesMap } from '@/app/_models/strategies.model';
 import { mulDiv } from '@/app/_utils/big-number.utils';
 import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
 
@@ -77,10 +77,12 @@ export const columns: Array<ColumnType<RegistrationsRow>> = [
 export const transformToRow = (
   { operator: { id, totalEigenShares, strategies } }: Registration,
   { logo, name }: ProtocolEntityMetadata,
-  strategyToEthBalance: StrategyToEthBalance,
+  strategiesMap: StrategiesMap,
 ): RegistrationsRow => {
   const tvl = strategies.reduce((tvl, { totalShares, strategy }) => {
-    tvl = tvl.plus(mulDiv(totalShares, strategyToEthBalance[strategy.id], strategy.totalShares));
+    const { ethBalance, totalSharesAndWithdrawing } = strategiesMap[strategy.id];
+
+    tvl = tvl.plus(mulDiv(totalShares, ethBalance, totalSharesAndWithdrawing));
 
     return tvl;
   }, BN_ZERO);
