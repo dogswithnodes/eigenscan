@@ -7,6 +7,7 @@ export const DetailsContainer = styled.article`
   grid-template-columns: 1fr 1fr;
   border: 2px solid #ececec;
   overflow: hidden;
+  background: #fcfcfc;
   border-bottom-right-radius: 6px;
   border-bottom-left-radius: 6px;
 
@@ -48,7 +49,7 @@ const cellStyles = css`
 
 export const Tr = styled.tr`
   &:hover {
-    background-color: #f6f6f6;
+    background-color: #ddd;
   }
 `;
 

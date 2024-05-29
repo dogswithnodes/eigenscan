@@ -60,6 +60,7 @@ export const columns: Array<ColumnType<AVSsRow>> = [
     title: titles.logo,
     dataIndex: 'logo',
     key: 'logo',
+    onCell: () => ({ className: 'ant-table-cell_img' }),
     render: renderImage,
   },
   {

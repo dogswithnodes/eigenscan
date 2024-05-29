@@ -36,6 +36,7 @@ export const columns: Array<ColumnType<AVSTokensRow>> = [
     dataIndex: 'logo',
     key: 'logo',
     align: 'center',
+    onCell: () => ({ className: 'ant-table-cell_img' }),
     render: renderImage,
   },
   {

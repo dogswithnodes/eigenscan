@@ -127,7 +127,7 @@ export const StyledTable = styled.section`
 
   .ant-table .ant-table-cell {
     vertical-align: middle;
-    background-color: #fff;
+    background-color: #fcfcfc;
     border-right: 2px solid #ececec;
 
     @media ${mq[1280]} {
@@ -221,7 +221,11 @@ export const StyledTable = styled.section`
       }
 
       &_row-hovered {
-        background-color: #f6f6f6;
+        background-color: #ddd !important;
+      }
+
+      &_img {
+        background-color: #e5e5e5;
       }
 
       &_left-aligned {
@@ -339,7 +343,7 @@ export const StyledTable = styled.section`
   .ant-table .ant-table-column {
     &_sorted {
       color: #000;
-      background-color: #fcfcfc;
+      background-color: #fff;
     }
   }
 

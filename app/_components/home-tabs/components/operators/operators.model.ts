@@ -72,6 +72,7 @@ export const columns: Array<ColumnType<OperatorsRow>> = [
     title: titles.logo,
     dataIndex: 'logo',
     key: 'logo',
+    onCell: () => ({ className: 'ant-table-cell_img' }),
     render: renderImage,
   },
   {
@@ -109,6 +110,7 @@ export const columns: Array<ColumnType<OperatorsRow>> = [
     title: titles.avsLogos,
     dataIndex: 'avsLogos',
     key: 'avsLogos',
+    onCell: () => ({ className: 'ant-table-cell_img' }),
     render: renderImageGroup,
   },
 ];
