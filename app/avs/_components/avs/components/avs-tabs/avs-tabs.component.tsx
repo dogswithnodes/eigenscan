@@ -41,22 +41,14 @@ type Props = {
   quorums: Array<Quorum>;
   registrations: Array<AVSOperator>;
   strategiesMap: StrategiesMapEnriched;
-  actionsCount: number;
 };
 
 type QuorumOption = {
   value: string;
   label: string;
 };
-export const AVSTabs: React.FC<Props> = ({
-  id,
-  tab,
-  avsDetails,
-  quorums,
-  registrations,
-  actionsCount,
-  strategiesMap,
-}) => {
+
+export const AVSTabs: React.FC<Props> = ({ id, tab, avsDetails, quorums, registrations, strategiesMap }) => {
   const pathname = usePathname();
   const { replace } = useRouter();
 
@@ -194,7 +186,7 @@ export const AVSTabs: React.FC<Props> = ({
         {selectedQuorums.at(0)?.multipliers.length && isTokens && (
           <AVSTokens multipliers={selectedQuorums[0].multipliers} strategiesMap={strategiesMap} />
         )}
-        {isActions && <AVSActions avsId={id} actionsCount={actionsCount} />}
+        {isActions && <AVSActions avsId={id} />}
       </TabContent>
     </>
   );

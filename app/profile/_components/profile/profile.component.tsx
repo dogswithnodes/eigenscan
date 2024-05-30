@@ -110,8 +110,6 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
           tvl: operatorTVL?.toFixed(),
           delegatorsCount: operator?.delegatorsCount,
         }}
-        operatorActionsCount={operator?.actionsCount}
-        stakerActionsCount={staker?.actionsCount}
         stakerDetails={{
           ...stakerStakesAndWithdrawals,
           operator: staker?.delegator?.operator?.id,

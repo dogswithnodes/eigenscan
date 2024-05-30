@@ -43,7 +43,6 @@ export const AVS: React.FC<Props> = ({ id, tab }) => {
     registrationsCount,
     registrations,
     quorums,
-    actionsCount,
     blsApkRegistry,
     stakeRegistry,
   } = avs.data;
@@ -63,7 +62,6 @@ export const AVS: React.FC<Props> = ({ id, tab }) => {
         }}
         quorums={quorums}
         registrations={registrations}
-        actionsCount={actionsCount}
         strategiesMap={strategies.data.strategiesMap}
       />
     </>

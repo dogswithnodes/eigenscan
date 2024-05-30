@@ -1,21 +1,22 @@
 'use client';
-import { useEffect, useMemo } from 'react';
+import { compose, prop, tap } from 'ramda';
+import { useCallback, useMemo } from 'react';
 
-import { OperatorActionsRow } from './operator-actions.model';
-import { useOperatorActions, useOperatorActionsCsv } from './operator-actions.service';
+import { OperatorActionsRow, transformToCsvRow } from './operator-actions.model';
+import { useOperatorActions } from './operator-actions.service';
 import { expandedRowRender } from './operator-actions.utils';
 
 import { ActionsTable } from '@/app/_components/actions-table/actions-table.component';
 import { Empty } from '@/app/_components/empty/empty.component';
 import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
+import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
   id: string;
-  actionsCount: number;
 };
 
-export const OperatorActions: React.FC<Props> = ({ id, actionsCount }) => {
+export const OperatorActions: React.FC<Props> = ({ id }) => {
   const {
     currentPage,
     perPage,
@@ -35,24 +36,29 @@ export const OperatorActions: React.FC<Props> = ({ id, actionsCount }) => {
     },
   });
 
-  useEffect(() => {
-    setTotal(actionsCount);
-  }, [actionsCount, setTotal]);
+  const { data, isPending, error } = useOperatorActions(id);
 
-  const { data, isPending, isFetching, error } = useOperatorActions({
-    id,
-    currentPage,
-    perPage,
-    sortParams,
-  });
+  const rows = useMemo(
+    () =>
+      data
+        ? compose(
+            (rows: Array<OperatorActionsRow>) =>
+              rows.slice(perPage * (currentPage - 1), perPage * currentPage),
+            sortTableRows(sortParams),
+            tap(compose(setTotal, prop('length'))),
+          )(data)
+        : [],
+    [currentPage, data, perPage, setTotal, sortParams],
+  );
 
-  const rows = useMemo(() => data ?? [], [data]);
-
-  const { isCsvLoading, handleCsvDownload } = useOperatorActionsCsv({
-    id,
-    actionsCount,
-    sortParams,
-  });
+  const handleCsvDownload = useCallback(() => {
+    downloadTableData({
+      data: data || [],
+      sortParams,
+      fileName: 'operator-actions',
+      transformToCsvRow,
+    });
+  }, [data, sortParams]);
 
   if (isPending) {
     return <TablePreloader />;
@@ -69,7 +75,6 @@ export const OperatorActions: React.FC<Props> = ({ id, actionsCount }) => {
   return (
     <ActionsTable<OperatorActionsRow>
       rows={rows}
-      isUpdating={isFetching}
       expandedRowRender={expandedRowRender}
       paginationOptions={{
         currentPage,
@@ -85,7 +90,6 @@ export const OperatorActions: React.FC<Props> = ({ id, actionsCount }) => {
       }}
       downloadCsvOptions={{
         onDownload: handleCsvDownload,
-        isLoading: isCsvLoading,
       }}
     />
   );

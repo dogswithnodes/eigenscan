@@ -47,10 +47,8 @@ type Props = {
   isOperator: boolean;
   isStaker: boolean;
   operatorDetails: OperatorDetailsProps;
-  operatorActionsCount: number | undefined;
   stakerDetails: StakerDetailsProps;
   stakerStakes: Array<StakerStake> | undefined;
-  stakerActionsCount: number | undefined;
   strategiesData: {
     strategies: Array<StrategyEnriched>;
     strategiesMap: StrategiesMapEnriched;
@@ -64,10 +62,8 @@ export const ProfileTabs: React.FC<Props> = ({
   isStaker,
   strategiesData: { strategies, strategiesMap },
   operatorDetails,
-  operatorActionsCount,
   stakerDetails,
   stakerStakes,
-  stakerActionsCount,
 }) => {
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -143,16 +139,12 @@ export const ProfileTabs: React.FC<Props> = ({
         )}
         {isOperatorAVSs && <OperatorAVSs id={id} strategies={strategies} strategiesMap={strategiesMap} />}
         {isOperatorStrategies && <OperatorStrategies id={id} strategiesMap={strategiesMap} />}
-        {isOperatorActions && typeof operatorActionsCount === 'number' && (
-          <OperatorActions id={id} actionsCount={operatorActionsCount} />
-        )}
+        {isOperatorActions && <OperatorActions id={id} />}
         {isStakerDetails && <StakerDetails {...stakerDetails} />}
         {isStakerStakes && stakerStakes && (
           <StakerStakes stakes={stakerStakes} strategiesMap={strategiesMap} />
         )}
-        {isStakerActions && typeof stakerActionsCount === 'number' && (
-          <StakerActions id={id} actionsCount={stakerActionsCount} />
-        )}
+        {isStakerActions && <StakerActions id={id} />}
       </TabContent>
     </>
   ) : (
