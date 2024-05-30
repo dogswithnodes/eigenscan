@@ -1,5 +1,6 @@
 'use client';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { compose, prop, tap } from 'ramda';
+import { useCallback, useMemo } from 'react';
 
 import { OperatorActionsRow, transformToCsvRow } from './operator-actions.model';
 import { useOperatorActions } from './operator-actions.service';
@@ -8,7 +9,7 @@ import { expandedRowRender } from './operator-actions.utils';
 import { ActionsTable } from '@/app/_components/actions-table/actions-table.component';
 import { Empty } from '@/app/_components/empty/empty.component';
 import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
-import { downloadTableData } from '@/app/_utils/table-data.utils';
+import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
@@ -37,39 +38,18 @@ export const OperatorActions: React.FC<Props> = ({ id }) => {
 
   const { data, isPending, error } = useOperatorActions(id);
 
-  useEffect(() => {
-    if (data) {
-      setTotal(data.length);
-    }
-  }, [data, setTotal]);
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [actions, setActions] = useState<Array<OperatorActionsRow>>([]);
-
-  const workerRef = useRef<Worker>();
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      workerRef.current = new Worker(
-        new URL('../../../../../../../_workers/actions.worker.ts', import.meta.url),
-      );
-      workerRef.current.onmessage = (event: MessageEvent<Array<OperatorActionsRow>>) => {
-        setIsLoading(false);
-        setActions(event.data);
-      };
-    }
-    return () => {
-      workerRef.current?.terminate();
-    };
-  });
-
-  useEffect(() => {
-    if (data) {
-      setIsLoading(true);
-      workerRef.current?.postMessage({ data, perPage, currentPage, sortParams });
-    }
-  }, [currentPage, data, perPage, sortParams]);
+  const rows = useMemo(
+    () =>
+      data
+        ? compose(
+            (rows: Array<OperatorActionsRow>) =>
+              rows.slice(perPage * (currentPage - 1), perPage * currentPage),
+            sortTableRows(sortParams),
+            tap(compose(setTotal, prop('length'))),
+          )(data)
+        : [],
+    [currentPage, data, perPage, setTotal, sortParams],
+  );
 
   const handleCsvDownload = useCallback(() => {
     downloadTableData({
@@ -80,7 +60,7 @@ export const OperatorActions: React.FC<Props> = ({ id }) => {
     });
   }, [data, sortParams]);
 
-  if (isPending || (actions.length === 0 && isLoading)) {
+  if (isPending) {
     return <TablePreloader />;
   }
 
@@ -94,8 +74,7 @@ export const OperatorActions: React.FC<Props> = ({ id }) => {
 
   return (
     <ActionsTable<OperatorActionsRow>
-      rows={actions}
-      isUpdating={actions.length > 0 && isLoading}
+      rows={rows}
       expandedRowRender={expandedRowRender}
       paginationOptions={{
         currentPage,
