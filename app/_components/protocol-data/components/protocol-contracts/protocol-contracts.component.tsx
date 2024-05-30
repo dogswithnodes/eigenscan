@@ -1,8 +1,8 @@
-import { Table, Thead, Th, BodyRow, Td, TdContent, Anchor } from './protocol-contracts.styled';
+import { Table, Thead, Th, BodyRow, Td, TdContent } from './protocol-contracts.styled';
 
 import { AccountButtons } from '@/app/_components/account-buttons/account-buttons.component';
+import { ExternalLink } from '@/app/_components/external-link/external-link.component';
 import { ProtocolContracts as Props } from '@/app/_models/protocol-data.model';
-import { preventDefault } from '@/app/_utils/events.utils';
 import { clampMiddle } from '@/app/_utils/text.utils';
 
 export const ProtocolContracts: React.FC<Props> = ({
@@ -14,14 +14,7 @@ export const ProtocolContracts: React.FC<Props> = ({
 }) => {
   const renderAddress = (address: string) => (
     <TdContent>
-      <Anchor
-        onMouseDown={preventDefault}
-        href={`https://etherscan.io/address/${address}`}
-        target="_blank"
-        rel="noreferrer"
-      >
-        {clampMiddle(address)}
-      </Anchor>
+      <ExternalLink href={`https://etherscan.io/address/${address}`}>{clampMiddle(address)}</ExternalLink>
       <AccountButtons id={address} />
     </TdContent>
   );

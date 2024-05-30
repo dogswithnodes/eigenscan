@@ -62,4 +62,8 @@ export const DescriptionText = styled.p`
   @media (max-width: 1280px) {
     font-size: 12px;
   }
+
+  a {
+    text-decoration: underline;
+  }
 `;

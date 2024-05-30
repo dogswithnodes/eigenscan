@@ -1,6 +1,7 @@
 import { styled } from 'styled-components';
 
 import { Link } from '@/app/_components/link/link.styled';
+import { fontFamily } from '@/app/_styles/font-family';
 import { mq } from '@/app/_utils/media-query.utils';
 
 export const Table = styled.table`
@@ -20,6 +21,13 @@ export const Table = styled.table`
 
   @media ${mq[1280]} {
     font-size: 14px;
+  }
+
+  a {
+    ${fontFamily.robotoMono}
+    margin-right: 16px;
+    font-weight: 500;
+    text-decoration: none;
   }
 `;
 

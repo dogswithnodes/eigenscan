@@ -93,19 +93,8 @@ export const Td = styled.td`
   }
 
   a {
-    color: #6830ff;
     font-weight: 500;
-    outline: none;
-    transition: color 0.2s;
-
-    &:hover,
-    &:focus {
-      color: #4313c3;
-    }
-
-    &:active {
-      color: #6830ff;
-    }
+    text-decoration: underline;
   }
 
   a.monospaced {

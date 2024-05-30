@@ -13,10 +13,12 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.35.1",
+    "@types/dompurify": "^3.0.5",
     "antd": "4.24.2",
     "bignumber.js": "^9.1.2",
     "color-hash": "^2.0.2",
     "date-fns": "^3.6.0",
+    "dompurify": "^3.1.4",
     "ethers": "^6.12.1",
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
