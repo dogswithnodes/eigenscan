@@ -1,48 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { gql } from 'graphql-request';
+import { useCallback } from 'react';
 
-import { fetchAllOperatorActions } from './operator-actions.action';
-import { OperatorAction, OperatorActionsFetchParams } from './operator-actions.model';
+import { fetchAllOperatorActions, fetchOperatorActionsCsv } from './operator-actions.action';
+import { OperatorActionsFetchParams, transformToCsvRow } from './operator-actions.model';
 
-import { request } from '@/app/_services/graphql.service';
+import { transformToCsv } from '@/app/_utils/actions.utils';
+import { downloadCsv } from '@/app/_utils/csv.utils';
 
-type OperatorActionsResponse = {
-  operatorActions: Array<OperatorAction>;
-};
-
-export const fetchOperatorActions = async (requestOptions: string): Promise<Array<OperatorAction>> => {
-  const { operatorActions } = await request<OperatorActionsResponse>(gql`
-    query {
-      operatorActions(
-        ${requestOptions}
-      ) {
-        id
-        blockNumber
-        blockTimestamp
-        transactionHash
-        type
-        avs {
-          id
-        }
-        delegationApprover
-        earningsReceiver
-        delegator {
-          id
-        }
-        metadataURI
-        stakerOptOutWindowBlocks
-        status
-        quorum {
-          quorum {
-            quorum
-          }
-        }
-      }
-    }
-  `);
-
-  return operatorActions;
-};
+const createServerCacheKey = (id: string) => JSON.stringify(['operator-actions', id]);
 
 export const useOperatorActions = (params: OperatorActionsFetchParams) => {
   const { id, currentPage, perPage, sortParams } = params;
@@ -50,10 +15,36 @@ export const useOperatorActions = (params: OperatorActionsFetchParams) => {
   return useQuery({
     queryKey: ['operator-actions', id, currentPage, perPage, sortParams],
     queryFn: async () => {
-      const data = await fetchAllOperatorActions(JSON.stringify(['operator-actions', id]), params);
+      const data = await fetchAllOperatorActions(createServerCacheKey(id), params);
 
       return data;
     },
     placeholderData: (prev) => prev,
   });
+};
+
+export const useOperatorActionsCsv = ({
+  id,
+  sortParams,
+}: Pick<OperatorActionsFetchParams, 'id' | 'sortParams'>) => {
+  const { data, isFetching, refetch } = useQuery({
+    queryKey: ['operator-actions-csv', id, sortParams],
+    queryFn: async () => {
+      const data = await fetchOperatorActionsCsv(createServerCacheKey(id));
+
+      const csv = transformToCsv({ sortParams, transformer: transformToCsvRow })(data);
+
+      return csv;
+    },
+    enabled: false,
+  });
+
+  const handleCsvDownload = useCallback(async () => {
+    downloadCsv(data ?? ((await refetch()).data || []), 'operator-actions');
+  }, [data, refetch]);
+
+  return {
+    isCsvLoading: isFetching,
+    handleCsvDownload,
+  };
 };

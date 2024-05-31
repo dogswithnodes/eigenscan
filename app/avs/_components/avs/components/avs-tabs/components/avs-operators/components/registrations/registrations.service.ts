@@ -13,7 +13,7 @@ import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-m
 import { downloadTableData } from '@/app/_utils/table-data.utils';
 
 type RegistrationsFetchParams = FetchParams<RegistrationsRow> & {
-  avsId: string;
+  id: string;
 };
 
 type RegistrationsResponse = {
@@ -48,18 +48,18 @@ const fetchRegistrations = async (requestParams: string): Promise<Array<Registra
 };
 
 export const useRegistrations = (
-  { avsId, currentPage, perPage, sortParams }: RegistrationsFetchParams,
+  { id, currentPage, perPage, sortParams }: RegistrationsFetchParams,
   strategiesMap: StrategiesMap,
 ) => {
   return useQuery({
-    queryKey: ['registrations', avsId, currentPage, perPage, sortParams],
+    queryKey: ['registrations', id, currentPage, perPage, sortParams],
     queryFn: async () => {
       const registrations = await fetchRegistrations(`
         first: ${perPage}
         skip: ${perPage * (currentPage - 1)}
         orderBy: ${sortParams.orderBy}
         orderDirection: ${sortParams.orderDirection}
-        where: {avs: ${JSON.stringify(avsId)}}
+        where: {avs: ${JSON.stringify(id)}}
       `);
 
       const metadata = await fetchProtocolEntitiesMetadata(
@@ -79,7 +79,7 @@ export const useRegistrations = (
 };
 
 const fetchAllRegistrations = async (
-  avsId: string,
+  id: string,
   operatorsCount: number,
   strategiesMap: StrategiesMap,
 ): Promise<Array<RegistrationsRow>> => {
@@ -87,7 +87,7 @@ const fetchAllRegistrations = async (
     return fetchRegistrations(`
       first: ${REQUEST_LIMIT}
       skip: ${skip}
-      where: {avs: ${JSON.stringify(avsId)}}
+      where: {avs: ${JSON.stringify(id)}}
     `);
   });
 
@@ -105,15 +105,15 @@ const fetchAllRegistrations = async (
 };
 
 export const useRegistrationsCsv = (
-  avsId: string,
+  id: string,
   operatorsCount: number,
   sortParams: SortParams<RegistrationsRow>,
   strategiesMap: StrategiesMap,
 ) => {
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ['registrations-csv', avsId, sortParams],
+    queryKey: ['registrations-csv', id, sortParams],
     queryFn: async () => {
-      return fetchAllRegistrations(avsId, operatorsCount, strategiesMap);
+      return fetchAllRegistrations(id, operatorsCount, strategiesMap);
     },
     enabled: false,
   });

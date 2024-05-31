@@ -1,4 +1,5 @@
-'use client';
+import { ProfileTabTableFetchParams } from '../../../../profile.model';
+
 import { titles } from '@/app/_components/actions-table/actions-table.model';
 import { BaseAction, BaseActionsRow } from '@/app/_models/actions.model';
 import { NullableFieldsRecord, RecordEntries } from '@/app/_utils/actions.utils';
@@ -41,6 +42,8 @@ type StakerActionDataEntries = RecordEntries<StakerActionData>;
 export type StakerActionsRow = BaseActionsRow & {
   actionDataEntries: StakerActionDataEntries;
 };
+
+export type StakerActionsFetchParams = ProfileTabTableFetchParams<StakerActionsRow>;
 
 const transformToEntries = (data: StakerActionData): StakerActionDataEntries =>
   Object.entries(data).filter((entry): entry is StakerActionDataEntries[number] => entry[0] in data);

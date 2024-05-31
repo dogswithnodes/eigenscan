@@ -5,7 +5,7 @@ import { Registrations } from './components/registrations/registrations.componen
 import { StrategiesMap } from '@/app/_models/strategies.model';
 
 type Props = {
-  avsId: string;
+  id: string;
   operatorsCount: number;
   quorum: number | null;
   quorumWeight: string | null;
@@ -13,11 +13,11 @@ type Props = {
 };
 
 export const AVSOperators: React.FC<Props> = (props) => {
-  const { avsId, quorum, quorumWeight, strategiesMap, operatorsCount } = props;
+  const { id, quorum, quorumWeight, strategiesMap, operatorsCount } = props;
 
   return typeof quorum === 'number' && quorumWeight ? (
     <QuorumOperators
-      avsId={avsId}
+      id={id}
       quorum={quorum}
       quorumWeight={quorumWeight}
       strategiesMap={strategiesMap}

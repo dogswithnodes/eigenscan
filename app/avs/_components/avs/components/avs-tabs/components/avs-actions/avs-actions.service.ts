@@ -1,59 +1,47 @@
 import { useQuery } from '@tanstack/react-query';
-import { gql } from 'graphql-request';
+import { useCallback } from 'react';
 
-import { AVSAction, transformToRow } from './avs-actions.model';
+import { fetchAllAVSActions, fetchAVSActionsCsv } from './avs-actions.action';
+import { AVSActionsFetchParams, transformToCsvRow } from './avs-actions.model';
 
-import { REQUEST_LIMIT, fetchAllConsecutively, request } from '@/app/_services/graphql.service';
+import { transformToCsv } from '@/app/_utils/actions.utils';
+import { downloadCsv } from '@/app/_utils/csv.utils';
 
-type AVSActionsResponse = {
-  avsactions: Array<AVSAction>;
-};
+const createServerCacheKey = (id: string) => JSON.stringify(['avs-actions', id]);
 
-const fetchAVSActions = async (requestOptions: string): Promise<Array<AVSAction>> => {
-  const { avsactions } = await request<AVSActionsResponse>(gql`
-    query {
-      avsactions(
-        ${requestOptions}
-      ) {
-        id
-        blockNumber
-        blockTimestamp
-        transactionHash
-        type
-        minimalStake
-        minimumStake
-        quorumNumber
-        metadataURI
-        operator {
-          id
-        }
-        multiplier {
-          multiply
-        }
-        strategy {
-          id
-          name
-        }
-      }
-    }
-  `);
+export const useAVSActions = (params: AVSActionsFetchParams) => {
+  const { id, currentPage, perPage, sortParams } = params;
 
-  return avsactions;
-};
-
-export const useAVSActions = (avsId: string) => {
   return useQuery({
-    queryKey: ['avs-actions', avsId],
+    queryKey: ['avs-actions', id, currentPage, perPage, sortParams],
     queryFn: async () => {
-      const actions = await fetchAllConsecutively((skip) =>
-        fetchAVSActions(`
-          first: ${REQUEST_LIMIT}
-          skip:${skip}
-          where: {avs: ${JSON.stringify(avsId)}}
-        `),
-      );
+      const data = await fetchAllAVSActions(createServerCacheKey(id), params);
 
-      return actions.map(transformToRow);
+      return data;
     },
+    placeholderData: (prev) => prev,
   });
+};
+
+export const useAVSActionsCsv = ({ id, sortParams }: Pick<AVSActionsFetchParams, 'id' | 'sortParams'>) => {
+  const { data, isFetching, refetch } = useQuery({
+    queryKey: ['avs-actions-csv', id, sortParams],
+    queryFn: async () => {
+      const data = await fetchAVSActionsCsv(createServerCacheKey(id));
+
+      const csv = transformToCsv({ sortParams, transformer: transformToCsvRow })(data);
+
+      return csv;
+    },
+    enabled: false,
+  });
+
+  const handleCsvDownload = useCallback(async () => {
+    downloadCsv(data ?? ((await refetch()).data || []), 'avs-actions');
+  }, [data, refetch]);
+
+  return {
+    isCsvLoading: isFetching,
+    handleCsvDownload,
+  };
 };

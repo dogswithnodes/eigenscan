@@ -1,14 +1,13 @@
 'use client';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 
-import { OperatorActionsRow, transformToCsvRow } from './operator-actions.model';
-import { useOperatorActions } from './operator-actions.service';
+import { OperatorActionsRow } from './operator-actions.model';
+import { useOperatorActions, useOperatorActionsCsv } from './operator-actions.service';
 import { expandedRowRender } from './operator-actions.utils';
 
 import { ActionsTable } from '@/app/_components/actions-table/actions-table.component';
 import { Empty } from '@/app/_components/empty/empty.component';
 import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
-import { downloadTableData } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
@@ -43,14 +42,7 @@ export const OperatorActions: React.FC<Props> = ({ id }) => {
     }
   }, [data, setTotal]);
 
-  const handleCsvDownload = useCallback(() => {
-    downloadTableData({
-      data: data?.rows || [],
-      sortParams,
-      fileName: 'operator-actions',
-      transformToCsvRow,
-    });
-  }, [data, sortParams]);
+  const { isCsvLoading, handleCsvDownload } = useOperatorActionsCsv({ id, sortParams });
 
   if (isPending) {
     return <TablePreloader />;
@@ -83,6 +75,7 @@ export const OperatorActions: React.FC<Props> = ({ id }) => {
       }}
       downloadCsvOptions={{
         onDownload: handleCsvDownload,
+        isLoading: isCsvLoading,
       }}
     />
   );

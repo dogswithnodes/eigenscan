@@ -1,73 +1,50 @@
 import { useQuery } from '@tanstack/react-query';
-import { gql } from 'graphql-request';
+import { useCallback } from 'react';
 
-import { StakerAction, transformToRow } from './staker-actions.model';
+import { fetchAllStakerActions, fetchStakerActionsCsv } from './staker-actions.action';
+import { StakerActionsFetchParams, transformToCsvRow } from './staker-actions.model';
 
-import { REQUEST_LIMIT, fetchAllConsecutively, request } from '@/app/_services/graphql.service';
+import { transformToCsv } from '@/app/_utils/actions.utils';
+import { downloadCsv } from '@/app/_utils/csv.utils';
 
-type StakerActionsResponse = {
-  stakerActions: Array<StakerAction>;
-};
+const createServerCacheKey = (id: string) => JSON.stringify(['staker-actions', id]);
 
-const fetchStakerActions = async (requestOptions: string): Promise<Array<StakerAction>> => {
-  const { stakerActions } = await request<StakerActionsResponse>(gql`
-    query {
-      stakerActions(
-        ${requestOptions}
-      ) {
-        id
-        blockNumber
-        blockTimestamp
-        transactionHash
-        type
-        delegatedTo {
-          id
-        }
-        eigonPod
-        nonce
-        share
-        strategy {
-          id
-          name
-        }
-        startBlock
-        token
-        withdrawer
-        withdrawal {
-          queuedBlockNumber
-          queuedTransactionHash
-          completedBlockNumber
-          completedTransactionHash
-          strategies(
-            first: ${REQUEST_LIMIT}
-            where: {share_gt: "0", strategy_not: null}
-          ) {
-            share
-            strategy {
-              tokenSymbol
-            }
-          }
-        }
-      }
-    }
-  `);
+export const useStakerActions = (params: StakerActionsFetchParams) => {
+  const { id, currentPage, perPage, sortParams } = params;
 
-  return stakerActions;
-};
-
-export const useStakerActions = (id: string) => {
   return useQuery({
-    queryKey: ['staker-actions', id],
+    queryKey: ['staker-actions', id, currentPage, perPage, sortParams],
     queryFn: async () => {
-      const actions = await fetchAllConsecutively((skip) =>
-        fetchStakerActions(`
-          first: ${REQUEST_LIMIT}
-          skip:${skip}
-          where: {staker: ${JSON.stringify(id)}}
-        `),
-      );
+      const data = await fetchAllStakerActions(createServerCacheKey(id), params);
 
-      return actions.map(transformToRow);
+      return data;
     },
+    placeholderData: (prev) => prev,
   });
+};
+
+export const useStakerActionsCsv = ({
+  id,
+  sortParams,
+}: Pick<StakerActionsFetchParams, 'id' | 'sortParams'>) => {
+  const { data, isFetching, refetch } = useQuery({
+    queryKey: ['staker-actions-csv', id, sortParams],
+    queryFn: async () => {
+      const data = await fetchStakerActionsCsv(createServerCacheKey(id));
+
+      const csv = transformToCsv({ sortParams, transformer: transformToCsvRow })(data);
+
+      return csv;
+    },
+    enabled: false,
+  });
+
+  const handleCsvDownload = useCallback(async () => {
+    downloadCsv(data ?? ((await refetch()).data || []), 'staker-actions');
+  }, [data, refetch]);
+
+  return {
+    isCsvLoading: isFetching,
+    handleCsvDownload,
+  };
 };
