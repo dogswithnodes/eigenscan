@@ -5,7 +5,7 @@ import { StakerStake } from './profile.model';
 
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { REQUEST_LIMIT, request } from '@/app/_services/graphql.service';
-import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
+import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata.service';
 
 type AccountResponse = {
   eigenAccount: {

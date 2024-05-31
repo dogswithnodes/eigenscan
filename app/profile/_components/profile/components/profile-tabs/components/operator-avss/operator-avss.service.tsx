@@ -6,7 +6,7 @@ import { OperatorAVSs, OperatorAVSsEnriched, transformToRows } from './operator-
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { StrategiesMapEnriched, StrategyEnriched } from '@/app/_models/strategies.model';
 import { request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
-import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
+import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata.service';
 
 type OperatorAVSsResponse = {
   operator: OperatorAVSs;

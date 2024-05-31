@@ -1,15 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 
-import { OperatorAction, transformToRow } from './operator-actions.model';
+import { fetchAllOperatorActions } from './operator-actions.action';
+import { OperatorAction, OperatorActionsFetchParams } from './operator-actions.model';
 
-import { REQUEST_LIMIT, fetchAllConsecutively, request } from '@/app/_services/graphql.service';
+import { request } from '@/app/_services/graphql.service';
 
 type OperatorActionsResponse = {
   operatorActions: Array<OperatorAction>;
 };
 
-const fetchOperatorActions = async (requestOptions: string): Promise<Array<OperatorAction>> => {
+export const fetchOperatorActions = async (requestOptions: string): Promise<Array<OperatorAction>> => {
   const { operatorActions } = await request<OperatorActionsResponse>(gql`
     query {
       operatorActions(
@@ -43,19 +44,16 @@ const fetchOperatorActions = async (requestOptions: string): Promise<Array<Opera
   return operatorActions;
 };
 
-export const useOperatorActions = (id: string) => {
-  return useQuery({
-    queryKey: ['operator-actions', id],
-    queryFn: async () => {
-      const actions = await fetchAllConsecutively((skip) =>
-        fetchOperatorActions(`
-          first: ${REQUEST_LIMIT}
-          skip:${skip}
-          where: {operator: ${JSON.stringify(id)}}
-        `),
-      );
+export const useOperatorActions = (params: OperatorActionsFetchParams) => {
+  const { id, currentPage, perPage, sortParams } = params;
 
-      return actions.map(transformToRow);
+  return useQuery({
+    queryKey: ['operator-actions', id, currentPage, perPage, sortParams],
+    queryFn: async () => {
+      const data = await fetchAllOperatorActions(JSON.stringify(['operator-actions', id]), params);
+
+      return data;
     },
+    placeholderData: (prev) => prev,
   });
 };

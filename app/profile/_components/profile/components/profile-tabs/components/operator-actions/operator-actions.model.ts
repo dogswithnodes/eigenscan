@@ -1,4 +1,5 @@
-'use client';
+import { ProfileTabTableFetchParams } from '../../../../profile.model';
+
 import { titles } from '@/app/_components/actions-table/actions-table.model';
 import { BaseAction, BaseActionsRow } from '@/app/_models/actions.model';
 import { NullableFieldsRecord, RecordEntries } from '@/app/_utils/actions.utils';
@@ -29,6 +30,8 @@ type OperatorActionDataEntries = RecordEntries<OperatorActionData>;
 export type OperatorActionsRow = BaseActionsRow & {
   actionDataEntries: OperatorActionDataEntries;
 };
+
+export type OperatorActionsFetchParams = ProfileTabTableFetchParams<OperatorActionsRow>;
 
 const transformToEntries = (data: OperatorActionData): OperatorActionDataEntries =>
   Object.entries(data).filter((entry): entry is OperatorActionDataEntries[number] => entry[0] in data);

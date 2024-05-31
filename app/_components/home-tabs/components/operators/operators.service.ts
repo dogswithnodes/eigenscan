@@ -16,7 +16,7 @@ import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metad
 import { SortParams } from '@/app/_models/sort.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { useProtocolData } from '@/app/_services/protocol-data.service';
-import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
+import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata.service';
 import { useStrategies } from '@/app/_services/strategies.service';
 import { isTermLongEnough } from '@/app/_utils/account-search.utils';
 import { downloadTableData } from '@/app/_utils/table-data.utils';

@@ -6,7 +6,7 @@ import { AVS, AVSEnriched, transformToRow } from './avss.model';
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { useProtocolData } from '@/app/_services/protocol-data.service';
-import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
+import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata.service';
 import { useStrategies } from '@/app/_services/strategies.service';
 
 type AVSsResponse = {
