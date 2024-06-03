@@ -2,8 +2,8 @@ import { styled } from 'styled-components';
 
 import { Container } from '../container/container.styled';
 
-import { fontFamily } from '@/app/_styles/font-family';
 import { mq } from '@/app/_utils/media-query.utils';
+import { fontFamily } from '@/app/fonts';
 
 export const StyledHeader = styled.header`
   padding: 26px 0;
@@ -14,7 +14,7 @@ export const StyledHeader = styled.header`
   }
 
   .header-title {
-    ${fontFamily.thunder}
+    font-family: ${fontFamily.thunder};
     font-size: 38px;
     color: #000;
     font-weight: bold;

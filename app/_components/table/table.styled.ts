@@ -3,6 +3,7 @@ import { styled } from 'styled-components';
 import { StyledSpinner } from '../spinner/spinner.component';
 
 import { mq } from '@/app/_utils/media-query.utils';
+import { fontFamily } from '@/app/fonts';
 
 export const STICKY_SCROLL_CLASSNAME = 'ant-table-sticky-scroll';
 
@@ -250,16 +251,16 @@ export const StyledTable = styled.section`
     }
 
     .ant-table-cell-monospaced-value {
-      font-family: 'Roboto Mono', 'Courier New', monospace;
+      font-family: ${fontFamily.robotoMono};
     }
 
     .ant-table-cell-normal-font-value {
-      font-family: 'Montserrat', 'Arial', sans-serif;
+      font-family: ${fontFamily.montserrat};
     }
   }
 
   .ant-table a {
-    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-family: ${fontFamily.robotoMono};
     font-weight: 500;
     font-size: 18px;
     color: #6830ff;

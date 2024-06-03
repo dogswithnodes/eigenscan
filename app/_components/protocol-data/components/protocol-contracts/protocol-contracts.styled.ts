@@ -1,8 +1,8 @@
 import { styled } from 'styled-components';
 
 import { Link } from '@/app/_components/link/link.styled';
-import { fontFamily } from '@/app/_styles/font-family';
 import { mq } from '@/app/_utils/media-query.utils';
+import { fontFamily } from '@/app/fonts';
 
 export const Table = styled.table`
   width: 100%;
@@ -24,8 +24,8 @@ export const Table = styled.table`
   }
 
   a {
-    ${fontFamily.robotoMono}
     margin-right: 16px;
+    font-family: ${fontFamily.robotoMono};
     font-weight: 500;
     text-decoration: none;
   }

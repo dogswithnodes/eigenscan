@@ -1,6 +1,6 @@
 import { css, styled } from 'styled-components';
 
-import { fontFamily } from '@/app/_styles/font-family';
+import { fontFamily } from '@/app/fonts';
 
 export const DetailsContainer = styled.article`
   display: grid;
@@ -98,7 +98,7 @@ export const Td = styled.td`
   }
 
   a.monospaced {
-    ${fontFamily.robotoMono}
+    font-family: ${fontFamily.robotoMono};
   }
 `;
 

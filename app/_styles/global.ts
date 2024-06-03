@@ -1,7 +1,7 @@
 'use client';
 import { createGlobalStyle } from 'styled-components';
 
-import { fontFamily } from './font-family';
+import { fontFamily } from '../fonts';
 
 export const GlobalStyles = createGlobalStyle`
   *,
@@ -43,7 +43,7 @@ export const GlobalStyles = createGlobalStyle`
     display: flex;
     flex-direction: column;
     text-rendering: optimizeSpeed;
-    ${fontFamily.montserrat}
+    font-family:${fontFamily.montserrat};
     font-weight: normal;
     line-height: normal;
     color: ##525252;

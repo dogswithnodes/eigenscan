@@ -1,13 +1,10 @@
 import type { Metadata } from 'next';
-// import { Inter } from 'next/font/google';
-// TODO fonts optimization
 
 import { Providers } from './_components/providers/providers.component';
 import { Shell } from './_components/shell/shell.component';
 import StyledComponentsRegistry from './_components/styled-components-registry/styled-components-registry.component';
 import { Tooltip } from './_components/tooltip/tooltip.component';
 import { GLOBAL_TOOLTIP_ID } from './_constants/tooltip.constants';
-import { Fonts } from './_styles/fonts';
 import { GlobalStyles } from './_styles/global';
 
 export const runtime = 'edge';
@@ -28,7 +25,6 @@ export default function RootLayout({
         <body>
           <Providers>
             <Shell>{children}</Shell>
-            <Fonts />
             <GlobalStyles />
             <Tooltip id={GLOBAL_TOOLTIP_ID} clickable delayHide={5} delayShow={500} />
           </Providers>
