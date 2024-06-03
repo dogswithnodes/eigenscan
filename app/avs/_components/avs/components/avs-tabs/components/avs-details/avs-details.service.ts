@@ -3,7 +3,7 @@ import { gql } from 'graphql-request';
 
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { request } from '@/app/_services/graphql.service';
-import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata.service';
+import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 
 type TopWeightOperatorsResponse = {
   operators: Array<{

@@ -9,7 +9,7 @@ import { SortParams } from '@/app/_models/sort.model';
 import { StrategiesMap } from '@/app/_models/strategies.model';
 import { FetchParams } from '@/app/_models/table.model';
 import { request, REQUEST_LIMIT, fetchAllParallel } from '@/app/_services/graphql.service';
-import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata.service';
+import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 import { downloadTableData } from '@/app/_utils/table-data.utils';
 
 type RegistrationsFetchParams = FetchParams<RegistrationsRow> & {
