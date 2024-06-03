@@ -77,7 +77,7 @@ export const HomeTabs: React.FC = () => {
             <TabButton $active={isOperators}>Operators</TabButton>
           </Link>
           <Link prefetch={false} href={{ query: { tab: HOME_TABS.stakers } }}>
-            <TabButton $active={isStakers}>Stackers</TabButton>
+            <TabButton $active={isStakers}>Stakers</TabButton>
           </Link>
           <Link prefetch={false} href={{ query: { tab: HOME_TABS.strategies } }}>
             <TabButton $active={isStrategies}>Strategies</TabButton>
