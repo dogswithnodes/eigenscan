@@ -1,6 +1,6 @@
+'use client';
 import { titles } from '@/app/_components/actions-table/actions-table.model';
 import { BaseAction, BaseActionsRow } from '@/app/_models/actions.model';
-import { FetchParams } from '@/app/_models/table.model';
 import { NullableFieldsRecord, RecordEntries } from '@/app/_utils/actions.utils';
 
 type AVSActionData = NullableFieldsRecord<{
@@ -27,8 +27,6 @@ type AVSActionDataEntries = RecordEntries<AVSActionData>;
 export type AVSActionsRow = BaseActionsRow & {
   actionDataEntries: AVSActionDataEntries;
 };
-
-export type AVSActionsFetchParams = { id: string } & FetchParams<AVSActionsRow>;
 
 const transformToEntries = (data: AVSActionData): AVSActionDataEntries =>
   Object.entries(data).filter((entry): entry is AVSActionDataEntries[number] => entry[0] in data);

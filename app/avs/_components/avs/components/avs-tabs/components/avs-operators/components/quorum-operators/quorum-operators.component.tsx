@@ -11,7 +11,7 @@ import { StrategiesMap } from '@/app/_models/strategies.model';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
-  id: string;
+  avsId: string;
   operatorsCount: number;
   quorum: number;
   quorumWeight: string;
@@ -19,7 +19,7 @@ type Props = {
 };
 
 export const QuorumOperators: React.FC<Props> = ({
-  id,
+  avsId,
   quorum,
   quorumWeight,
   strategiesMap,
@@ -54,7 +54,7 @@ export const QuorumOperators: React.FC<Props> = ({
 
   const { data, isPending, isFetching, error } = useQuorumOperators(
     {
-      id,
+      avsId,
       quorum,
       currentPage,
       perPage,
@@ -67,7 +67,7 @@ export const QuorumOperators: React.FC<Props> = ({
   const rows = useMemo(() => data ?? [], [data]);
 
   const { isCsvLoading, handleCsvDownload } = useQuorumOperatorsCsv(
-    id,
+    avsId,
     operatorsCount,
     quorum,
     quorumWeight,

@@ -1,20 +1,22 @@
 'use client';
-import { useEffect } from 'react';
+import { compose, prop, tap } from 'ramda';
+import { useCallback, useMemo } from 'react';
 
-import { AVSActionsRow } from './avs-actions.model';
-import { useAVSActions, useAVSActionsCsv } from './avs-actions.service';
+import { AVSActionsRow, transformToCsvRow } from './avs-actions.model';
+import { useAVSActions } from './avs-actions.service';
 import { expandedRowRender } from './avs-actions.utils';
 
 import { ActionsTable } from '@/app/_components/actions-table/actions-table.component';
 import { Empty } from '@/app/_components/empty/empty.component';
 import { TablePreloader } from '@/app/_components/table-preloader/table-preloader.component';
+import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
-  id: string;
+  avsId: string;
 };
 
-export const AVSActions: React.FC<Props> = ({ id }) => {
+export const AVSActions: React.FC<Props> = ({ avsId }) => {
   const {
     currentPage,
     perPage,
@@ -34,15 +36,28 @@ export const AVSActions: React.FC<Props> = ({ id }) => {
     },
   });
 
-  const { data, isPending, isFetching, error } = useAVSActions({ id, currentPage, perPage, sortParams });
+  const { data, isPending, error } = useAVSActions(avsId);
 
-  useEffect(() => {
-    if (data) {
-      setTotal(data.total);
-    }
-  }, [data, setTotal]);
+  const rows = useMemo(
+    () =>
+      data
+        ? compose(
+            (rows: Array<AVSActionsRow>) => rows.slice(perPage * (currentPage - 1), perPage * currentPage),
+            sortTableRows(sortParams),
+            tap(compose(setTotal, prop('length'))),
+          )(data)
+        : [],
+    [currentPage, data, perPage, setTotal, sortParams],
+  );
 
-  const { isCsvLoading, handleCsvDownload } = useAVSActionsCsv({ id, sortParams });
+  const handleCsvDownload = useCallback(() => {
+    downloadTableData({
+      data: data || [],
+      sortParams,
+      fileName: 'avs-actions',
+      transformToCsvRow,
+    });
+  }, [data, sortParams]);
 
   if (isPending) {
     return <TablePreloader />;
@@ -58,8 +73,7 @@ export const AVSActions: React.FC<Props> = ({ id }) => {
 
   return (
     <ActionsTable<AVSActionsRow>
-      rows={data.rows}
-      isUpdating={isFetching}
+      rows={rows}
       expandedRowRender={expandedRowRender}
       paginationOptions={{
         currentPage,
@@ -75,7 +89,6 @@ export const AVSActions: React.FC<Props> = ({ id }) => {
       }}
       downloadCsvOptions={{
         onDownload: handleCsvDownload,
-        isLoading: isCsvLoading,
       }}
     />
   );

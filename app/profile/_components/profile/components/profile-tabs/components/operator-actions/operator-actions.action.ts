@@ -1,54 +1,15 @@
 'use server';
-import { gql } from 'graphql-request';
+import { compose } from 'ramda';
 
-import { OperatorAction, OperatorActionsFetchParams, transformToRow } from './operator-actions.model';
+import { OperatorActionsFetchParams, OperatorActionsRow, transformToRow } from './operator-actions.model';
+import { fetchOperatorActions } from './operator-actions.service';
 
-import { REQUEST_LIMIT, request } from '@/app/_services/graphql.service';
-import { fetchAllActions, paginateRows } from '@/app/_utils/actions.utils';
+import { REQUEST_LIMIT } from '@/app/_services/graphql.service';
+import { fetchAllActions } from '@/app/_utils/actions.utils';
 import { getCache } from '@/app/_utils/cache';
+import { sortTableRows } from '@/app/_utils/table-data.utils';
 
-type OperatorActionsResponse = {
-  operatorActions: Array<OperatorAction>;
-};
-
-const fetchOperatorActions = async (requestOptions: string): Promise<Array<OperatorAction>> => {
-  const { operatorActions } = await request<OperatorActionsResponse>(gql`
-    query {
-      operatorActions(
-        ${requestOptions}
-      ) {
-        id
-        blockNumber
-        blockTimestamp
-        transactionHash
-        type
-        avs {
-          id
-        }
-        delegationApprover
-        earningsReceiver
-        delegator {
-          id
-        }
-        metadataURI
-        stakerOptOutWindowBlocks
-        status
-        quorum {
-          quorum {
-            quorum
-          }
-        }
-      }
-    }
-  `);
-
-  return operatorActions;
-};
-
-const cache = getCache(
-  process.env.METADATA_CACHE as unknown as CloudflareEnv['METADATA_CACHE'],
-  'operators-actions',
-);
+const cache = getCache(process.env.METADATA_CACHE as unknown as CloudflareEnv['METADATA_CACHE'], 'metadata');
 
 export const fetchAllOperatorActions = async (
   cacheKey: string,
@@ -67,17 +28,10 @@ export const fetchAllOperatorActions = async (
   });
 
   return {
-    rows: paginateRows({ currentPage, perPage, sortParams })(rows),
+    rows: compose(
+      (rows: Array<OperatorActionsRow>) => rows.slice(perPage * (currentPage - 1), perPage * currentPage),
+      sortTableRows(sortParams),
+    )(rows),
     total: rows.length,
   };
-};
-
-export const fetchOperatorActionsCsv = async (cacheKey: string) => {
-  const data = await cache.get(cacheKey);
-
-  if (data) {
-    return JSON.parse(data);
-  }
-
-  return [];
 };

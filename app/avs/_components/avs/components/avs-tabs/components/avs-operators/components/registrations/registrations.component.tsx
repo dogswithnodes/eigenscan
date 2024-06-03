@@ -11,12 +11,12 @@ import { StrategiesMap } from '@/app/_models/strategies.model';
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
-  id: string;
+  avsId: string;
   operatorsCount: number;
   strategiesMap: StrategiesMap;
 };
 
-export const Registrations: React.FC<Props> = ({ id, strategiesMap, operatorsCount }) => {
+export const Registrations: React.FC<Props> = ({ avsId, strategiesMap, operatorsCount }) => {
   const {
     currentPage,
     perPage,
@@ -42,7 +42,7 @@ export const Registrations: React.FC<Props> = ({ id, strategiesMap, operatorsCou
 
   const { data, isPending, isFetching, error } = useRegistrations(
     {
-      id,
+      avsId,
       currentPage,
       perPage,
       sortParams,
@@ -53,7 +53,7 @@ export const Registrations: React.FC<Props> = ({ id, strategiesMap, operatorsCou
   const rows = useMemo(() => data ?? [], [data]);
 
   const { isCsvLoading, handleCsvDownload } = useRegistrationsCsv(
-    id,
+    avsId,
     operatorsCount,
     sortParams,
     strategiesMap,
