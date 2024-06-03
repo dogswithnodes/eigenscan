@@ -87,7 +87,6 @@ export const AVSDetails: React.FC<Props> = ({
             <Tr>
               <Th>Website</Th>
               <Td>
-                {/* TODO render generic link */}
                 {website ? (
                   <ExternalLink href={website}>
                     {website.replace(/(^\w+:|^)\/\//, '').replace(/\/+$/, '')}
