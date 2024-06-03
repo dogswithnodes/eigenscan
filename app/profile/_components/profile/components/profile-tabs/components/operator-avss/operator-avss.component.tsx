@@ -32,6 +32,7 @@ export const OperatorAVSs: React.FC<Props> = ({ id, strategies, strategiesMap })
     setTotal,
   } = useTable<OperatorAVSsRow>({
     tableName: 'operator-avss',
+    id,
     sortParams: {
       orderBy: 'totalWeight',
       orderDirection: 'desc',

@@ -30,6 +30,7 @@ export const StrategyStakes: React.FC<Props> = ({ id, balance, totalSharesAndWit
     setTotal,
   } = useTable<StrategyStakesRow>({
     tableName: 'strategy-stakes',
+    id,
     sortParams: {
       orderBy: 'shares',
       orderDirection: 'desc',

@@ -18,7 +18,7 @@ import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-m
 import { downloadTableData } from '@/app/_utils/table-data.utils';
 
 type QuorumOperatorsFetchParams = FetchParams<QuorumOperatorsRow> & {
-  avsId: string;
+  id: string;
   quorum: number;
 };
 
@@ -55,19 +55,19 @@ const fetchQuorumOperators = async (requestParams: string): Promise<Array<Quorum
 };
 
 export const useQuorumOperators = (
-  { avsId, quorum, currentPage, perPage, sortParams }: QuorumOperatorsFetchParams,
+  { id, quorum, currentPage, perPage, sortParams }: QuorumOperatorsFetchParams,
   strategiesMap: StrategiesMap,
   quorumWeight: string,
 ) => {
   return useQuery({
-    queryKey: ['quorum-operators', avsId, quorum, currentPage, perPage, sortParams],
+    queryKey: ['quorum-operators', id, quorum, currentPage, perPage, sortParams],
     queryFn: async () => {
       const operators = await fetchQuorumOperators(`
         first: ${perPage}
         skip: ${perPage * (currentPage - 1)}
         orderBy: ${sortParams.orderBy}
         orderDirection: ${sortParams.orderDirection}
-        where: {quorum_: {avs: ${JSON.stringify(avsId)}, quorum: ${quorum}}}
+        where: {quorum_: {avs: ${JSON.stringify(id)}, quorum: ${quorum}}}
       `);
 
       const metadata = await fetchProtocolEntitiesMetadata(
@@ -88,7 +88,7 @@ export const useQuorumOperators = (
 };
 
 const fetchAllQuorumOperators = async (
-  avsId: string,
+  id: string,
   quorum: number,
   quorumWeight: string,
   operatorsCount: number,
@@ -98,7 +98,7 @@ const fetchAllQuorumOperators = async (
     return fetchQuorumOperators(`
       first: ${REQUEST_LIMIT}
       skip: ${skip}
-      where: {quorum_: {avs: ${JSON.stringify(avsId)}, quorum: ${quorum}}}
+      where: {quorum_: {avs: ${JSON.stringify(id)}, quorum: ${quorum}}}
     `);
   });
 
@@ -117,7 +117,7 @@ const fetchAllQuorumOperators = async (
 };
 
 export const useQuorumOperatorsCsv = (
-  avsId: string,
+  id: string,
   operatorsCount: number,
   quorum: number,
   quorumWeight: string,
@@ -125,9 +125,9 @@ export const useQuorumOperatorsCsv = (
   strategiesMap: StrategiesMap,
 ) => {
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ['quorum-operators-csv', avsId, quorum, sortParams],
+    queryKey: ['quorum-operators-csv', id, quorum, sortParams],
     queryFn: async () => {
-      return fetchAllQuorumOperators(avsId, quorum, quorumWeight, operatorsCount, strategiesMap);
+      return fetchAllQuorumOperators(id, quorum, quorumWeight, operatorsCount, strategiesMap);
     },
     enabled: false,
   });

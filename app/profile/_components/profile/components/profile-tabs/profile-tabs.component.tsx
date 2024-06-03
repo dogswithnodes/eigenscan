@@ -142,7 +142,7 @@ export const ProfileTabs: React.FC<Props> = ({
         {isOperatorActions && <OperatorActions id={id} />}
         {isStakerDetails && <StakerDetails {...stakerDetails} />}
         {isStakerStakes && stakerStakes && (
-          <StakerStakes stakes={stakerStakes} strategiesMap={strategiesMap} />
+          <StakerStakes id={id} stakes={stakerStakes} strategiesMap={strategiesMap} />
         )}
         {isStakerActions && <StakerActions id={id} />}
       </TabContent>

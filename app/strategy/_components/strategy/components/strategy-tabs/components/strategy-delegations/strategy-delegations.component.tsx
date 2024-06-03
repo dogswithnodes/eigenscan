@@ -35,6 +35,7 @@ export const StrategyDelegations: React.FC<Props> = ({
     setTotal,
   } = useTable<StrategyDelegationsRow>({
     tableName: 'strategy-stakes',
+    id,
     sortParams: {
       orderBy: 'shares',
       orderDirection: 'desc',

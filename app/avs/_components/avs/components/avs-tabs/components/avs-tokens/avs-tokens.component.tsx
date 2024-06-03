@@ -12,11 +12,12 @@ import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils'
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
+  id: string;
   multipliers: Array<Multiplier>;
   strategiesMap: StrategiesMapEnriched;
 };
 
-export const AVSTokens: React.FC<Props> = ({ multipliers, strategiesMap }) => {
+export const AVSTokens: React.FC<Props> = ({ id, multipliers, strategiesMap }) => {
   const {
     currentPage,
     perPage,
@@ -29,6 +30,7 @@ export const AVSTokens: React.FC<Props> = ({ multipliers, strategiesMap }) => {
     setTotal,
   } = useTable<AVSTokensRow>({
     tableName: 'avs-tokens',
+    id,
     sortParams: {
       orderBy: 'strategy',
       orderDirection: 'desc',

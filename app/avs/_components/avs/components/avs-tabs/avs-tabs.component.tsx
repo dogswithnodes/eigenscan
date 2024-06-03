@@ -176,7 +176,7 @@ export const AVSTabs: React.FC<Props> = ({ id, tab, avsDetails, quorums, registr
         )}
         {isOperators && (
           <AVSOperators
-            avsId={id}
+            id={id}
             operatorsCount={operatorsCount}
             quorum={quorum}
             quorumWeight={operatorsQuorumWeights?.totalWeight ?? null}
@@ -184,9 +184,9 @@ export const AVSTabs: React.FC<Props> = ({ id, tab, avsDetails, quorums, registr
           />
         )}
         {selectedQuorums.at(0)?.multipliers.length && isTokens && (
-          <AVSTokens multipliers={selectedQuorums[0].multipliers} strategiesMap={strategiesMap} />
+          <AVSTokens id={id} multipliers={selectedQuorums[0].multipliers} strategiesMap={strategiesMap} />
         )}
-        {isActions && <AVSActions avsId={id} />}
+        {isActions && <AVSActions id={id} />}
       </TabContent>
     </>
   );

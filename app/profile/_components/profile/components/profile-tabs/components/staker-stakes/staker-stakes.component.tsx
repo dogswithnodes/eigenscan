@@ -18,11 +18,12 @@ import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils'
 import { useTable } from '@/app/_utils/table.utils';
 
 type Props = {
+  id: string;
   stakes: Array<StakerStake>;
   strategiesMap: StrategiesMapEnriched;
 };
 
-export const StakerStakes: React.FC<Props> = ({ stakes, strategiesMap }) => {
+export const StakerStakes: React.FC<Props> = ({ id, stakes, strategiesMap }) => {
   const {
     currentPage,
     perPage,
@@ -35,6 +36,7 @@ export const StakerStakes: React.FC<Props> = ({ stakes, strategiesMap }) => {
     setTotal,
   } = useTable<StakerStakesRow>({
     tableName: 'staker-stakes',
+    id,
     sortParams: {
       orderBy: 'lstBalance',
       orderDirection: 'desc',

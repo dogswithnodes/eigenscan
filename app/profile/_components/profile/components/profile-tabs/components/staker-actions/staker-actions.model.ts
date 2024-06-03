@@ -1,4 +1,3 @@
-'use client';
 import { titles } from '@/app/_components/actions-table/actions-table.model';
 import { BaseAction, BaseActionsRow } from '@/app/_models/actions.model';
 import { NullableFieldsRecord, RecordEntries } from '@/app/_utils/actions.utils';

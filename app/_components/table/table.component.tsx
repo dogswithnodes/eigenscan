@@ -19,7 +19,7 @@ import { SortParams } from '@/app/_models/sort.model';
 
 type Resolution = '2560' | '1920' | '1440' | '1280';
 
-export type Props<Row> = {
+type Props<Row> = {
   columns: Array<ColumnType<Row>>;
   rows: Array<Row>;
   paginationOptions: PaginationProps;

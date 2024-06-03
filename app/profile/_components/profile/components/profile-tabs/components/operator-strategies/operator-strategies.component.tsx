@@ -31,6 +31,7 @@ export const OperatorStrategies: React.FC<Props> = ({ id, strategiesMap }) => {
     setTotal,
   } = useTable<OperatorStrategiesRow>({
     tableName: 'operator-strategies',
+    id,
     sortParams: {
       orderBy: 'totalDelegated',
       orderDirection: 'desc',
