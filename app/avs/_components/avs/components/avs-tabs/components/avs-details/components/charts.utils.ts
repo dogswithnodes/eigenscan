@@ -1,4 +1,4 @@
-import { QuorumWeights } from '../../avs-tabs.model';
+import { QuorumWeights } from '../../../avs-tabs.model';
 
 import { divBy1e18 } from '@/app/_utils/big-number.utils';
 
