@@ -1,6 +1,7 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
 
+import { PROFILE_TABLES } from '@/app/_constants/tables.constants';
 import { mulDiv } from '@/app/_utils/big-number.utils';
 import {
   renderAddressLink,
@@ -55,7 +56,7 @@ export const columns: Array<ColumnType<StrategyDelegationsRow>> = [
     dataIndex: 'operator',
     key: 'operator',
     align: 'center',
-    render: renderAddressLink('profile', 'operator-details'),
+    render: renderAddressLink('profile', PROFILE_TABLES.operator.details),
   },
   {
     title: titles.shares,

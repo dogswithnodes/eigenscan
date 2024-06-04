@@ -21,15 +21,9 @@ import {
   Fieldset,
   Legend,
 } from '@/app/_components/tabs/tabs.styled';
+import { AVS_TABLES } from '@/app/_constants/tables.constants';
 import { StrategiesMapEnriched } from '@/app/_models/strategies.model';
 import { add, mul } from '@/app/_utils/big-number.utils';
-
-const AVS_TABS = {
-  details: 'avs-details',
-  operators: 'avs-operators',
-  actions: 'avs-actions',
-  tokens: 'avs-tokens',
-};
 
 type Props = {
   id: string;
@@ -53,15 +47,15 @@ export const AVSTabs: React.FC<Props> = ({ id, tab, avsDetails, quorums, registr
   const { replace } = useRouter();
 
   useEffect(() => {
-    if (!tab || !Object.values(AVS_TABS).some((t) => t === tab.toLowerCase())) {
-      replace(`${pathname}?id=${id}&tab=${AVS_TABS.details}`);
+    if (!tab || !Object.values(AVS_TABLES).some((t) => t === tab.toLowerCase())) {
+      replace(`${pathname}?id=${id}&tab=${AVS_TABLES.details}`);
     }
   }, [pathname, tab, replace, id]);
 
-  const isDetails = tab === AVS_TABS.details;
-  const isOperators = tab === AVS_TABS.operators;
-  const isActions = tab === AVS_TABS.actions;
-  const isTokens = tab === AVS_TABS.tokens;
+  const isDetails = tab === AVS_TABLES.details;
+  const isOperators = tab === AVS_TABLES.operators;
+  const isActions = tab === AVS_TABLES.actions;
+  const isTokens = tab === AVS_TABLES.tokens;
 
   const quorumsOptions = useMemo(
     () => quorums.map(({ quorum }): QuorumOption => ({ value: String(quorum), label: `Quorum ${quorum}` })),
@@ -131,16 +125,16 @@ export const AVSTabs: React.FC<Props> = ({ id, tab, avsDetails, quorums, registr
           <Legend>AVS:</Legend>
           <TabsHeaderContent>
             <TabButtons>
-              <Link prefetch={false} href={{ query: { id, tab: AVS_TABS.details } }}>
+              <Link prefetch={false} href={{ query: { id, tab: AVS_TABLES.details } }}>
                 <TabButton $active={isDetails}>Details</TabButton>
               </Link>
-              <Link prefetch={false} href={{ query: { id, tab: AVS_TABS.operators } }}>
+              <Link prefetch={false} href={{ query: { id, tab: AVS_TABLES.operators } }}>
                 <TabButton $active={isOperators}>Operators</TabButton>
               </Link>
-              <Link prefetch={false} href={{ query: { id, tab: AVS_TABS.actions } }}>
+              <Link prefetch={false} href={{ query: { id, tab: AVS_TABLES.actions } }}>
                 <TabButton $active={isActions}>Actions</TabButton>
               </Link>
-              <Link prefetch={false} href={{ query: { id, tab: AVS_TABS.tokens } }}>
+              <Link prefetch={false} href={{ query: { id, tab: AVS_TABLES.tokens } }}>
                 <TabButton $active={isTokens}>Allowed Tokens</TabButton>
               </Link>
             </TabButtons>

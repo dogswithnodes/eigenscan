@@ -2,6 +2,7 @@
 import { ColumnType } from 'antd/es/table';
 import type BigNumber from 'bignumber.js';
 
+import { AVS_TABLES } from '@/app/_constants/tables.constants';
 import { AVSOperatorBase } from '@/app/_models/avs.model';
 import { StrategiesMap } from '@/app/_models/strategies.model';
 import { calculateAVSTVLs } from '@/app/_utils/avs.utils';
@@ -68,7 +69,7 @@ export const columns: Array<ColumnType<AVSsRow>> = [
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    render: renderAddressLink('avs', 'avs-details'),
+    render: renderAddressLink('avs', AVS_TABLES.details),
   },
   {
     title: titles.name,

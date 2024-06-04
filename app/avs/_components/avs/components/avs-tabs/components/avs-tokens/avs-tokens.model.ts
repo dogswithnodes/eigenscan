@@ -3,6 +3,7 @@ import { ColumnType } from 'antd/es/table';
 
 import { Multiplier } from '../../../../avs.model';
 
+import { STRATEGY_TABLES } from '@/app/_constants/tables.constants';
 import { StrategiesMapEnriched } from '@/app/_models/strategies.model';
 import { renderAddressLink, renderImage } from '@/app/_utils/render.utils';
 
@@ -50,7 +51,7 @@ export const columns: Array<ColumnType<AVSTokensRow>> = [
     dataIndex: 'strategy',
     key: 'strategy',
     align: 'center',
-    render: renderAddressLink('strategy', 'strategy-details'),
+    render: renderAddressLink('strategy', STRATEGY_TABLES.details),
   },
   {
     title: titles.strategyName,

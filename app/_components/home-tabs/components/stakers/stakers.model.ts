@@ -4,6 +4,7 @@ import type BigNumber from 'bignumber.js';
 
 import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
+import { PROFILE_TABLES } from '@/app/_constants/tables.constants';
 import { StrategiesMap } from '@/app/_models/strategies.model';
 import { mulDiv } from '@/app/_utils/big-number.utils';
 import { renderAddressLink, renderBigNumber, renderDate } from '@/app/_utils/render.utils';
@@ -74,7 +75,7 @@ export const columns: Array<ColumnType<StakersRow>> = [
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    render: renderAddressLink('profile', 'staker-details'),
+    render: renderAddressLink('profile', PROFILE_TABLES.staker.details),
   },
   {
     title: titles.totalShares,
@@ -105,7 +106,7 @@ export const columns: Array<ColumnType<StakersRow>> = [
     dataIndex: 'delegatedTo',
     key: 'delegatedTo',
     align: 'center',
-    render: renderAddressLink('profile'),
+    render: renderAddressLink('profile', PROFILE_TABLES.operator.details),
   },
   {
     title: titles.lastDelegatedAt,

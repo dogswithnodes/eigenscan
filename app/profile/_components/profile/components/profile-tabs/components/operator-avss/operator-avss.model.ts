@@ -4,6 +4,7 @@ import { ColumnType } from 'antd/es/table';
 import { renderTokens } from './operator-avss.utils';
 
 import { EIGEN_STRATEGY } from '@/app/_constants/addresses.constants';
+import { AVS_TABLES } from '@/app/_constants/tables.constants';
 import { StrategiesMapEnriched, StrategyEnriched } from '@/app/_models/strategies.model';
 import { renderAddressLink, renderBigNumber, renderDate, renderImage } from '@/app/_utils/render.utils';
 
@@ -86,7 +87,7 @@ export const columns: Array<ColumnType<OperatorAVSsRow>> = [
     dataIndex: 'avsId',
     key: 'avsId',
     align: 'center',
-    render: renderAddressLink('avs', 'avs-details'),
+    render: renderAddressLink('avs', AVS_TABLES.details),
   },
   {
     title: titles.avsName,

@@ -12,18 +12,13 @@ import { StyledHomeTabs } from './home-tabs.styled';
 
 import { TabButtons, TabButton, TabContent } from '../tabs/tabs.styled';
 
-const HOME_TABS = {
-  avss: 'avss',
-  operators: 'operators',
-  stakers: 'stakers',
-  strategies: 'strategies',
-};
+import { MAIN_TABLES } from '@/app/_constants/tables.constants';
 
 const searchInputPlaceholders = {
-  [HOME_TABS.avss]: 'Enter avs id or name',
-  [HOME_TABS.operators]: 'Enter operator id',
-  [HOME_TABS.stakers]: 'Enter staker id',
-  [HOME_TABS.strategies]: 'Enter strategy id or name',
+  [MAIN_TABLES.avss]: 'Enter avs id or name',
+  [MAIN_TABLES.operators]: 'Enter operator id',
+  [MAIN_TABLES.stakers]: 'Enter staker id',
+  [MAIN_TABLES.strategies]: 'Enter strategy id or name',
 };
 
 export const HomeTabs: React.FC = () => {
@@ -34,21 +29,21 @@ export const HomeTabs: React.FC = () => {
   const { replace } = useRouter();
 
   useEffect(() => {
-    if (!tab || !Object.values(HOME_TABS).some((t) => t === tab.toLowerCase())) {
-      replace(`${pathname}?tab=${HOME_TABS.avss}`);
+    if (!tab || !Object.values(MAIN_TABLES).some((t) => t === tab.toLowerCase())) {
+      replace(`${pathname}?tab=${MAIN_TABLES.avss}`);
     }
   }, [pathname, tab, replace]);
 
-  const isAVSs = !tab || tab === HOME_TABS.avss;
-  const isOperators = tab === HOME_TABS.operators;
-  const isStakers = tab === HOME_TABS.stakers;
-  const isStrategies = tab === HOME_TABS.strategies;
+  const isAVSs = !tab || tab === MAIN_TABLES.avss;
+  const isOperators = tab === MAIN_TABLES.operators;
+  const isStakers = tab === MAIN_TABLES.stakers;
+  const isStrategies = tab === MAIN_TABLES.strategies;
 
   const [searchTerms, setSearchTerms] = useState({
-    [HOME_TABS.avss]: '',
-    [HOME_TABS.operators]: '',
-    [HOME_TABS.stakers]: '',
-    [HOME_TABS.strategies]: '',
+    [MAIN_TABLES.avss]: '',
+    [MAIN_TABLES.operators]: '',
+    [MAIN_TABLES.stakers]: '',
+    [MAIN_TABLES.strategies]: '',
   });
 
   const searchTerm = tab && tab in searchTerms ? searchTerms[tab] : '';
@@ -70,16 +65,16 @@ export const HomeTabs: React.FC = () => {
     <>
       <StyledHomeTabs>
         <TabButtons>
-          <Link prefetch={false} href={{ query: { tab: HOME_TABS.avss } }}>
+          <Link prefetch={false} href={{ query: { tab: MAIN_TABLES.avss } }}>
             <TabButton $active={isAVSs}>AVSs</TabButton>
           </Link>
-          <Link prefetch={false} href={{ query: { tab: HOME_TABS.operators } }}>
+          <Link prefetch={false} href={{ query: { tab: MAIN_TABLES.operators } }}>
             <TabButton $active={isOperators}>Operators</TabButton>
           </Link>
-          <Link prefetch={false} href={{ query: { tab: HOME_TABS.stakers } }}>
+          <Link prefetch={false} href={{ query: { tab: MAIN_TABLES.stakers } }}>
             <TabButton $active={isStakers}>Stakers</TabButton>
           </Link>
-          <Link prefetch={false} href={{ query: { tab: HOME_TABS.strategies } }}>
+          <Link prefetch={false} href={{ query: { tab: MAIN_TABLES.strategies } }}>
             <TabButton $active={isStrategies}>Strategies</TabButton>
           </Link>
         </TabButtons>

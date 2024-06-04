@@ -2,6 +2,7 @@
 import { ColumnType } from 'antd/es/table';
 import BigNumber from 'bignumber.js';
 
+import { STRATEGY_TABLES } from '@/app/_constants/tables.constants';
 import { StrategiesMapEnriched } from '@/app/_models/strategies.model';
 import { mulDiv } from '@/app/_utils/big-number.utils';
 import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
@@ -50,7 +51,7 @@ export const columns: Array<ColumnType<OperatorStrategiesRow>> = [
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    render: renderAddressLink('strategy', 'strategy-details'),
+    render: renderAddressLink('strategy', STRATEGY_TABLES.details),
   },
   {
     title: titles.name,

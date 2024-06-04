@@ -1,6 +1,7 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
 
+import { PROFILE_TABLES } from '@/app/_constants/tables.constants';
 import { mulDiv } from '@/app/_utils/big-number.utils';
 import { renderAddressLink, renderBigNumber, renderImage } from '@/app/_utils/render.utils';
 
@@ -56,7 +57,7 @@ export const columns: Array<ColumnType<StrategyOperatorsRow>> = [
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    render: renderAddressLink('profile', 'operator-details' /** TODO const */),
+    render: renderAddressLink('profile', PROFILE_TABLES.operator.details),
   },
   {
     title: titles.totalShares,

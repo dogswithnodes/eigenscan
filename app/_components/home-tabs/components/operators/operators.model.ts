@@ -3,6 +3,7 @@ import { ColumnType } from 'antd/es/table';
 import type BigNumber from 'bignumber.js';
 
 import { BN_ZERO } from '@/app/_constants/big-number.constants';
+import { PROFILE_TABLES } from '@/app/_constants/tables.constants';
 import { StrategiesMap } from '@/app/_models/strategies.model';
 import { mulDiv } from '@/app/_utils/big-number.utils';
 import {
@@ -86,7 +87,7 @@ export const columns: Array<ColumnType<OperatorsRow>> = [
     dataIndex: 'id',
     key: 'id',
     align: 'center',
-    render: renderAddressLink('profile', 'operator-details' /** TODO const */),
+    render: renderAddressLink('profile', PROFILE_TABLES.operator.details),
   },
   {
     title: titles.registered,

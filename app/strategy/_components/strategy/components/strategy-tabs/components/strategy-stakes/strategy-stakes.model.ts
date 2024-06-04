@@ -1,6 +1,7 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
 
+import { PROFILE_TABLES } from '@/app/_constants/tables.constants';
 import { mulDiv } from '@/app/_utils/big-number.utils';
 import {
   renderAddressLink,
@@ -53,7 +54,7 @@ export const columns: Array<ColumnType<StrategyStakesRow>> = [
     dataIndex: 'staker',
     key: 'staker',
     align: 'center',
-    render: renderAddressLink('profile', 'staker-details'),
+    render: renderAddressLink('profile', PROFILE_TABLES.staker.details),
   },
   {
     title: titles.shares,

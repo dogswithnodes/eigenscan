@@ -18,13 +18,7 @@ import {
   Fieldset,
   Legend,
 } from '@/app/_components/tabs/tabs.styled';
-
-const STRATEGY_TABS = {
-  details: 'strategy-details',
-  operators: 'strategy-operators',
-  stakes: 'strategy-stakes',
-  delegations: 'strategy-delegations',
-};
+import { STRATEGY_TABLES } from '@/app/_constants/tables.constants';
 
 type Props = {
   id: string;
@@ -46,15 +40,15 @@ export const StrategyTabs: React.FC<Props> = ({
   const { replace } = useRouter();
 
   useEffect(() => {
-    if (!tab || !Object.values(STRATEGY_TABS).some((t) => t === tab.toLowerCase())) {
-      replace(`${pathname}?id=${id}&tab=${STRATEGY_TABS.details}`);
+    if (!tab || !Object.values(STRATEGY_TABLES).some((t) => t === tab.toLowerCase())) {
+      replace(`${pathname}?id=${id}&tab=${STRATEGY_TABLES.details}`);
     }
   }, [pathname, tab, replace, id]);
 
-  const isDetails = tab === STRATEGY_TABS.details;
-  const isOperators = tab === STRATEGY_TABS.operators;
-  const isStakes = tab === STRATEGY_TABS.stakes;
-  const isDelegations = tab === STRATEGY_TABS.delegations;
+  const isDetails = tab === STRATEGY_TABLES.details;
+  const isOperators = tab === STRATEGY_TABLES.operators;
+  const isStakes = tab === STRATEGY_TABLES.stakes;
+  const isDelegations = tab === STRATEGY_TABLES.delegations;
 
   return (
     <>
@@ -62,16 +56,16 @@ export const StrategyTabs: React.FC<Props> = ({
         <Fieldset role="presentation">
           <Legend>Strategy:</Legend>
           <TabButtons>
-            <Link prefetch={false} href={{ query: { id, tab: STRATEGY_TABS.details } }}>
+            <Link prefetch={false} href={{ query: { id, tab: STRATEGY_TABLES.details } }}>
               <TabButton $active={isDetails}>Details</TabButton>
             </Link>
-            <Link prefetch={false} href={{ query: { id, tab: STRATEGY_TABS.operators } }}>
+            <Link prefetch={false} href={{ query: { id, tab: STRATEGY_TABLES.operators } }}>
               <TabButton $active={isOperators}>Operators</TabButton>
             </Link>
-            <Link prefetch={false} href={{ query: { id, tab: STRATEGY_TABS.stakes } }}>
+            <Link prefetch={false} href={{ query: { id, tab: STRATEGY_TABLES.stakes } }}>
               <TabButton $active={isStakes}>Stakes</TabButton>
             </Link>
-            <Link prefetch={false} href={{ query: { id, tab: STRATEGY_TABS.delegations } }}>
+            <Link prefetch={false} href={{ query: { id, tab: STRATEGY_TABLES.delegations } }}>
               <TabButton $active={isDelegations}>Delegations</TabButton>
             </Link>
           </TabButtons>
