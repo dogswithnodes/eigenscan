@@ -4,7 +4,7 @@ import { useEffect, useMemo } from 'react';
 import { StakersRow, columns, columnsWidth } from './stakers.model';
 import { useStakers, useStakersCsv, useStakersSearch } from './stakers.service';
 
-import { HomeTabTableCommonProps } from '../../home-tabs.model';
+import { SearchTableProps } from '../../home-tabs.model';
 
 import { Empty } from '@/app/_components/empty/empty.component';
 import { Table } from '@/app/_components/table/table.component';
@@ -12,7 +12,7 @@ import { TablePreloader } from '@/app/_components/table-preloader/table-preloade
 import { useProtocolData } from '@/app/_services/protocol-data.service';
 import { useTable } from '@/app/_utils/table.utils';
 
-export const Stakers: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) => {
+export const Stakers: React.FC<SearchTableProps> = ({ searchTerm }) => {
   const {
     currentPage,
     perPage,

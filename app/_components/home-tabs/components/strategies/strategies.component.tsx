@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'react';
 
 import { StrategiesRow, columns, columnsWidth, transformToCsvRow, transformToRow } from './strategies.model';
 
-import { HomeTabTableCommonProps } from '../../home-tabs.model';
+import { SearchTableProps } from '../../home-tabs.model';
 
 import { Empty } from '@/app/_components/empty/empty.component';
 import { Table } from '@/app/_components/table/table.component';
@@ -13,7 +13,7 @@ import { useEnrichedStrategies } from '@/app/_services/strategies.service';
 import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
-export const Strategies: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) => {
+export const Strategies: React.FC<SearchTableProps> = ({ searchTerm }) => {
   const {
     currentPage,
     perPage,

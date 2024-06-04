@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 
 import { Staker, StakersRow, transformToCsvRow, transformToRow } from './stakers.model';
 
-import { HomeTabTableFetchParams } from '../../home-tabs.model';
+import { ServerSearchFetchParams } from '../../home-tabs.model';
 
 import { SortParams } from '@/app/_models/sort.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
@@ -69,9 +69,12 @@ const fetchStakers = async (requestOptions: string) => {
   return stakers;
 };
 
-type FetchStakersParams = HomeTabTableFetchParams<StakersRow>;
-
-export const useStakers = ({ currentPage, perPage, sortParams, idFilters }: FetchStakersParams) => {
+export const useStakers = ({
+  currentPage,
+  perPage,
+  sortParams,
+  idFilters,
+}: ServerSearchFetchParams<StakersRow>) => {
   const { data } = useStrategies();
 
   return useQuery({

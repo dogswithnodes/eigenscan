@@ -10,6 +10,7 @@ import {
 } from './strategy-delegations.model';
 
 import { SortParams } from '@/app/_models/sort.model';
+import { SingleEntityFetchParams } from '@/app/_models/table.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { downloadTableData } from '@/app/_utils/table-data.utils';
 
@@ -43,16 +44,8 @@ const fetchStrategyDelegations = async (requestOptions: string) => {
   return delegations;
 };
 
-// TODO generic
-type FetchStrategyDelegationsParams = {
-  id: string;
-  currentPage: number;
-  perPage: number;
-  sortParams: SortParams<StrategyDelegationsRow>;
-};
-
 export const useStrategyDelegations = (
-  { id, currentPage, perPage, sortParams }: FetchStrategyDelegationsParams,
+  { id, currentPage, perPage, sortParams }: SingleEntityFetchParams<StrategyDelegationsRow>,
   balance: string,
   totalSharesAndWithdrawing: string,
 ) =>

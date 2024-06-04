@@ -11,6 +11,7 @@ import {
 
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { SortParams } from '@/app/_models/sort.model';
+import { SingleEntityFetchParams } from '@/app/_models/table.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 import { downloadTableData } from '@/app/_utils/table-data.utils';
@@ -52,16 +53,8 @@ const fetchStrategyOperators = async (requestOptions: string) => {
   });
 };
 
-// TODO generic
-type FetchStrategyOperatorsParams = {
-  id: string;
-  currentPage: number;
-  perPage: number;
-  sortParams: SortParams<StrategyOperatorsRow>;
-};
-
 export const useStrategyOperators = (
-  { id, currentPage, perPage, sortParams }: FetchStrategyOperatorsParams,
+  { id, currentPage, perPage, sortParams }: SingleEntityFetchParams<StrategyOperatorsRow>,
   balance: string,
   totalSharesAndWithdrawing: string,
 ) =>

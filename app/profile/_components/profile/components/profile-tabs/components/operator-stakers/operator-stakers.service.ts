@@ -9,7 +9,7 @@ import {
   transformToRow,
 } from './operator-stakers.model';
 
-import { ProfileTabTableFetchParams } from '../../../../profile.model';
+import { ProfileFetchParams } from '../../../../profile.model';
 
 import { SortParams } from '@/app/_models/sort.model';
 import { StrategiesMap } from '@/app/_models/strategies.model';
@@ -50,10 +50,8 @@ const fetchOperatorStakers = async (requestOptions: string) => {
   return delegators;
 };
 
-type FetchOperatorStakersParams = ProfileTabTableFetchParams<OperatorStakersRow>;
-
 export const useOperatorStakers = (
-  { id, currentPage, perPage, sortParams }: FetchOperatorStakersParams,
+  { id, currentPage, perPage, sortParams }: ProfileFetchParams<OperatorStakersRow>,
   strategiesMap: StrategiesMap,
 ) =>
   useQuery({

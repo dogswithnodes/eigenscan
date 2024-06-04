@@ -5,6 +5,7 @@ import { useCallback } from 'react';
 import { StrategyStakesRow, StrategyStake, transformToCsvRow, transformToRow } from './strategy-stakes.model';
 
 import { SortParams } from '@/app/_models/sort.model';
+import { SingleEntityFetchParams } from '@/app/_models/table.model';
 import { fetchAllParallel, request, REQUEST_LIMIT } from '@/app/_services/graphql.service';
 import { downloadTableData } from '@/app/_utils/table-data.utils';
 
@@ -36,16 +37,8 @@ const fetchStrategyStakes = async (requestOptions: string) => {
   return strategyDeposits;
 };
 
-// TODO generic
-type FetchStrategyStakesParams = {
-  id: string;
-  currentPage: number;
-  perPage: number;
-  sortParams: SortParams<StrategyStakesRow>;
-};
-
 export const useStrategyStakes = (
-  { id, currentPage, perPage, sortParams }: FetchStrategyStakesParams,
+  { id, currentPage, perPage, sortParams }: SingleEntityFetchParams<StrategyStakesRow>,
   balance: string,
   totalSharesAndWithdrawing: string,
 ) =>

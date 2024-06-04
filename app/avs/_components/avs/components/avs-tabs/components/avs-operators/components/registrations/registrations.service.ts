@@ -7,14 +7,10 @@ import { Registration, RegistrationsRow, transformToCsvRow, transformToRow } fro
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { SortParams } from '@/app/_models/sort.model';
 import { StrategiesMap } from '@/app/_models/strategies.model';
-import { FetchParams } from '@/app/_models/table.model';
+import { SingleEntityFetchParams } from '@/app/_models/table.model';
 import { request, REQUEST_LIMIT, fetchAllParallel } from '@/app/_services/graphql.service';
 import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 import { downloadTableData } from '@/app/_utils/table-data.utils';
-
-type RegistrationsFetchParams = FetchParams<RegistrationsRow> & {
-  id: string;
-};
 
 type RegistrationsResponse = {
   avsoperatorStatuses: Array<Registration>;
@@ -48,7 +44,7 @@ const fetchRegistrations = async (requestParams: string): Promise<Array<Registra
 };
 
 export const useRegistrations = (
-  { id, currentPage, perPage, sortParams }: RegistrationsFetchParams,
+  { id, currentPage, perPage, sortParams }: SingleEntityFetchParams<RegistrationsRow>,
   strategiesMap: StrategiesMap,
 ) => {
   return useQuery({

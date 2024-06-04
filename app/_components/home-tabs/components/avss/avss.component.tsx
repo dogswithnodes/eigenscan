@@ -5,7 +5,7 @@ import { useCallback, useMemo } from 'react';
 import { AVSsRow, columns, columnsWidth, transformToCsvRow } from './avss.model';
 import { useAVSs } from './avss.service';
 
-import { HomeTabTableCommonProps } from '../../home-tabs.model';
+import { SearchTableProps } from '../../home-tabs.model';
 
 import { Empty } from '@/app/_components/empty/empty.component';
 import { Table } from '@/app/_components/table/table.component';
@@ -13,7 +13,7 @@ import { TablePreloader } from '@/app/_components/table-preloader/table-preloade
 import { downloadTableData, sortTableRows } from '@/app/_utils/table-data.utils';
 import { useTable } from '@/app/_utils/table.utils';
 
-export const AVSs: React.FC<HomeTabTableCommonProps> = ({ searchTerm }) => {
+export const AVSs: React.FC<SearchTableProps> = ({ searchTerm }) => {
   const {
     currentPage,
     perPage,

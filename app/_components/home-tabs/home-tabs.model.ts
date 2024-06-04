@@ -1,7 +1,7 @@
 import { FetchParams } from '@/app/_models/table.model';
 
-export type HomeTabTableCommonProps = {
+export type SearchTableProps = {
   searchTerm: string;
 };
 
-export type HomeTabTableFetchParams<Row> = FetchParams<Row> & { idFilters: Array<string> | null };
+export type ServerSearchFetchParams<Row> = FetchParams<Row> & { idFilters: Array<string> | null };

@@ -10,7 +10,7 @@ import {
   transformToRow,
 } from './operators.model';
 
-import { HomeTabTableFetchParams } from '../../home-tabs.model';
+import { ServerSearchFetchParams } from '../../home-tabs.model';
 
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { SortParams } from '@/app/_models/sort.model';
@@ -78,9 +78,12 @@ const fetchOperators = async (requestOptions: string): Promise<Array<OperatorEnr
   });
 };
 
-type FetchOperatorsParams = HomeTabTableFetchParams<OperatorsRow>;
-
-export const useOperators = ({ currentPage, perPage, sortParams, idFilters }: FetchOperatorsParams) => {
+export const useOperators = ({
+  currentPage,
+  perPage,
+  sortParams,
+  idFilters,
+}: ServerSearchFetchParams<OperatorsRow>) => {
   const { data } = useStrategies();
 
   return useQuery({

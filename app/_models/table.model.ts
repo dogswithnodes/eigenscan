@@ -5,3 +5,7 @@ export type FetchParams<Row> = {
   perPage: number;
   sortParams: SortParams<Row>;
 };
+
+export type SingleEntityFetchParams<Row> = FetchParams<Row> & {
+  id: string;
+};

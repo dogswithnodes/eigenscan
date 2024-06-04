@@ -12,15 +12,10 @@ import {
 import { DEFAULT_METADATA_MAP_KEY } from '@/app/_constants/protocol-entity-metadata.constants';
 import { SortParams } from '@/app/_models/sort.model';
 import { StrategiesMap } from '@/app/_models/strategies.model';
-import { FetchParams } from '@/app/_models/table.model';
+import { SingleEntityFetchParams } from '@/app/_models/table.model';
 import { request, REQUEST_LIMIT, fetchAllParallel } from '@/app/_services/graphql.service';
 import { fetchProtocolEntitiesMetadata } from '@/app/_services/protocol-entity-metadata';
 import { downloadTableData } from '@/app/_utils/table-data.utils';
-
-type QuorumOperatorsFetchParams = FetchParams<QuorumOperatorsRow> & {
-  id: string;
-  quorum: number;
-};
 
 type QuorumOperatorsQuorumResponse = {
   operatorQuorums: Array<QuorumOperator>;
@@ -55,7 +50,13 @@ const fetchQuorumOperators = async (requestParams: string): Promise<Array<Quorum
 };
 
 export const useQuorumOperators = (
-  { id, quorum, currentPage, perPage, sortParams }: QuorumOperatorsFetchParams,
+  {
+    id,
+    quorum,
+    currentPage,
+    perPage,
+    sortParams,
+  }: SingleEntityFetchParams<QuorumOperatorsRow> & { quorum: number },
   strategiesMap: StrategiesMap,
   quorumWeight: string,
 ) => {

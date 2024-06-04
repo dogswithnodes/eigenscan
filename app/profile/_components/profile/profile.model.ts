@@ -1,6 +1,6 @@
 import { FetchParams } from '@/app/_models/table.model';
 
-export type ProfileTabTableFetchParams<Row> = FetchParams<Row> & { id: string };
+export type ProfileFetchParams<Row> = FetchParams<Row> & { id: string };
 
 export type StakerStake = {
   id: string;
