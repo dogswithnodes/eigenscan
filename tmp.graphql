@@ -1,0 +1,19 @@
+{
+  strategies(first: 1000, where: { totalShares_gt: "0" }) {
+    id
+    name
+    totalShares
+    totalDelegated
+    totalWithdrawing
+    tokenSymbol
+    stakesCount
+    delegationsCount
+    underlyingToken
+    whitelisted
+    tokenDecimals
+    operatorsCount
+    withdrawals(first: 1000, where: { share_not: null, strategy_not: null }) {
+      share
+    }
+  }
+}
