@@ -83,7 +83,7 @@ id = "b3243c54deed44f2a26b6f55a8434265"
 
 [env.production.vars]
 NEXT_PUBLIC_ETH_NODE = "https://ethereum-rpc.publicnode.com"
-NEXT_PUBLIC_SUBGRAPH_URL= "https://gateway-arbitrum.network.thegraph.com/api/01ac6ca85b3eb819410ae8c48141a496/subgraphs/id/Hmjb4h1rN5L69eseuMoYtUhqii4wwg8UVo68y8s4dwrb"
+NEXT_PUBLIC_SUBGRAPH_URL= "https://graph-node.dogswithnodes.com/subgraphs/name/eigen"
 [[env.production.kv_namespaces]]
 
 binding = "METADATA_CACHE"
