@@ -16,7 +16,7 @@ import {
   StrategiesMap,
   StrategiesMapEnriched,
 } from '../_models/strategies.model';
-import { add } from '../_utils/big-number.utils';
+import { add, divBy1e18, mulDiv } from '../_utils/big-number.utils';
 
 type StrategiesResponse = {
   strategies: Array<StrategyServer>;
@@ -101,10 +101,13 @@ export const useStrategies = (
 
       const strategiesWithBalances = strategies.map((strategy, i) => {
         const balance = balances[i];
+
         return {
           ...strategy,
-          balance,
-          ethBalance: new BigNumber(balance).times(prices[i]).div(1e18).decimalPlaces(0, 1).toFixed(),
+          balance: mulDiv(new BigNumber(balance), 1e18, 10 ** strategy.tokenDecimals)
+            .decimalPlaces(0, 1)
+            .toFixed(),
+          ethBalance: divBy1e18(new BigNumber(balance).times(prices[i])).decimalPlaces(0, 1).toFixed(),
           totalSharesAndWithdrawing: add(strategy.totalShares, strategy.totalWithdrawing).toFixed(),
         };
       });
