@@ -16,9 +16,9 @@ pages_build_output_dir = ".vercel/output/static"
 # - https://developers.cloudflare.com/pages/functions/bindings/#environment-variables
 # Note: Use secrets to store sensitive data.
 # - https://developers.cloudflare.com/pages/functions/bindings/#secrets
-[vars]
-NEXT_PUBLIC_ETH_NODE = "https://ethereum-rpc.publicnode.com"
-NEXT_PUBLIC_SUBGRAPH_URL= "https://graph-node-tmp.dogswithnodes.com/subgraphs/name/eigen-next"
+# [vars]
+# NEXT_PUBLIC_ETH_NODE = "https://ethereum-rpc.publicnode.com"
+# NEXT_PUBLIC_SUBGRAPH_URL= "https://graph-node.dogswithnodes.com/subgraphs/name/eigen"
 
 # Bind the Workers AI model catalog. Run machine learning models, powered by serverless GPUs, on Cloudflare’s global network
 # Docs: https://developers.cloudflare.com/pages/functions/bindings/#workers-ai
@@ -43,9 +43,9 @@ NEXT_PUBLIC_SUBGRAPH_URL= "https://graph-node-tmp.dogswithnodes.com/subgraphs/na
 # Bind a KV Namespace. Use KV as persistent storage for small key-value pairs.
 # Docs: https://developers.cloudflare.com/pages/functions/bindings/#kv-namespaces
 # KV Example:
-[[kv_namespaces]]
-binding = "METADATA_CACHE"
-id = "b3243c54deed44f2a26b6f55a8434265"
+# [[kv_namespaces]]
+# binding = "METADATA_CACHE"
+# id = "b3243c54deed44f2a26b6f55a8434265"
 
 # Bind a Queue producer. Use this binding to schedule an arbitrary task that may be processed later by a Queue consumer.
 # Docs: https://developers.cloudflare.com/pages/functions/bindings/#queue-producers
@@ -73,7 +73,7 @@ id = "b3243c54deed44f2a26b6f55a8434265"
 
 [env.preview.vars]
 NEXT_PUBLIC_ETH_NODE = "https://ethereum-rpc.publicnode.com"
-NEXT_PUBLIC_SUBGRAPH_URL= "https://graph-node-tmp.dogswithnodes.com/subgraphs/name/eigen-next"
+NEXT_PUBLIC_SUBGRAPH_URL= "https://gateway-arbitrum.network.thegraph.com/api/01ac6ca85b3eb819410ae8c48141a496/subgraphs/id/Hmjb4h1rN5L69eseuMoYtUhqii4wwg8UVo68y8s4dwrb"
 
 [[env.preview.kv_namespaces]]
 binding = "METADATA_CACHE"
@@ -83,7 +83,7 @@ id = "b3243c54deed44f2a26b6f55a8434265"
 
 [env.production.vars]
 NEXT_PUBLIC_ETH_NODE = "https://ethereum-rpc.publicnode.com"
-NEXT_PUBLIC_SUBGRAPH_URL= "https://graph-node-tmp.dogswithnodes.com/subgraphs/name/eigen-next"
+NEXT_PUBLIC_SUBGRAPH_URL= "https://graph-node.dogswithnodes.com/subgraphs/name/eigen"
 [[env.production.kv_namespaces]]
 
 binding = "METADATA_CACHE"
