@@ -1,3 +1,4 @@
+'use client';
 import { compose } from 'ramda';
 
 import { BaseActionsRow } from '@/app/_models/actions.model';
