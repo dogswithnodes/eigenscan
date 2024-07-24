@@ -45,7 +45,7 @@ export const ActionsTable = <
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      actionTypesWorkerRef.current = new Worker(new URL('./workers/action-types.worker', import.meta.url));
+      actionTypesWorkerRef.current = new Worker(new URL('./action-types.worker', import.meta.url));
 
       actionTypesWorkerRef.current.onmessage = (event: MessageEvent<Array<string>>) => {
         setActionTypes(event.data);
@@ -97,7 +97,7 @@ export const ActionsTable = <
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      paginationWorkerRef.current = new Worker(new URL('./workers/pagination.worker', import.meta.url));
+      paginationWorkerRef.current = new Worker(new URL('./pagination.worker', import.meta.url));
 
       paginationWorkerRef.current.onmessage = (
         event: MessageEvent<{

@@ -1,4 +1,3 @@
-'use client';
 import { BaseActionsRow } from '@/app/_models/actions.model';
 
 addEventListener('message', (e: MessageEvent<Array<BaseActionsRow>>) => {
