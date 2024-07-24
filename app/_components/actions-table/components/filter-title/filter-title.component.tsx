@@ -75,7 +75,7 @@ export const FilterTitle: React.FC<Props> = ({ actionTypes, currentActions, titl
                   return (
                     <li
                       key={type}
-                      role="radio"
+                      role="checkbox"
                       aria-checked={selected}
                       className="filter-menu-item"
                       onClick={() => {
