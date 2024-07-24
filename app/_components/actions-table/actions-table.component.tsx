@@ -3,8 +3,8 @@ import { ExpandableConfig } from 'antd/es/table/interface';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { columnsWidth, getColumns } from './actions-table.model';
-// import { useActionTypes } from './actions-table.utils';
-// import { FilterTitle } from './components/filter-title/filter-title.component';
+import { useActionTypes } from './actions-table.utils';
+import { FilterTitle } from './components/filter-title/filter-title.component';
 
 import { ExpandButton } from '../expand-button/expand-button.component';
 import { Table } from '../table/table.component';
@@ -39,30 +39,30 @@ export const ActionsTable = <
   expandedRowRender: NonNullable<ExpandableConfig<Row>['expandedRowRender']>;
   transformToCsvRow: (row: Row) => Record<string, unknown>;
 }) => {
-  // const actionTypesWorkerRef = useRef<Worker>();
+  const actionTypesWorkerRef = useRef<Worker>();
 
-  // const { actionTypes, currentActions, setActionTypes, setCurrentActions } = useActionTypes();
+  const { actionTypes, currentActions, setActionTypes, setCurrentActions } = useActionTypes();
 
-  // useEffect(() => {
-  //   if (typeof window !== 'undefined') {
-  //     actionTypesWorkerRef.current = new Worker(new URL('./action-types.worker', import.meta.url));
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      actionTypesWorkerRef.current = new Worker(new URL('./action-types.worker', import.meta.url));
 
-  //     actionTypesWorkerRef.current.onmessage = (event: MessageEvent<Array<string>>) => {
-  //       setActionTypes(event.data);
-  //       actionTypesWorkerRef.current?.terminate();
-  //     };
-  //   }
+      actionTypesWorkerRef.current.onmessage = (event: MessageEvent<Array<string>>) => {
+        setActionTypes(event.data);
+        actionTypesWorkerRef.current?.terminate();
+      };
+    }
 
-  //   return () => {
-  //     actionTypesWorkerRef.current?.terminate();
-  //   };
-  // }, [setActionTypes]);
+    return () => {
+      actionTypesWorkerRef.current?.terminate();
+    };
+  }, [setActionTypes]);
 
-  // useEffect(() => {
-  //   if (data) {
-  //     actionTypesWorkerRef.current?.postMessage(data);
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (data) {
+      actionTypesWorkerRef.current?.postMessage(data);
+    }
+  }, [data]);
 
   const {
     currentPage,
@@ -88,14 +88,9 @@ export const ActionsTable = <
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // const cacheKey = useMemo(
-  //   () => JSON.stringify([tableName, id, perPage, currentPage, sortParams, currentActions.sort()]),
-  //   [currentActions, currentPage, id, perPage, sortParams, tableName],
-  // );
-
   const cacheKey = useMemo(
-    () => JSON.stringify([tableName, id, perPage, currentPage, sortParams]),
-    [currentPage, id, perPage, sortParams, tableName],
+    () => JSON.stringify([tableName, id, perPage, currentPage, sortParams, currentActions.sort()]),
+    [currentActions, currentPage, id, perPage, sortParams, tableName],
   );
 
   const paginationWorkerRef = useRef<Worker>();
@@ -146,11 +141,11 @@ export const ActionsTable = <
           perPage,
           currentPage,
           sortParams,
-          // currentActions,
+          currentActions,
         });
       }
     }
-  }, [cacheKey, currentPage, data, id, perPage, setTotal, sortParams]);
+  }, [cacheKey, currentActions, currentPage, data, id, perPage, setTotal, sortParams]);
 
   const handleCsvDownload = useCallback(() => {
     downloadTableData({
@@ -176,15 +171,14 @@ export const ActionsTable = <
   return (
     <Table<Row>
       rows={rows}
-      columns={getColumns(
-        (title: string) => title,
-        // <FilterTitle
-        //   actionTypes={actionTypes}
-        //   currentActions={currentActions}
-        //   title={title}
-        //   setCurrentActions={setCurrentActions}
-        // />
-      )}
+      columns={getColumns((title: string) => (
+        <FilterTitle
+          actionTypes={actionTypes}
+          currentActions={currentActions}
+          title={title}
+          setCurrentActions={setCurrentActions}
+        />
+      ))}
       columnsWidth={columnsWidth}
       isUpdating={rows.length > 0 && isLoading}
       paginationOptions={{

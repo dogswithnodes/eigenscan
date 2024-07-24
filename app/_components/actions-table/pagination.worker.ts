@@ -11,21 +11,21 @@ addEventListener(
       currentPage: number;
       perPage: number;
       sortParams: SortParams<BaseActionsRow>;
-      // currentActions: Array<string>;
+      currentActions: Array<string>;
       rows: Array<BaseActionsRow>;
     }>,
   ) => {
-    const { currentPage, perPage, sortParams, rows } = e.data;
+    const { currentPage, currentActions, perPage, sortParams, rows } = e.data;
 
-    // const filteredRows =
-    //   currentActions.length > 0 ? rows.filter(({ typeId }) => currentActions.includes(typeId)) : rows;
+    const filteredRows =
+      currentActions.length > 0 ? rows.filter(({ typeId }) => currentActions.includes(typeId)) : rows;
 
     postMessage({
       rows: compose(
         (rows: Array<BaseActionsRow>) => rows.slice(perPage * (currentPage - 1), perPage * currentPage),
         sortTableRows(sortParams),
-      )(rows),
-      total: rows.length,
+      )(filteredRows),
+      total: filteredRows.length,
     });
   },
 );
