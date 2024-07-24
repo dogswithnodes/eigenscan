@@ -1,7 +1,7 @@
 'use client';
 import { Table as TableComponent } from 'antd';
 import { ColumnType } from 'antd/es/table';
-import { ExpandableConfig } from 'antd/es/table/interface';
+import { ColumnTitleProps, ExpandableConfig } from 'antd/es/table/interface';
 import ResizeObserver from 'rc-resize-observer';
 import { useMemo, useCallback, useState, useLayoutEffect, useEffect, useRef } from 'react';
 import { useMediaQuery } from 'react-responsive';
@@ -121,11 +121,13 @@ export const Table = <Row extends Record<string, unknown>>({
         ...column,
         className: column.dataIndex === sortParams.orderBy ? 'ant-table-column_sorted ' : '',
         width: columnsWidth[resolution][id],
-        fixed: id === 0 ? column.fixed ?? 'left' : column.fixed,
-        title: (
+        fixed: id === 0 ? (column.fixed ?? 'left') : column.fixed,
+        title: (props: ColumnTitleProps<Row>) => (
           <>
             <div className="ant-table-column-title-container">
-              <p className="ant-table-column-title">{column.title?.toString()}</p>
+              <p className="ant-table-column-title">
+                {typeof column.title === 'function' ? column.title(props) : column.title}
+              </p>
             </div>
             <span className="ant-table-sort-icon">
               <img src={sort.src} alt="Sort" width="14" height="10" />

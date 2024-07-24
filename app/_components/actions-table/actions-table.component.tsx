@@ -3,6 +3,8 @@ import { ExpandableConfig } from 'antd/es/table/interface';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { columnsWidth, getColumns } from './actions-table.model';
+import { useActionTypes } from './actions-table.utils';
+import { FilterTitle } from './components/filter-title/filter-title.component';
 
 import { ExpandButton } from '../expand-button/expand-button.component';
 import { Table } from '../table/table.component';
@@ -37,6 +39,31 @@ export const ActionsTable = <
   expandedRowRender: NonNullable<ExpandableConfig<Row>['expandedRowRender']>;
   transformToCsvRow: (row: Row) => Record<string, unknown>;
 }) => {
+  const actionTypesWorkerRef = useRef<Worker>();
+
+  const { actionTypes, currentActions, setActionTypes, setCurrentActions } = useActionTypes();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      actionTypesWorkerRef.current = new Worker(new URL('./workers/action-types.worker', import.meta.url));
+
+      actionTypesWorkerRef.current.onmessage = (event: MessageEvent<Array<string>>) => {
+        setActionTypes(event.data);
+        actionTypesWorkerRef.current?.terminate();
+      };
+    }
+
+    return () => {
+      actionTypesWorkerRef.current?.terminate();
+    };
+  }, [setActionTypes]);
+
+  useEffect(() => {
+    if (data) {
+      actionTypesWorkerRef.current?.postMessage(data);
+    }
+  }, [data]);
+
   const {
     currentPage,
     perPage,
@@ -61,60 +88,73 @@ export const ActionsTable = <
 
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (data) {
-      setTotal(data.length);
-    }
-  }, [data, setTotal]);
-
   const cacheKey = useMemo(
-    () => JSON.stringify([id, perPage, currentPage, sortParams]),
-    [currentPage, id, perPage, sortParams],
+    () => JSON.stringify([tableName, id, perPage, currentPage, sortParams, currentActions.sort()]),
+    [currentActions, currentPage, id, perPage, sortParams, tableName],
   );
 
-  const workerRef = useRef<Worker>();
+  const paginationWorkerRef = useRef<Worker>();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      workerRef.current = new Worker(new URL('./actions-table.worker', import.meta.url));
+      paginationWorkerRef.current = new Worker(new URL('./workers/pagination.worker', import.meta.url));
 
-      workerRef.current.onmessage = (event: MessageEvent<Array<Row>>) => {
+      paginationWorkerRef.current.onmessage = (
+        event: MessageEvent<{
+          rows: Array<Row>;
+          total: number;
+        }>,
+      ) => {
+        const { rows, total } = event.data;
+
         setIsLoading(false);
-        setRows(event.data);
-        actionsCache.set(cacheKey, event.data);
+        setRows(rows);
+        setTotal(total);
+        actionsCache.set(cacheKey, {
+          rows,
+          total,
+        });
       };
 
-      workerRef.current.onerror = (event) => {
+      paginationWorkerRef.current.onerror = (event) => {
         // eslint-disable-next-line no-console
         console.log(`Worker error event: ${event}`);
       };
     }
+
     return () => {
-      workerRef.current?.terminate();
+      paginationWorkerRef.current?.terminate();
     };
-  }, [cacheKey]);
+  }, [cacheKey, setTotal]);
 
   useEffect(() => {
     if (data) {
-      const rows = actionsCache.get(cacheKey);
+      const cached = actionsCache.get(cacheKey);
 
-      if (Array.isArray(rows)) {
-        setRows(rows);
+      if (cached) {
+        setRows(cached.rows);
+        setTotal(cached.total);
       } else {
         setIsLoading(true);
-        workerRef.current?.postMessage({ rows: data, perPage, currentPage, sortParams });
+        paginationWorkerRef.current?.postMessage({
+          rows: data,
+          perPage,
+          currentPage,
+          sortParams,
+          currentActions,
+        });
       }
     }
-  }, [cacheKey, currentPage, data, id, perPage, sortParams]);
+  }, [cacheKey, currentActions, currentPage, data, id, perPage, setTotal, sortParams]);
 
   const handleCsvDownload = useCallback(() => {
     downloadTableData({
       data: data || [],
       sortParams,
-      fileName: 'operator-actions',
+      fileName: tableName,
       transformToCsvRow,
     });
-  }, [data, sortParams, transformToCsvRow]);
+  }, [data, sortParams, tableName, transformToCsvRow]);
 
   if (isPending || (rows.length === 0 && isLoading)) {
     return <TablePreloader />;
@@ -131,7 +171,14 @@ export const ActionsTable = <
   return (
     <Table<Row>
       rows={rows}
-      columns={getColumns()}
+      columns={getColumns((title: string) => (
+        <FilterTitle
+          actionTypes={actionTypes}
+          currentActions={currentActions}
+          title={title}
+          setCurrentActions={setCurrentActions}
+        />
+      ))}
       columnsWidth={columnsWidth}
       isUpdating={rows.length > 0 && isLoading}
       paginationOptions={{

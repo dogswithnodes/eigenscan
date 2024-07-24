@@ -363,7 +363,9 @@ export const StyledTable = styled.section`
   .ant-table-sticky-holder {
     position: sticky;
     z-index: 3;
+    overflow: visible !important;
   }
+
   .${STICKY_SCROLL_CLASSNAME} {
     height: 20px !important;
     position: sticky;

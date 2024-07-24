@@ -3,16 +3,16 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
 import { QuorumWeights } from './avs-tabs.model';
-import { TabsHeaderContent } from './avs-tabs.styled';
+import { QuorumSelectBox, TabsHeaderContent } from './avs-tabs.styled';
 import { AVSActions } from './components/avs-actions/avs-actions.component';
 import { AVSDetails, Props as AVSDetailsProps } from './components/avs-details/avs-details.component';
 import { AVSOperators } from './components/avs-operators/avs-operators.component';
 import { AVSTokens } from './components/avs-tokens/avs-tokens.component';
-import { Select } from './components/select/select.component';
 
 import { calculateAVSTVLs } from '../../../../../_utils/avs.utils';
 import { AVSOperator, Quorum } from '../../avs.model';
 
+import { Select } from '@/app/_components/select/select.component';
 import {
   Tabs,
   TabButton,
@@ -58,7 +58,7 @@ export const AVSTabs: React.FC<Props> = ({ id, tab, avsDetails, quorums, registr
   const isTokens = tab === AVS_TABLES.tokens;
 
   const quorumsOptions = useMemo(
-    () => quorums.map(({ quorum }): QuorumOption => ({ value: String(quorum), label: `Quorum ${quorum}` })),
+    () => quorums.map(({ quorum }): QuorumOption => ({ value: String(quorum), label: String(quorum) })),
     [quorums],
   );
 
@@ -134,22 +134,27 @@ export const AVSTabs: React.FC<Props> = ({ id, tab, avsDetails, quorums, registr
               <Link prefetch={false} href={{ query: { id, tab: AVS_TABLES.actions } }}>
                 <TabButton $active={isActions}>Actions</TabButton>
               </Link>
-              <Link prefetch={false} href={{ query: { id, tab: AVS_TABLES.tokens } }}>
-                <TabButton $active={isTokens}>Allowed Tokens</TabButton>
-              </Link>
+              {selectedQuorums.at(0)?.multipliers.length && (
+                <Link prefetch={false} href={{ query: { id, tab: AVS_TABLES.tokens } }}>
+                  <TabButton $active={isTokens}>Allowed Tokens</TabButton>
+                </Link>
+              )}
             </TabButtons>
             {quorums.length > 0 && (
-              <Select<QuorumOption>
-                defaultValue={quorumsOptions[0]}
-                options={quorumsOptions}
-                onChange={(option) => {
-                  const value = option?.value;
+              <QuorumSelectBox>
+                <span className="quorum-select-box-text">Quorum:</span>
+                <Select<QuorumOption>
+                  defaultValue={quorumsOptions[0]}
+                  options={quorumsOptions}
+                  onChange={(option) => {
+                    const value = option?.value;
 
-                  if (value) {
-                    setQuorum(Number(value));
-                  }
-                }}
-              />
+                    if (value) {
+                      setQuorum(Number(value));
+                    }
+                  }}
+                />
+              </QuorumSelectBox>
             )}
           </TabsHeaderContent>
         </Fieldset>

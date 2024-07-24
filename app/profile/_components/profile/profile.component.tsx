@@ -23,7 +23,6 @@ export const Profile: React.FC<Props> = ({ id, tab }) => {
 
   const operatorTVL = useMemo(() => {
     if (account.data?.operator && strategies.data) {
-      // TODO genew
       return account.data.operator.strategies.reduce((acc, { totalShares, strategy }) => {
         const { ethBalance, totalSharesAndWithdrawing } = strategies.data.strategiesMap[strategy.id];
 

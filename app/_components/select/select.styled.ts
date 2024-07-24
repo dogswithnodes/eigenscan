@@ -4,7 +4,6 @@ import { styled } from 'styled-components';
 export const StyledSelect = styled(Select)`
   .react-select {
     &__control {
-      min-width: 175px;
       height: 40px;
       min-height: 34px;
       background-color: #fce202;
@@ -16,20 +15,21 @@ export const StyledSelect = styled(Select)`
 
       &:hover {
         border: 2px solid #000;
+
+        @media (max-width: 1280px) {
+          border-width: 1px;
+        }
       }
 
       @media (max-width: 1920px) {
-        min-width: 160px;
         height: 38px;
       }
 
       @media (max-width: 1440px) {
-        min-width: 145px;
         height: 36px;
       }
 
       @media (max-width: 1280px) {
-        min-width: 130px;
         height: 34px;
         border-width: 1px;
       }
@@ -45,7 +45,7 @@ export const StyledSelect = styled(Select)`
     }
 
     &__value-container {
-      margin-left: 10px;
+      margin-left: 8px;
       padding: 0;
       height: 100%;
     }
@@ -53,8 +53,8 @@ export const StyledSelect = styled(Select)`
     &__placeholder {
       font-weight: 500;
       font-size: 20px;
-      line-height: 1;
       color: #000;
+      white-space: nowrap;
 
       @media (max-width: 1920px) {
         font-size: 18px;
@@ -72,7 +72,6 @@ export const StyledSelect = styled(Select)`
     &__single-value {
       font-weight: 600;
       font-size: 20px;
-      line-height: 1.2;
       color: #000;
 
       @media (max-width: 1920px) {
@@ -93,12 +92,16 @@ export const StyledSelect = styled(Select)`
     }
 
     &__indicator {
+      padding: 6px;
       color: #000;
-      transition: 0.2s;
 
       &:hover {
         color: #000;
       }
+    }
+
+    &__dropdown-indicator {
+      transition: 0.2s;
     }
 
     &__menu {
@@ -112,7 +115,7 @@ export const StyledSelect = styled(Select)`
       z-index: 100;
 
       @media (max-width: 1280px) {
-        border-top-width: 1px;
+        border-width: 1px;
       }
     }
 
@@ -136,13 +139,11 @@ export const StyledSelect = styled(Select)`
     }
 
     &__option {
-      font-weight: 500;
       font-size: 20px;
       color: #525252;
       font-weight: 400;
       background-color: transparent;
       transition: 0.2s;
-
       cursor: pointer;
       white-space: nowrap;
 

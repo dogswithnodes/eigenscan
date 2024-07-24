@@ -6,6 +6,7 @@ export const Tabs = styled.section`
   position: relative;
   padding: 18px 16px 18px 28px;
   display: flex;
+  gap: 52px;
   border: 2px solid #ececec;
   border-bottom: none;
   border-top-left-radius: 8px;
@@ -79,7 +80,6 @@ export const TabContent = styled.article<{ $footerPressedToBottom?: boolean }>`
 `;
 
 export const Fieldset = styled.fieldset`
-  margin: 0 0 0 52px;
   padding: 25px 0 5px;
   width: 100%;
   border: none;

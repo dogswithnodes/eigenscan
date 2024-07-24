@@ -1,5 +1,6 @@
 'use client';
 import { ColumnType } from 'antd/es/table';
+import { ReactNode } from 'react';
 
 import { BaseActionsRow } from '@/app/_models/actions.model';
 import { renderDate, renderTransactionHash } from '@/app/_utils/render.utils';
@@ -18,7 +19,9 @@ export const columnsWidth = {
   '1280': [285, 285, 284, 284],
 };
 
-export const getColumns = <T extends BaseActionsRow>(): Array<ColumnType<T>> => [
+export const getColumns = <T extends BaseActionsRow>(
+  renderTypeTitle: (title: string) => ReactNode,
+): Array<ColumnType<T>> => [
   {
     title: titles.blockTimestamp,
     dataIndex: 'blockTimestamp',
@@ -33,7 +36,7 @@ export const getColumns = <T extends BaseActionsRow>(): Array<ColumnType<T>> => 
     align: 'center',
   },
   {
-    title: titles.typeId,
+    title: renderTypeTitle(titles.typeId),
     dataIndex: 'typeId',
     key: 'typeId',
     align: 'center',

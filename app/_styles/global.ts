@@ -46,7 +46,7 @@ export const GlobalStyles = createGlobalStyle`
     font-family:${fontFamily.montserrat};
     font-weight: normal;
     line-height: normal;
-    color: ##525252;
+    color: #525252;
     background-color: #fff;
 
     @media (min-width: 960px) {
