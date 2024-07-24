@@ -3,13 +3,13 @@ import { RequestDocument, Variables, GraphQLClient } from 'graphql-request';
 
 export const REQUEST_LIMIT = 1000;
 
-export const fetchAllConsecutively = async <T>(
-  fetcher: (skip: number) => Promise<Array<T>>,
+export const fetchAllConsecutively = async <T extends { id: string }>(
+  fetcher: (id: string) => Promise<Array<T>>,
   acc: Array<T> = [],
 ) => {
   let response: Array<T>;
   do {
-    response = await fetcher(acc.length);
+    response = await fetcher(acc.at(-1)?.id || '');
     acc.push(...response);
   } while (response.length > 0 && response.length % REQUEST_LIMIT === 0);
 

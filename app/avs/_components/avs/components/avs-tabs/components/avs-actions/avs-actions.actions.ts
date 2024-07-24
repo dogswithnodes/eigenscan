@@ -42,11 +42,10 @@ const fetchAVSActions = async (requestOptions: string): Promise<Array<AVSAction>
 };
 
 export const fetchAllAVSActions = async (id: string) => {
-  const actions = await fetchAllConsecutively((skip) =>
+  const actions = await fetchAllConsecutively((actionId) =>
     fetchAVSActions(`
       first: ${REQUEST_LIMIT}
-      skip:${skip}
-      where: {avs: ${JSON.stringify(id)}}
+      where: {avs: ${JSON.stringify(id)}, id_gt: ${JSON.stringify(actionId)}}
     `),
   );
 

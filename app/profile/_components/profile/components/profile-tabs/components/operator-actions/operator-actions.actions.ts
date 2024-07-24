@@ -44,11 +44,10 @@ const fetchOperatorActions = async (requestOptions: string): Promise<Array<Opera
 };
 
 export const fetchAllOperatorActions = async (id: string) => {
-  const actions = await fetchAllConsecutively((skip) =>
+  const actions = await fetchAllConsecutively((actionId) =>
     fetchOperatorActions(`
       first: ${REQUEST_LIMIT}
-      skip:${skip}
-      where: {operator: ${JSON.stringify(id)}}
+      where: {operator: ${JSON.stringify(id)}, id_gt: ${JSON.stringify(actionId)}}
     `),
   );
 

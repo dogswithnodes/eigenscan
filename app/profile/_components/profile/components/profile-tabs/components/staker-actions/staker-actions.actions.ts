@@ -56,11 +56,10 @@ const fetchStakerActions = async (requestOptions: string): Promise<Array<StakerA
 };
 
 export const fetchAllStakerActions = async (id: string) => {
-  const actions = await fetchAllConsecutively((skip) =>
+  const actions = await fetchAllConsecutively((actionId) =>
     fetchStakerActions(`
       first: ${REQUEST_LIMIT}
-      skip:${skip}
-      where: {staker: ${JSON.stringify(id)}}
+      where: {staker: ${JSON.stringify(id)}, id_gt: ${JSON.stringify(actionId)}}
     `),
   );
 
