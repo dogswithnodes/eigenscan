@@ -1,4 +1,3 @@
-'use client';
 import { MouseEvent as SyntheticMouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 import { FilterButton, FilterMenu } from './filter-title.styled';
@@ -17,22 +16,24 @@ export const FilterTitle: React.FC<Props> = ({ actionTypes, currentActions, titl
   const menuRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const handleOutsideClick = ({ target }: MouseEvent) => {
-      const trigger = triggerRef.current;
-      const menu = menuRef.current;
+    if (typeof window !== 'undefined') {
+      const handleOutsideClick = ({ target }: MouseEvent) => {
+        const trigger = triggerRef.current;
+        const menu = menuRef.current;
 
-      if (menu && trigger && open && target instanceof Node) {
-        if (target !== menu && target !== trigger && !menu.contains(target) && !trigger.contains(target)) {
-          setOpen(false);
+        if (menu && trigger && open && target instanceof Node) {
+          if (target !== menu && target !== trigger && !menu.contains(target) && !trigger.contains(target)) {
+            setOpen(false);
+          }
         }
-      }
-    };
+      };
 
-    window.addEventListener('click', handleOutsideClick);
+      window.addEventListener('click', handleOutsideClick);
 
-    return () => {
-      window.removeEventListener('click', handleOutsideClick);
-    };
+      return () => {
+        window.removeEventListener('click', handleOutsideClick);
+      };
+    }
   }, [open]);
 
   const handleClick = useCallback((e: SyntheticMouseEvent) => {

@@ -9,8 +9,7 @@
     "lint": "next lint",
     "prepare": "husky",
     "test": "lint-staged",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts",
-    "build:workers": "tsc -p tsconfig.worker.json"
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.35.1",

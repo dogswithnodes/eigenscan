@@ -1,4 +1,4 @@
-import { BaseActionsRow } from '../../../_models/actions.model';
+import { BaseActionsRow } from '@/app/_models/actions.model';
 
 addEventListener('message', (e: MessageEvent<Array<BaseActionsRow>>) => {
   const types = new Set();

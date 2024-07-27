@@ -17,7 +17,7 @@ export const DescriptionCard: React.FC<Props> = ({ description }) => {
         <DescriptionHeading>Description</DescriptionHeading>
         <DescriptionText
           dangerouslySetInnerHTML={{
-            __html: parseLinks(description) || 'Description was not provided.',
+            __html: parseLinks(description) || 'Description was not provided',
           }}
         />
       </Description>

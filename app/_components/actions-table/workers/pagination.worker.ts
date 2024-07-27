@@ -1,44 +1,8 @@
-import { BaseActionsRow } from '../../../_models/actions.model';
-import { SortParams } from '../../../_models/sort.model';
+import { compose } from 'ramda';
 
-const rowsComparator =
-  <T extends Record<string, unknown>>(sortParams: SortParams<T>) =>
-  (a: T, b: T) => {
-    const { orderBy, orderDirection } = sortParams;
-    const isAscending = orderDirection === 'asc';
-    const x = a[orderBy];
-    const y = b[orderBy];
-
-    if (x === null) {
-      return 1;
-    }
-
-    if (y === null) {
-      return -1;
-    }
-
-    if (typeof x === 'number' && typeof y === 'number') {
-      return isAscending ? x - y : y - x;
-    }
-
-    return new Intl.Collator('en', { sensitivity: 'base', ignorePunctuation: true }).compare(
-      String(isAscending ? x : y),
-      String(isAscending ? y : x),
-    );
-  };
-
-const sortTableRows =
-  <T extends Record<string, unknown>>(sortParams: SortParams<T>) =>
-  (arr: Array<T>) =>
-    arr.sort(rowsComparator(sortParams));
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const compose = (...fs: Array<(...args: any) => any>) =>
-  fs.reduceRight(
-    (f1, f2) =>
-      (...args) =>
-        f2(f1(...args)),
-  );
+import { BaseActionsRow } from '@/app/_models/actions.model';
+import { SortParams } from '@/app/_models/sort.model';
+import { sortTableRows } from '@/app/_utils/table-data.utils';
 
 addEventListener(
   'message',
