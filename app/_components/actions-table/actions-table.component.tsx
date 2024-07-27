@@ -44,14 +44,22 @@ export const ActionsTable = <
   const { actionTypes, currentActions, setActionTypes, setCurrentActions } = useActionTypes();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      actionTypesWorkerRef.current = new Worker(new URL('./action-types.worker', import.meta.url));
+    actionTypesWorkerRef.current = new Worker(
+      'workers/_components/actions-table/workers/action-types.worker.js',
+      {
+        type: 'module',
+      },
+    );
 
-      actionTypesWorkerRef.current.onmessage = (event: MessageEvent<Array<string>>) => {
-        setActionTypes(event.data);
-        actionTypesWorkerRef.current?.terminate();
-      };
-    }
+    actionTypesWorkerRef.current.onmessage = (event: MessageEvent<Array<string>>) => {
+      setActionTypes(event.data);
+      actionTypesWorkerRef.current?.terminate();
+    };
+
+    actionTypesWorkerRef.current.onerror = () => {
+      // eslint-disable-next-line no-console
+      console.log(`Action types worker error`);
+    };
 
     return () => {
       actionTypesWorkerRef.current?.terminate();
@@ -96,31 +104,34 @@ export const ActionsTable = <
   const paginationWorkerRef = useRef<Worker>();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      paginationWorkerRef.current = new Worker(new URL('./pagination.worker', import.meta.url));
+    paginationWorkerRef.current = new Worker(
+      'workers/_components/actions-table/workers/pagination.worker.js',
+      {
+        type: 'module',
+      },
+    );
 
-      paginationWorkerRef.current.onmessage = (
-        event: MessageEvent<{
-          rows: Array<Row>;
-          total: number;
-        }>,
-      ) => {
-        const { rows, total } = event.data;
+    paginationWorkerRef.current.onmessage = (
+      event: MessageEvent<{
+        rows: Array<Row>;
+        total: number;
+      }>,
+    ) => {
+      const { rows, total } = event.data;
 
-        setIsLoading(false);
-        setRows(rows);
-        setTotal(total);
-        actionsCache.set(cacheKey, {
-          rows,
-          total,
-        });
-      };
+      setIsLoading(false);
+      setRows(rows);
+      setTotal(total);
+      actionsCache.set(cacheKey, {
+        rows,
+        total,
+      });
+    };
 
-      paginationWorkerRef.current.onerror = (event) => {
-        // eslint-disable-next-line no-console
-        console.log(`Worker error event: ${event}`);
-      };
-    }
+    paginationWorkerRef.current.onerror = () => {
+      // eslint-disable-next-line no-console
+      console.log(`Pagination worker error`);
+    };
 
     return () => {
       paginationWorkerRef.current?.terminate();
@@ -136,6 +147,7 @@ export const ActionsTable = <
         setTotal(cached.total);
       } else {
         setIsLoading(true);
+
         paginationWorkerRef.current?.postMessage({
           rows: data,
           perPage,
